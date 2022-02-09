@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<instrument>
+  <identifier identifierType="Handle">20.1000/5555</identifier>
+  <schemaVersion>1.0</schemaVersion>
+  <landingPage>{{ current_url }}</landingPage>
+  <name>{{ instrument.name }}</name>
+  <owners>
+    {% for owner in instrument.owners.all %}
+      <owner>
+        <ownerName>{{ owner.name }}</ownerName>
+        {% if owner.ror_id %}
+          <ownerIdentifier ownerIdentifierType="ROR">{{ owner.ror_id }}</ownerIdentifier>
+        {% endif %}
+      </owner>
+    {% endfor %}
+  </owners>
+  <manufacturers>
+    {% for manufacturer in instrument.model.manufacturers.all %}
+      <manufacturer>
+        <manufacturerName>{{ manufacturer.name }}</manufacturerName>
+        {% if manufacturer.ror_id %}
+          <manufacturerIdentifier manufacturerIdentifierType="ROR">{{ manufacturer.ror_id }}</manufacturerIdentifier>
+        {% endif %}
+      </manufacturer>
+    {% endfor %}
+  </manufacturers>
+  <model>
+    <modelName>{{ instrument.model.name }}</modelName>
+  </model>
+  <instrumentTypes>
+    {% for type in instrument.types.all %}
+      <instrumentType>
+        <instrumentTypeName>{{ type.name }}</instrumentTypeName>
+      </instrumentType>
+    {% endfor %}
+  </instrumentTypes>
+  <measuredVariables>
+    {% for variable in instrument.variables.all %}
+      <measuredVariable>{{ variable.name }}</measuredVariable>
+    {% endfor %}
+  </measuredVariables>
+  {% if dates %}
+    <dates>
+      {% for date in dates %}
+        <date dateType="{{ date.type }}">{{ date.date }}</date>
+      {% endfor %}
+    </dates>
+  {% endif %}
+  {% if instrument.description %}
+    <description>{{ instrument.description }}</description>
+  {% endif %}
+  {% if instrument.related_identifiers %}
+    <relatedIdentifiers>
+      {% for item in instrument.related_identifiers.all %}
+        <relatedIdentifier relatedIdentifierType="{{ item.identifier_type }}" relationType="{{ item.relation_type }}">
+          {{ item.identifier }}
+        </relatedIdentifier>
+      {% endfor %}
+    </relatedIdentifiers>
+  {% endif %}
+  {% if instrument.alternate_identifiers %}
+    <alternateIdentifiers>
+      {% for item in instrument.alternate_identifiers.all %}
+        <alternateIdentifier alternateIdentifierType="{{ item.identifier_type }}">
+          {{ item.identifier }}
+        </alternateIdentifier>
+      {% endfor %}
+    </alternateIdentifiers>
+  {% endif %}
+</instrument>

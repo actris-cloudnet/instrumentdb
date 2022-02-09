@@ -1,0 +1,18 @@
+server {
+    listen $NGINX_PORT;
+
+    location / {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass http://$BACKEND_SERVICE_HOST:$BACKEND_SERVICE_PORT;
+        proxy_ssl_session_reuse off;
+        proxy_set_header Host $http_host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_redirect off;
+    }
+
+    location /static/ {
+        alias /app/backend_static/;
+    }
+}
