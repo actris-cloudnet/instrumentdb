@@ -26,6 +26,8 @@ DEBUG = os.environ.get("DEBUG", "0").lower() in ["y", "yes", "t", "true", "on", 
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
+CSRF_TRUSTED_ORIGINS = os.environ["TRUSTED_ORIGINS"].split(",")
+
 
 # Application definition
 
