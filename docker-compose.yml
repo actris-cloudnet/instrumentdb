@@ -17,7 +17,7 @@ services:
       - SECRET_KEY=donutsteel
       - DEBUG=1
       - ALLOWED_HOSTS=*
-      - TRUSTED_ORIGINS=*
+      - TRUSTED_ORIGINS=http://localhost
     depends_on:
       - database
   database:
