@@ -32,104 +32,104 @@
   </head>
   <body>
     <main>
-    <a href="{% url 'instrument_xml' instrument.id %}" style="float:right">XML</a>
-    <h1>{{ instrument.name }}</h1>
-    <div class="field">
-      <div class="field-label">PID</div>
-      <a class="field-content" href="https://hdl.handle.net/20.1000/5555">
-        https://hdl.handle.net/20.1000/5555
-      </a>
-    </div>
-    <div class="field">
-      <div class="field-label">Owners</div>
-      <div class="field-content">
-        {% for owner in instrument.owners.all %}
-          {{ owner.name }}{% if owner.ror_id %} (<a href="https://ror.org/{{ owner.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
-        {% endfor %}
+      <a href="{% url 'instrument_xml' instrument.id %}" style="float:right">XML</a>
+      <h1>{{ instrument.name }}</h1>
+      <div class="field">
+        <div class="field-label">PID</div>
+        <a class="field-content" href="https://hdl.handle.net/20.1000/5555">
+          https://hdl.handle.net/20.1000/5555
+        </a>
       </div>
-    </div>
-    <div class="field">
-      <div class="field-label">Manufacturers</div>
-      <div class="field-content">
-        {% for manufacturer in instrument.model.manufacturers.all %}
-          {{ manufacturer.name }}{% if manufacturer.ror_id %} (<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
-        {% endfor %}
+      <div class="field">
+        <div class="field-label">Owners</div>
+        <div class="field-content">
+          {% for owner in instrument.owners.all %}
+            {{ owner.name }}{% if owner.ror_id %} (<a href="https://ror.org/{{ owner.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+          {% endfor %}
         </div>
-    </div>
-    <div class="field">
-      <div class="field-label">Model name</div>
-      <div class="field-content">{{ instrument.model.name }}</div>
-    </div>
-    <div class="field">
-      <div class="field-label">Instrument types</div>
-      <div class="field-content">
-        {% for type in instrument.types.all %}
-          {{ type.name }}{% if not forloop.last %},{% endif %}
-        {% endfor %}
       </div>
-    </div>
-    <div class="field">
-      <div class="field-label">Measured variables</div>
-      <div class="field-content">
-        {% for variable in instrument.variables.all %}
-          {{ variable.name }}{% if not forloop.last %},{% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    {% if instrument.commission_date %}
       <div class="field">
-        <div class="field-label">Commission date</div>
-        <div class="field-content">{{ instrument.commission_date }}</div>
+        <div class="field-label">Manufacturers</div>
+        <div class="field-content">
+          {% for manufacturer in instrument.model.manufacturers.all %}
+            {{ manufacturer.name }}{% if manufacturer.ror_id %} (<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+          </div>
       </div>
-    {% endif %}
-    {% if instrument.decommission_date %}
       <div class="field">
-        <div class="field-label">Decommission date</div>
-        <div class="field-content">{{ instrument.decommission_date }}</div>
+        <div class="field-label">Model name</div>
+        <div class="field-content">{{ instrument.model.name }}</div>
       </div>
-    {% endif %}
-    {% if instrument.description %}
       <div class="field">
-        <div class="field-label">Description</div>
-        <div class="field-content">{{ instrument.description }}</div>
+        <div class="field-label">Instrument types</div>
+        <div class="field-content">
+          {% for type in instrument.types.all %}
+            {{ type.name }}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </div>
       </div>
-    {% endif %}
-    {% if instrument.related_identifiers %}
       <div class="field">
-        <div class="field-label">Related identifiers</div>
-        <table class="field-content">
-          <tbody>
-            {% for item in instrument.related_identifiers.all %}
-              <tr>
-                <th>{{ item.get_relation_type_display }}:</th>
-                <td>
-                  {% if item.identifier_type == 'URL' %}
-                    <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
-                  {% else %}
-                    {{ item.identifier }} ({{ item.get_identifier_type_display }})
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="field-label">Measured variables</div>
+        <div class="field-content">
+          {% for variable in instrument.variables.all %}
+            {{ variable.name }}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </div>
       </div>
-    {% endif %}
-    {% if instrument.alternate_identifiers %}
-      <div class="field">
-        <div class="field-label">Alternate identifiers</div>
-        <table class="field-content">
-          <tbody>
-            {% for item in instrument.alternate_identifiers.all %}
-              <tr>
-                <th>{{ item.get_identifier_type_display }}:</th>
-                <td>{{ item.identifier }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
+      {% if instrument.commission_date %}
+        <div class="field">
+          <div class="field-label">Commission date</div>
+          <div class="field-content">{{ instrument.commission_date }}</div>
+        </div>
+      {% endif %}
+      {% if instrument.decommission_date %}
+        <div class="field">
+          <div class="field-label">Decommission date</div>
+          <div class="field-content">{{ instrument.decommission_date }}</div>
+        </div>
+      {% endif %}
+      {% if instrument.description %}
+        <div class="field">
+          <div class="field-label">Description</div>
+          <div class="field-content">{{ instrument.description }}</div>
+        </div>
+      {% endif %}
+      {% if instrument.related_identifiers %}
+        <div class="field">
+          <div class="field-label">Related identifiers</div>
+          <table class="field-content">
+            <tbody>
+              {% for item in instrument.related_identifiers.all %}
+                <tr>
+                  <th>{{ item.get_relation_type_display }}:</th>
+                  <td>
+                    {% if item.identifier_type == 'URL' %}
+                      <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
+                    {% else %}
+                      {{ item.identifier }} ({{ item.get_identifier_type_display }})
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+      {% if instrument.alternate_identifiers %}
+        <div class="field">
+          <div class="field-label">Alternate identifiers</div>
+          <table class="field-content">
+            <tbody>
+              {% for item in instrument.alternate_identifiers.all %}
+                <tr>
+                  <th>{{ item.get_identifier_type_display }}:</th>
+                  <td>{{ item.identifier }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
     </main>
   </body>
 </html>
