@@ -6,6 +6,7 @@ admin.site.register(models.Type)
 admin.site.register(models.Variable)
 admin.site.register(models.Organization)
 admin.site.register(models.Model)
+admin.site.register(models.Person)
 
 
 class RelatedIdentifierAdminInline(admin.TabularInline):
