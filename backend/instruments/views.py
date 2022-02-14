@@ -1,7 +1,7 @@
 from http.client import HTTPResponse
 
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .models import Instrument
@@ -9,7 +9,9 @@ from .models import Instrument
 
 def instrument_html(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
-    canonical_path = reverse('instrument_html', kwargs={'instrument_uuid': instrument.uuid})
+    canonical_path = reverse(
+        "instrument_html", kwargs={"instrument_uuid": instrument.uuid}
+    )
     if request.path != canonical_path:
         return redirect(canonical_path)
     return render(request, "instruments/instrument.html", {"instrument": instrument})
@@ -17,7 +19,9 @@ def instrument_html(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
 
 def instrument_xml(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
-    canonical_path = reverse('instrument_xml', kwargs={'instrument_uuid': instrument.uuid})
+    canonical_path = reverse(
+        "instrument_xml", kwargs={"instrument_uuid": instrument.uuid}
+    )
     if request.path != canonical_path:
         return redirect(canonical_path)
     dates = []

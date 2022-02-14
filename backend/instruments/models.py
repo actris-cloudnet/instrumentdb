@@ -1,5 +1,6 @@
-from django.db import models
 import uuid
+
+from django.db import models
 
 
 class Type(models.Model):
@@ -31,6 +32,7 @@ class Model(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Person(models.Model):
     full_name = models.CharField(max_length=255)
     email_address = models.EmailField()
@@ -51,7 +53,9 @@ class Instrument(models.Model):
         blank=True,
         help_text="Technical description of the device and its capabilities.",
     )
-    contact_person = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
+    contact_person = models.ForeignKey(
+        Person, on_delete=models.PROTECT, null=True, blank=True
+    )
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
