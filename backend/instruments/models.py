@@ -1,6 +1,5 @@
-from email.mime import image
-
 from django.db import models
+import uuid
 
 
 class Type(models.Model):
@@ -42,6 +41,7 @@ class Person(models.Model):
 
 
 class Instrument(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(
         max_length=255, help_text="Name by which the instrument instance is known."
     )

@@ -4,12 +4,12 @@ from . import views
 
 urlpatterns = [
     path(
-        "instrument/<int:instrument_id>.html",
+        "instrument/<instrument_uuid>.html",
         views.instrument_html,
         name="instrument_html",
     ),
     path(
-        "instrument/<int:instrument_id>.xml",
+        "instrument/<instrument_uuid>.xml",
         views.instrument_xml,
         name="instrument_xml",
     ),

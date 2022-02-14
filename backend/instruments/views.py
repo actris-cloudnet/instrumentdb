@@ -1,18 +1,25 @@
 from http.client import HTTPResponse
 
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 
 from .models import Instrument
 
 
-def instrument_html(request: HttpRequest, instrument_id: int) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, pk=instrument_id)
+def instrument_html(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
+    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
+    canonical_path = reverse('instrument_html', kwargs={'instrument_uuid': instrument.uuid})
+    if request.path != canonical_path:
+        return redirect(canonical_path)
     return render(request, "instruments/instrument.html", {"instrument": instrument})
 
 
-def instrument_xml(request: HttpRequest, instrument_id: int) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, pk=instrument_id)
+def instrument_xml(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
+    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
+    canonical_path = reverse('instrument_xml', kwargs={'instrument_uuid': instrument.uuid})
+    if request.path != canonical_path:
+        return redirect(canonical_path)
     dates = []
     if instrument.commission_date:
         dates.append(
