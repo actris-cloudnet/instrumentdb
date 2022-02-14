@@ -15,4 +15,8 @@ server {
     location /static/ {
         alias /app/backend_static/;
     }
+
+    location /media/ {
+        alias /app/backend_media/;
+    }
 }

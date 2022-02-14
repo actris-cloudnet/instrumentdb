@@ -28,6 +28,11 @@
         font-variant: small-caps;
         margin-bottom: .25rem;
       }
+      img {
+        float: right;
+        width: 150px;
+        height: auto;
+      }
     </style>
   </head>
   <body>
@@ -35,6 +40,9 @@
       <a href="{% url 'instrument_xml' instrument.id %}" style="float:right">XML</a>
       <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
       <h1>{{ instrument.name }}</h1>
+      {% if instrument.image %}
+        <img src="/media/{{ instrument.image }}">
+      {% endif %}
       <div class="field">
         <div class="field-label">PID</div>
         <a class="field-content" href="https://hdl.handle.net/20.1000/5555">
@@ -95,7 +103,7 @@
           <div class="field-content">{{ instrument.description }}</div>
         </div>
       {% endif %}
-      {% if instrument.related_identifiers %}
+      {% if instrument.related_identifiersa.all %}
         <div class="field">
           <div class="field-label">Related identifiers</div>
           <table class="field-content">
@@ -116,7 +124,7 @@
           </table>
         </div>
       {% endif %}
-      {% if instrument.alternate_identifiers %}
+      {% if instrument.alternate_identifiers.all %}
         <div class="field">
           <div class="field-label">Alternate identifiers</div>
           <table class="field-content">

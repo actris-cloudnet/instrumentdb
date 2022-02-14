@@ -1,3 +1,4 @@
+from email.mime import image
 from django.db import models
 
 
@@ -43,11 +44,12 @@ class Instrument(models.Model):
     )
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
+    image = models.ImageField(null=True)
     types = models.ManyToManyField(
-        Type, help_text="Classification of the type of the instrument."
+        Type, help_text="Classification of the type of the instrument.", blank=True
     )
     variables = models.ManyToManyField(
-        Variable, help_text="The variable(s) that this instrument measures or observes."
+        Variable, help_text="The variable(s) that this instrument measures or observes.", blank=True
     )
 
     def __str__(self) -> str:
