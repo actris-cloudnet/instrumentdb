@@ -104,7 +104,7 @@
           <div class="field-label">Contact</div>
           <div class="field-content">
             {{ instrument.contact_person.full_name }}
-            (<a href="mailto:{{ instrument.contact_person.email_address }}">Email</a>{% if instrument.contact_person.orcid_id %}, <a href="{{ instrument.contact_person.orcid_id }}">ORCiD</a>{% endif %})
+            (<a href="mailto:{{ instrument.contact_person.email_address }}">Email</a>{% if instrument.contact_person.orcid_id %}, <a href="{{ instrument.contact_person.orcid_id }}" target="_blank">ORCiD</a>{% endif %})
           </div>
         </div>
       {% endif %}
