@@ -37,7 +37,7 @@
   </head>
   <body>
     <main>
-      <a href="{% url 'instrument_xml' instrument.id %}" style="float:right">XML</a>
+      <a href="{% url 'instrument_xml' instrument.uuid %}" style="float:right">XML</a>
       <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
       <h1>{{ instrument.name }}</h1>
       {% if instrument.image %}
