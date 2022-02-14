@@ -18,3 +18,9 @@ docker-compose exec django ./manage.py createsuperuser
 ```
 
 Log in and create some instruments in <http://localhost:8000/admin>.
+
+Install [pre-commit](https://pre-commit.com/) hooks:
+
+```sh
+pre-commit install
+```
