@@ -8,7 +8,7 @@ persistent identifiers (PIDs) for them according to [PIDINST](https://github.com
 Start application:
 
 ```sh
-docker-composer up
+docker-compose up
 ```
 
 Create admin user:
