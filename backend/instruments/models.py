@@ -44,7 +44,7 @@ class Instrument(models.Model):
     )
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, blank=True)
     types = models.ManyToManyField(
         Type, help_text="Classification of the type of the instrument.", blank=True
     )
