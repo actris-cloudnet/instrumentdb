@@ -41,7 +41,9 @@
       <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
       <h1>{{ instrument.name }}</h1>
       {% if instrument.image %}
-        <img src="/media/{{ instrument.image }}">
+        <a href="/media/{{ instrument.image }}" target="_blank">
+          <img src="/media/{{ instrument.image }}">
+        </a>
       {% endif %}
       <div class="field">
         <div class="field-label">PID</div>
