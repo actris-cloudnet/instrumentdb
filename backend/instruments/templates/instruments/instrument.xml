@@ -49,7 +49,7 @@
   {% if instrument.description %}
     <description>{{ instrument.description }}</description>
   {% endif %}
-  {% if instrument.related_identifiers %}
+  {% if instrument.related_identifiers.all %}
     <relatedIdentifiers>
       {% for item in instrument.related_identifiers.all %}
         <relatedIdentifier relatedIdentifierType="{{ item.identifier_type }}" relationType="{{ item.relation_type }}">
@@ -58,7 +58,7 @@
       {% endfor %}
     </relatedIdentifiers>
   {% endif %}
-  {% if instrument.alternate_identifiers %}
+  {% if instrument.alternate_identifiers.all %}
     <alternateIdentifiers>
       {% for item in instrument.alternate_identifiers.all %}
         <alternateIdentifier alternateIdentifierType="{{ item.identifier_type }}">
