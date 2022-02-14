@@ -1,4 +1,5 @@
 from email.mime import image
+
 from django.db import models
 
 
@@ -49,7 +50,9 @@ class Instrument(models.Model):
         Type, help_text="Classification of the type of the instrument.", blank=True
     )
     variables = models.ManyToManyField(
-        Variable, help_text="The variable(s) that this instrument measures or observes.", blank=True
+        Variable,
+        help_text="The variable(s) that this instrument measures or observes.",
+        blank=True,
     )
 
     def __str__(self) -> str:

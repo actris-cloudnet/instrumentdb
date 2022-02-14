@@ -6,18 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('instruments', '0002_instrument_image_alter_instrument_types_and_more'),
+        ("instruments", "0002_instrument_image_alter_instrument_types_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='instrument',
-            name='types',
-            field=models.ManyToManyField(blank=True, help_text='Classification of the type of the instrument.', to='instruments.Type'),
+            model_name="instrument",
+            name="types",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="Classification of the type of the instrument.",
+                to="instruments.Type",
+            ),
         ),
         migrations.AlterField(
-            model_name='instrument',
-            name='variables',
-            field=models.ManyToManyField(blank=True, help_text='The variable(s) that this instrument measures or observes.', to='instruments.Variable'),
+            model_name="instrument",
+            name="variables",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="The variable(s) that this instrument measures or observes.",
+                to="instruments.Variable",
+            ),
         ),
     ]
