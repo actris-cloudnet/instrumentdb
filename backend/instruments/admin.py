@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 
 from . import models
 
@@ -19,6 +20,8 @@ class AlternateIdentifierAdminInline(admin.TabularInline):
 
 class InstrumentAdmin(admin.ModelAdmin):
     inlines = (RelatedIdentifierAdminInline, AlternateIdentifierAdminInline)
+    def view_on_site(self, obj):
+        return reverse('instrument_html', kwargs={'instrument_uuid': obj.uuid})
 
 
 admin.site.register(models.Instrument, InstrumentAdmin)
