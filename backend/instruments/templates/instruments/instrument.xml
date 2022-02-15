@@ -2,7 +2,7 @@
 <instrument>
   <identifier identifierType="Handle">20.1000/5555</identifier>
   <schemaVersion>1.0</schemaVersion>
-  <landingPage>{{ current_url }}</landingPage>
+  <landingPage>{{ landing_page }}</landingPage>
   <name>{{ instrument.name }}</name>
   <owners>
     {% for owner in instrument.owners.all %}

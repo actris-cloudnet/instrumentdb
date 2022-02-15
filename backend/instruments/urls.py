@@ -13,4 +13,9 @@ urlpatterns = [
         views.instrument_xml,
         name="instrument_xml",
     ),
+    path(
+        "instrument/<instrument_uuid>.json",
+        views.instrument_json,
+        name="instrument_json",
+    ),
 ]
