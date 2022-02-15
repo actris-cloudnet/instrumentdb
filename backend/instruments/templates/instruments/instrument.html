@@ -84,22 +84,26 @@
         <div class="field-label">Model name</div>
         <div class="field-content">{{ instrument.model.name }}</div>
       </div>
-      <div class="field">
-        <div class="field-label">Instrument types</div>
-        <div class="field-content">
-          {% for type in instrument.types.all %}
-            {{ type.name }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
+      {% if instrument.types.all %}
+        <div class="field">
+          <div class="field-label">Instrument types</div>
+          <div class="field-content">
+            {% for type in instrument.types.all %}
+              {{ type.name }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="field-label">Measured variables</div>
-        <div class="field-content">
-          {% for variable in instrument.variables.all %}
-            {{ variable.name }}{% if not forloop.last %},{% endif %}
-          {% endfor %}
+      {% endif %}
+      {% if instrument.variables.all %}
+        <div class="field">
+          <div class="field-label">Measured variables</div>
+          <div class="field-content">
+            {% for variable in instrument.variables.all %}
+              {{ variable.name }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
+      {% endif %}
       {% if instrument.contact_person %}
         <div class="field">
           <div class="field-label">Contact</div>

@@ -74,60 +74,69 @@ def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     landing_page = request.build_absolute_uri(
         reverse("instrument_html", kwargs={"instrument_uuid": instrument.uuid})
     )
+    result = {
+        "Identifier": {
+            "identifierValue": "20.1000/5555",
+            "identifierType": "Handle",
+        },
+        "LandingPage": landing_page,
+        "Name": instrument.name,
+        "Owners": [
+            _organization_json(owner, "owner") for owner in instrument.owners.all()
+        ],
+        "Manufacturers": [
+            _organization_json(owner, "manufacturer")
+            for owner in instrument.model.manufacturers.all()
+        ],
+        "Model": {
+            "modelName": instrument.model.name,
+        },
+    }
+    if description := instrument.description:
+        result["Description"] = description
+    if types := instrument.types.all():
+        result["InstrumentType"] = [type.name for type in types]
+    if variables := instrument.variables.all():
+        result["MeasuredVariables"] = [
+            {"measuredVariable": {"variableMeasured": variable.name}}
+            for variable in variables
+        ]
     dates = []
-    if instrument.commission_date:
+    if date := instrument.commission_date:
         dates.append(
             {
                 "date": {
-                    "date": instrument.commission_date.strftime("%Y-%m-%d"),
+                    "date": date.strftime("%Y-%m-%d"),
                     "dateType": "Commissioned",
                 }
             }
         )
-    if instrument.decommission_date:
+    if date := instrument.decommission_date:
         dates.append(
             {
                 "date": {
-                    "date": instrument.decommission_date.strftime("%Y-%m-%d"),
+                    "date": date.strftime("%Y-%m-%d"),
                     "dateType": "DeCommissioned",
                 }
             }
         )
-    return JsonResponse(
-        {
-            "Identifier": {
-                "identifierValue": "20.1000/5555",
-                "identifierType": "Handle",
-            },
-            "LandingPage": landing_page,
-            "Name": instrument.name,
-            "Owners": [
-                _organization_json(owner, "owner") for owner in instrument.owners.all()
-            ],
-            "Manufacturers": [
-                _organization_json(owner, "manufacturer")
-                for owner in instrument.model.manufacturers.all()
-            ],
-            "Model": {
-                "modelName": instrument.model.name,
-            },
-            "Description": instrument.description,
-            "InstrumentType": [type.name for type in instrument.types.all()],
-            "MeasuredVariables": [
-                {"measuredVariable": {"variableMeasured": variable.name}}
-                for variable in instrument.variables.all()
-            ],
-            "Dates": dates,
-            "AlternateIdentifiers": [
+    if dates:
+        result["Dates"] = dates
+    if identifiers := instrument.alternate_identifiers.all():
+        result["AlternateIdentifiers"] = (
+            [
                 {
                     "alternateIdentifier": {
                         "alternateIdentifierValue": identifier.identifier,
                         "alternateIdentifierType": identifier.identifier_type,
                     }
                 }
-                for identifier in instrument.alternate_identifiers.all()
+                for identifier in identifiers
             ],
-            "RelatedIdentifiers": [
+        )
+    if identifiers := instrument.related_identifiers.all():
+        result["RelatedIdentifiers"] = (
+            [
                 {
                     "relatedIdentifier": {
                         "relatedIdentifierValue": identifier.identifier,
@@ -135,7 +144,7 @@ def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
                         "relationType": identifier.relation_type,
                     }
                 }
-                for identifier in instrument.related_identifiers.all()
+                for identifier in identifiers
             ],
-        }
-    )
+        )
+    return JsonResponse(result)

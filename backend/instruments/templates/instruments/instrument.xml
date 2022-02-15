@@ -27,18 +27,22 @@
   <model>
     <modelName>{{ instrument.model.name }}</modelName>
   </model>
-  <instrumentTypes>
-    {% for type in instrument.types.all %}
-      <instrumentType>
-        <instrumentTypeName>{{ type.name }}</instrumentTypeName>
-      </instrumentType>
-    {% endfor %}
-  </instrumentTypes>
-  <measuredVariables>
-    {% for variable in instrument.variables.all %}
-      <measuredVariable>{{ variable.name }}</measuredVariable>
-    {% endfor %}
-  </measuredVariables>
+  {% if instrument.types.all %}
+    <instrumentTypes>
+      {% for type in instrument.types.all %}
+        <instrumentType>
+          <instrumentTypeName>{{ type.name }}</instrumentTypeName>
+        </instrumentType>
+      {% endfor %}
+    </instrumentTypes>
+  {% endif %}
+  {% if instrument.variables.all %}
+    <measuredVariables>
+      {% for variable in instrument.variables.all %}
+        <measuredVariable>{{ variable.name }}</measuredVariable>
+      {% endfor %}
+    </measuredVariables>
+  {% endif %}
   {% if dates %}
     <dates>
       {% for date in dates %}
