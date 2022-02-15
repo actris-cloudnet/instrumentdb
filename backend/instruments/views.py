@@ -132,7 +132,7 @@ def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
                     "relatedIdentifier": {
                         "relatedIdentifierValue": identifier.identifier,
                         "relatedIdentifierType": identifier.identifier_type,
-                        "relationType": identifier.relation_name,
+                        "relationType": identifier.relation_type,
                     }
                 }
                 for identifier in instrument.related_identifiers.all()
