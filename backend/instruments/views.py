@@ -123,28 +123,24 @@ def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     if dates:
         result["Dates"] = dates
     if identifiers := instrument.alternate_identifiers.all():
-        result["AlternateIdentifiers"] = (
-            [
-                {
-                    "alternateIdentifier": {
-                        "alternateIdentifierValue": identifier.identifier,
-                        "alternateIdentifierType": identifier.identifier_type,
-                    }
+        result["AlternateIdentifiers"] = [
+            {
+                "alternateIdentifier": {
+                    "alternateIdentifierValue": identifier.identifier,
+                    "alternateIdentifierType": identifier.identifier_type,
                 }
-                for identifier in identifiers
-            ],
-        )
+            }
+            for identifier in identifiers
+        ]
     if identifiers := instrument.related_identifiers.all():
-        result["RelatedIdentifiers"] = (
-            [
-                {
-                    "relatedIdentifier": {
-                        "relatedIdentifierValue": identifier.identifier,
-                        "relatedIdentifierType": identifier.identifier_type,
-                        "relationType": identifier.relation_type,
-                    }
+        result["RelatedIdentifiers"] = [
+            {
+                "relatedIdentifier": {
+                    "relatedIdentifierValue": identifier.identifier,
+                    "relatedIdentifierType": identifier.identifier_type,
+                    "relationType": identifier.relation_type,
                 }
-                for identifier in identifiers
-            ],
-        )
+            }
+            for identifier in identifiers
+        ]
     return JsonResponse(result)
