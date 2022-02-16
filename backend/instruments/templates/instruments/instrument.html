@@ -1,3 +1,4 @@
+{% load thumbnail %}
 <!doctype html>
 <html>
   <head>
@@ -42,8 +43,6 @@
       }
       img {
         float: right;
-        width: 150px;
-        height: auto;
       }
     </style>
   </head>
@@ -55,7 +54,9 @@
       <h1>{{ instrument.name }}</h1>
       {% if instrument.image %}
         <a href="/media/{{ instrument.image }}" target="_blank">
-          <img src="/media/{{ instrument.image }}">
+          {% thumbnail instrument.image "150" as image %}
+            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+          {% endthumbnail %}
         </a>
       {% endif %}
       <div class="field">
