@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import reverse
+from sorl.thumbnail.admin import AdminImageMixin
 
 from . import models
 
@@ -18,7 +19,7 @@ class AlternateIdentifierAdminInline(admin.TabularInline):
     model = models.AlternateIdentifier
 
 
-class InstrumentAdmin(admin.ModelAdmin):
+class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     inlines = (RelatedIdentifierAdminInline, AlternateIdentifierAdminInline)
 
     def view_on_site(self, obj):
