@@ -7,26 +7,11 @@ from django.urls import reverse
 from .models import Instrument, Organization
 
 
-def instrument_html(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
-    canonical_path = reverse(
-        "instrument_html", kwargs={"instrument_uuid": instrument.uuid}
-    )
-    if request.path != canonical_path:
-        return redirect(canonical_path)
+def _instrument_html(request: HttpRequest, instrument: Instrument) -> HttpResponse:
     return render(request, "instruments/instrument.html", {"instrument": instrument})
 
 
-def instrument_xml(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
-    canonical_path = reverse(
-        "instrument_xml", kwargs={"instrument_uuid": instrument.uuid}
-    )
-    if request.path != canonical_path:
-        return redirect(canonical_path)
-    landing_page = request.build_absolute_uri(
-        reverse("instrument_html", kwargs={"instrument_uuid": instrument.uuid})
-    )
+def _instrument_xml(request: HttpRequest, instrument: Instrument) -> HttpResponse:
     dates = []
     if instrument.commission_date:
         dates.append(
@@ -47,8 +32,8 @@ def instrument_xml(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
         "instruments/instrument.xml",
         {
             "instrument": instrument,
+            "landing_page": instrument.get_landing_page(request),
             "dates": dates,
-            "landing_page": landing_page,
         },
         "application/xml",
     )
@@ -64,22 +49,13 @@ def _organization_json(organization: Organization, prefix: str):
     return {prefix: obj}
 
 
-def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
-    canonical_path = reverse(
-        "instrument_json", kwargs={"instrument_uuid": instrument.uuid}
-    )
-    if request.path != canonical_path:
-        return redirect(canonical_path)
-    landing_page = request.build_absolute_uri(
-        reverse("instrument_html", kwargs={"instrument_uuid": instrument.uuid})
-    )
+def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpResponse:
     result = {
         "Identifier": {
             "identifierValue": "20.1000/5555",
             "identifierType": "Handle",
         },
-        "LandingPage": landing_page,
+        "LandingPage": instrument.get_landing_page(request),
         "Name": instrument.name,
         "Owners": [
             _organization_json(owner, "owner") for owner in instrument.owners.all()
@@ -144,3 +120,28 @@ def instrument_json(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
             for identifier in identifiers
         ]
     return JsonResponse(result)
+
+
+def instrument(
+    request: HttpRequest, instrument_uuid: str, output_format: str
+) -> HttpResponse:
+    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
+
+    # A single UUID has multiple textual representations with differences in
+    # dashes and letter case. Let's accept the different representations but
+    # redirect the user to the URL with canonical form.
+    canonical_path = reverse(
+        request.resolver_match.view_name,
+        kwargs={"instrument_uuid": instrument.uuid, "output_format": output_format},
+    )
+    if request.path != canonical_path:
+        return redirect(canonical_path, permanent=True)
+
+    if output_format == "html":
+        return _instrument_html(request, instrument)
+    if output_format == "json":
+        return _instrument_json(request, instrument)
+    if output_format == "xml":
+        return _instrument_xml(request, instrument)
+
+    return HttpResponse("invalid format", status_code=400)

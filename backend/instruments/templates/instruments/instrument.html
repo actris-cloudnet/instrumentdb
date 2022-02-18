@@ -48,8 +48,8 @@
   </head>
   <body>
     <main>
-      <a href="{% url 'instrument_xml' instrument.uuid %}" style="float:right">XML</a>
-      <a href="{% url 'instrument_json' instrument.uuid %}" style="float:right;margin-right:.5rem">JSON</a>
+      <a href="{% url 'instrument' instrument.uuid 'xml' %}" style="float:right">XML</a>
+      <a href="{% url 'instrument' instrument.uuid 'json' %}" style="float:right;margin-right:.5rem">JSON</a>
       <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
       <h1>{{ instrument.name }}</h1>
       {% if instrument.image %}

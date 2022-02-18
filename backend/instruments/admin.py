@@ -23,7 +23,9 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     inlines = (RelatedIdentifierAdminInline, AlternateIdentifierAdminInline)
 
     def view_on_site(self, obj):
-        return reverse("instrument_html", kwargs={"instrument_uuid": obj.uuid})
+        return reverse(
+            "instrument", kwargs={"instrument_uuid": obj.uuid, "output_format": "html"}
+        )
 
 
 admin.site.register(models.Instrument, InstrumentAdmin)

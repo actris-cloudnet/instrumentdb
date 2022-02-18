@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from django.http import HttpRequest
+from django.urls import reverse
 from sorl.thumbnail import ImageField
 
 
@@ -68,6 +70,14 @@ class Instrument(models.Model):
         help_text="The variable(s) that this instrument measures or observes.",
         blank=True,
     )
+
+    def get_landing_page(self, request: HttpRequest) -> str:
+        return request.build_absolute_uri(
+            reverse(
+                "instrument",
+                kwargs={"instrument_uuid": self.uuid, "output_format": "html"},
+            )
+        )
 
     def __str__(self) -> str:
         return self.name
