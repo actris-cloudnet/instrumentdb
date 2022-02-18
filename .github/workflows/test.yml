@@ -1,0 +1,17 @@
+name: Test
+on: [push]
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: docker-compose build
+
+      - name: Test
+        run: docker-compose run django ./manage.py test
