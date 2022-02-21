@@ -1,6 +1,4 @@
-from http.client import HTTPResponse
-
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -144,4 +142,4 @@ def instrument(
     if output_format == "xml":
         return _instrument_xml(request, instrument)
 
-    return HttpResponse("invalid format", status_code=400)
+    raise Http404()
