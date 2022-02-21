@@ -69,7 +69,8 @@
         <div class="field-label">Owners</div>
         <div class="field-content">
           {% for owner in instrument.owners.all %}
-            {{ owner.name }}{% if owner.ror_id %} (<a href="https://ror.org/{{ owner.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+            {{ owner.name }}
+            {% if owner.ror_id %}(<a href="https://ror.org/{{ owner.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
         </div>
       </div>
@@ -77,7 +78,8 @@
         <div class="field-label">Manufacturers</div>
         <div class="field-content">
           {% for manufacturer in instrument.model.manufacturers.all %}
-            {{ manufacturer.name }}{% if manufacturer.ror_id %} (<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+            {{ manufacturer.name }}
+            {% if manufacturer.ror_id %}(<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
           </div>
       </div>
