@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +25,13 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = os.environ.get("DEBUG", "0").lower() in ["y", "yes", "t", "true", "on", "1"]
 
-ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
+PUBLIC_URL = os.environ["PUBLIC_URL"]
 
-CSRF_TRUSTED_ORIGINS = os.environ["TRUSTED_ORIGINS"].split(",")
+ALLOWED_HOSTS = [urlparse(PUBLIC_URL).hostname]
+
+CSRF_TRUSTED_ORIGINS = [PUBLIC_URL]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -76,16 +81,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASE_SERVICE = os.environ["DATABASE_SERVICE"].upper()
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ["DATABASE_NAME"],
         "USER": os.environ["DATABASE_USER"],
         "PASSWORD": os.environ["DATABASE_PASSWORD"],
-        "HOST": os.environ[DATABASE_SERVICE + "_SERVICE_HOST"],
-        "PORT": os.environ[DATABASE_SERVICE + "_SERVICE_PORT"],
+        "HOST": os.environ["DATABASE_HOST"],
+        "PORT": os.environ["DATABASE_PORT"],
     }
 }
 

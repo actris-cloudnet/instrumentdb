@@ -8,6 +8,8 @@ services:
     volumes:
       - ./backend:/app
     environment:
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
       - DATABASE_NAME=cfs
       - DATABASE_USER=AzureDiamond
       - DATABASE_PASSWORD=hunter2
@@ -16,8 +18,7 @@ services:
       - DATABASE_SERVICE_PORT=5432
       - SECRET_KEY=donutsteel
       - DEBUG=1
-      - ALLOWED_HOSTS=*
-      - TRUSTED_ORIGINS=http://localhost
+      - PUBLIC_URL=http://localhost
     depends_on:
       - database
   database:
