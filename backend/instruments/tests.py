@@ -1,6 +1,14 @@
+import doctest
+
 from django.test import Client, TestCase
 
+from . import fields
 from .models import Instrument, Model, Organization
+
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(fields))
+    return tests
 
 
 class SimpleTest(TestCase):
