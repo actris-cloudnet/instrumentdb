@@ -1,4 +1,5 @@
 import uuid
+from enum import unique
 
 from django.db import models
 from django.http import HttpRequest
@@ -24,7 +25,7 @@ class Variable(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
-    ror_id = RorIdField(null=True, blank=True, verbose_name="ROR ID")
+    ror_id = RorIdField(null=True, blank=True, verbose_name="ROR ID", unique=True)
 
     def __str__(self) -> str:
         return self.name
@@ -41,7 +42,7 @@ class Model(models.Model):
 class Person(models.Model):
     full_name = models.CharField(max_length=255)
     email_address = models.EmailField()
-    orcid_id = OrcidIdField(null=True, blank=True, verbose_name="ORCID iD")
+    orcid_id = OrcidIdField(null=True, blank=True, verbose_name="ORCID iD", unique=True)
 
     def __str__(self) -> str:
         return self.full_name
