@@ -26,6 +26,12 @@ def parse_orcid_id(value: str) -> str:
     '0000-0001-5109-3700'
     >>> parse_orcid_id('000000021694233X')
     '0000-0002-1694-233X'
+    >>> parse_orcid_id('000000021694233x')
+    '0000-0002-1694-233X'
+    >>> parse_orcid_id('HTTP://ORCID.ORG/0000-0002-1694-233X')
+    '0000-0002-1694-233X'
+    >>> parse_orcid_id('https://orcid.org/ 0000-0002-1694-233X')
+    '0000-0002-1694-233X'
     >>> parse_orcid_id('2-1694-233X')
     Traceback (most recent call last):
         ...
@@ -36,12 +42,14 @@ def parse_orcid_id(value: str) -> str:
     django.core.exceptions.ValidationError: ['Invalid check digit.']
     """
     m = re.fullmatch(
-        r"(?:(?:https?://)?(?:www\.)?orcid.org/)?(\d{4})-?(\d{4})-?(\d{4})-?(\d{3})([\dX])",
+        r"(?:(?:https?://)?(?:www\.)?orcid.org/)?\s*(\d{4})-?(\d{4})-?(\d{4})-?(\d{3})([\dX])",
         value,
+        re.I,
     )
     if m is None:
         raise ValidationError("Invalid structure.")
     aaaa, bbbb, cccc, ddd, e = m.groups()
+    e = e.upper()
     if generate_check_digit(aaaa + bbbb + cccc + ddd) != e:
         raise ValidationError("Invalid check digit.")
     return f"{aaaa}-{bbbb}-{cccc}-{ddd}{e}"
@@ -57,6 +65,10 @@ def parse_ror_id(value: str) -> str:
     '05hppb561'
     >>> parse_ror_id('http://ror.org/05hppb561')
     '05hppb561'
+    >>> parse_ror_id('HTTP://ROR.ORG/05HPPB561')
+    '05hppb561'
+    >>> parse_ror_id('http://ror.org/ 05hppb561')
+    '05hppb561'
     >>> parse_ror_id('05hppb500')
     Traceback (most recent call last):
         ...
@@ -67,7 +79,9 @@ def parse_ror_id(value: str) -> str:
     django.core.exceptions.ValidationError: ['Invalid structure.']
     """
     m = re.fullmatch(
-        r"(?:(?:https?://)?(?:www\.)?ror.org/)?0(?P<n>.{6})(?P<checksum>.{2})", value
+        r"(?:(?:https?://)?(?:www\.)?ror.org/)?\s*0(?P<n>.{6})(?P<checksum>.{2})",
+        value,
+        re.I,
     )
     if m is None:
         raise ValidationError("Invalid structure.")
@@ -75,12 +89,12 @@ def parse_ror_id(value: str) -> str:
     checksum = str(98 - ((n * 100) % 97)).zfill(2)
     if checksum != m["checksum"]:
         raise ValidationError(f"Invalid checksum.")
-    return "0" + m["n"] + m["checksum"]
+    return "0" + m["n"].lower() + m["checksum"]
 
 
 class OrcidIdField(CharField):
     def __init__(self, *args, **kwargs):
-        kwargs["max_length"] = len("xxxx-xxxx-xxxx-xxxx")
+        kwargs["max_length"] = len("aaaa-bbbb-cccc-ddde")
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):
@@ -96,7 +110,7 @@ class OrcidIdField(CharField):
 
 class RorIdField(CharField):
     def __init__(self, *args, **kwargs):
-        kwargs["max_length"] = len("0xxxxxxxx")
+        kwargs["max_length"] = len("0aaaaaabb")
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):
