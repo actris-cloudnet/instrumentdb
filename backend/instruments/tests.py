@@ -1,4 +1,5 @@
 import doctest
+from pathlib import Path
 
 from django.test import Client, TestCase
 
@@ -60,35 +61,7 @@ class SimpleTest(TestCase):
     def test_xml(self):
         response = self.client.get(f"{self.endpoint}.xml")
         self.assertEquals(response.status_code, 200)
-        expected_xml = """
-        <instrument>
-        <identifier identifierType="Handle">20.1000/5555</identifier>
-        <schemaVersion>1.0</schemaVersion>
-        <landingPage>http://testserver/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6.html</landingPage>
-        <name>Test instrument</name>
-        <owners>
-        <owner>
-        <ownerName>Test company</ownerName>
-        </owner>
-        </owners>
-        <manufacturers>
-        <manufacturer>
-        <manufacturerName>Test company</manufacturerName>
-        </manufacturer>
-        </manufacturers>
-        <model>
-        <modelName>Test model</modelName>
-        </model>
-        <instrumentTypes>
-        <instrumentType>
-        <instrumentTypeName>Test type</instrumentTypeName>
-        </instrumentType>
-        </instrumentTypes>
-        <measuredVariables>
-        <measuredVariable>Test variable</measuredVariable>
-        </measuredVariables>
-        </instrument>
-        """
+        expected_xml = Path("instruments/test_data/response.xml").read_text()
         self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
 
     def test_json(self):
