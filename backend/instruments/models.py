@@ -35,6 +35,15 @@ class Model(models.Model):
     name = models.CharField(max_length=255)
     manufacturers = models.ManyToManyField(Organization)
 
+    types = models.ManyToManyField(
+        Type, help_text="Classification of the type of the instrument.", blank=True
+    )
+    variables = models.ManyToManyField(
+        Variable,
+        help_text="The variable(s) that this instrument measures or observes.",
+        blank=True,
+    )
+
     def __str__(self) -> str:
         return self.name
 
@@ -65,14 +74,6 @@ class Instrument(models.Model):
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
     image = ImageField(null=True, blank=True)
-    types = models.ManyToManyField(
-        Type, help_text="Classification of the type of the instrument.", blank=True
-    )
-    variables = models.ManyToManyField(
-        Variable,
-        help_text="The variable(s) that this instrument measures or observes.",
-        blank=True,
-    )
 
     def get_landing_page(self, request: HttpRequest) -> str:
         return request.build_absolute_uri(

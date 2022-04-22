@@ -68,9 +68,9 @@ def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpRespon
     }
     if description := instrument.description:
         result["Description"] = description
-    if types := instrument.types.all():
+    if types := instrument.model.types.all():
         result["InstrumentType"] = [type.name for type in types]
-    if variables := instrument.variables.all():
+    if variables := instrument.model.variables.all():
         result["MeasuredVariables"] = [
             {"measuredVariable": {"variableMeasured": variable.name}}
             for variable in variables
