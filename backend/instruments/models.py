@@ -1,5 +1,4 @@
 import uuid
-from enum import unique
 
 from django.db import models
 from django.http import HttpRequest

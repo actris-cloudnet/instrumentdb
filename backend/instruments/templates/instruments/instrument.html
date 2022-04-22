@@ -1,6 +1,6 @@
 {% load thumbnail %}
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +55,7 @@
       {% if instrument.image %}
         <a href="/media/{{ instrument.image }}" target="_blank">
           {% thumbnail instrument.image "150" as image %}
-            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
           {% endthumbnail %}
         </a>
       {% endif %}
