@@ -5,32 +5,32 @@ from django.urls import reverse
 from .models import Instrument, Organization
 
 
-def _instrument_html(request: HttpRequest, instrument: Instrument) -> HttpResponse:
-    return render(request, "instruments/instrument.html", {"instrument": instrument})
+def _instrument_html(request: HttpRequest, instru: Instrument) -> HttpResponse:
+    return render(request, "instruments/instrument.html", {"instrument": instru})
 
 
-def _instrument_xml(request: HttpRequest, instrument: Instrument) -> HttpResponse:
+def _instrument_xml(request: HttpRequest, instru: Instrument) -> HttpResponse:
     dates = []
-    if instrument.commission_date:
+    if instru.commission_date:
         dates.append(
             {
                 "type": "Commissioned",
-                "date": instrument.commission_date.strftime("%Y-%m-%d"),
+                "date": instru.commission_date.strftime("%Y-%m-%d"),
             }
         )
-    if instrument.decommission_date:
+    if instru.decommission_date:
         dates.append(
             {
                 "type": "DeCommissioned",
-                "date": instrument.decommission_date.strftime("%Y-%m-%d"),
+                "date": instru.decommission_date.strftime("%Y-%m-%d"),
             }
         )
     return render(
         request,
         "instruments/instrument.xml",
         {
-            "instrument": instrument,
-            "landing_page": instrument.get_landing_page(request),
+            "instrument": instru,
+            "landing_page": instru.get_landing_page(request),
             "dates": dates,
         },
         "application/xml",
@@ -47,36 +47,34 @@ def _organization_json(organization: Organization, prefix: str):
     return {prefix: obj}
 
 
-def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpResponse:
+def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
     result = {
         "Identifier": {
             "identifierValue": "20.1000/5555",
             "identifierType": "Handle",
         },
-        "LandingPage": instrument.get_landing_page(request),
-        "Name": instrument.name,
-        "Owners": [
-            _organization_json(owner, "owner") for owner in instrument.owners.all()
-        ],
+        "LandingPage": instru.get_landing_page(request),
+        "Name": instru.name,
+        "Owners": [_organization_json(owner, "owner") for owner in instru.owners.all()],
         "Manufacturers": [
             _organization_json(owner, "manufacturer")
-            for owner in instrument.model.manufacturers.all()
+            for owner in instru.model.manufacturers.all()
         ],
         "Model": {
-            "modelName": instrument.model.name,
+            "modelName": instru.model.name,
         },
     }
-    if description := instrument.description:
+    if description := instru.description:
         result["Description"] = description
-    if types := instrument.types.all():
+    if types := instru.model.types.all():
         result["InstrumentType"] = [type.name for type in types]
-    if variables := instrument.variables.all():
+    if variables := instru.model.variables.all():
         result["MeasuredVariables"] = [
             {"measuredVariable": {"variableMeasured": variable.name}}
             for variable in variables
         ]
     dates = []
-    if date := instrument.commission_date:
+    if date := instru.commission_date:
         dates.append(
             {
                 "date": {
@@ -85,7 +83,7 @@ def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpRespon
                 }
             }
         )
-    if date := instrument.decommission_date:
+    if date := instru.decommission_date:
         dates.append(
             {
                 "date": {
@@ -96,7 +94,7 @@ def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpRespon
         )
     if dates:
         result["Dates"] = dates
-    if identifiers := instrument.alternate_identifiers.all():
+    if identifiers := instru.alternate_identifiers.all():
         result["AlternateIdentifiers"] = [
             {
                 "alternateIdentifier": {
@@ -106,7 +104,7 @@ def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpRespon
             }
             for identifier in identifiers
         ]
-    if identifiers := instrument.related_identifiers.all():
+    if identifiers := instru.related_identifiers.all():
         result["RelatedIdentifiers"] = [
             {
                 "relatedIdentifier": {
@@ -123,23 +121,23 @@ def _instrument_json(request: HttpRequest, instrument: Instrument) -> HttpRespon
 def instrument(
     request: HttpRequest, instrument_uuid: str, output_format: str
 ) -> HttpResponse:
-    instrument = get_object_or_404(Instrument, uuid=instrument_uuid)
+    instru = get_object_or_404(Instrument, uuid=instrument_uuid)
 
     # A single UUID has multiple textual representations with differences in
     # dashes and letter case. Let's accept the different representations but
     # redirect the user to the URL with canonical form.
     canonical_path = reverse(
         request.resolver_match.view_name,
-        kwargs={"instrument_uuid": instrument.uuid, "output_format": output_format},
+        kwargs={"instrument_uuid": instru.uuid, "output_format": output_format},
     )
     if request.path != canonical_path:
         return redirect(canonical_path, permanent=True)
 
     if output_format == "html":
-        return _instrument_html(request, instrument)
+        return _instrument_html(request, instru)
     if output_format == "json":
-        return _instrument_json(request, instrument)
+        return _instrument_json(request, instru)
     if output_format == "xml":
-        return _instrument_xml(request, instrument)
+        return _instrument_xml(request, instru)
 
     raise Http404()

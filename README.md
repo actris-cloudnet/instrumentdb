@@ -8,13 +8,13 @@ persistent identifiers (PIDs) for them according to [PIDINST](https://github.com
 Start application:
 
 ```sh
-docker-compose up
+docker compose up
 ```
 
 Create admin user:
 
 ```sh
-docker-compose exec django ./manage.py createsuperuser
+docker compose exec django ./manage.py createsuperuser
 ```
 
 Log in and create some instruments in <http://localhost:8000/admin>.

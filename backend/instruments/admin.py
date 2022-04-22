@@ -22,7 +22,8 @@ class AlternateIdentifierAdminInline(admin.TabularInline):
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     inlines = (RelatedIdentifierAdminInline, AlternateIdentifierAdminInline)
 
-    def view_on_site(self, obj):
+    @staticmethod
+    def view_on_site(obj):
         return reverse(
             "instrument", kwargs={"instrument_uuid": obj.uuid, "output_format": "html"}
         )

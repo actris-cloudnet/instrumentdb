@@ -27,18 +27,18 @@
   <model>
     <modelName>{{ instrument.model.name }}</modelName>
   </model>
-  {% if instrument.types.all %}
+  {% if instrument.model.types.all %}
     <instrumentTypes>
-      {% for type in instrument.types.all %}
+      {% for type in instrument.model.types.all %}
         <instrumentType>
           <instrumentTypeName>{{ type.name }}</instrumentTypeName>
         </instrumentType>
       {% endfor %}
     </instrumentTypes>
   {% endif %}
-  {% if instrument.variables.all %}
+  {% if instrument.model.variables.all %}
     <measuredVariables>
-      {% for variable in instrument.variables.all %}
+      {% for variable in instrument.model.variables.all %}
         <measuredVariable>{{ variable.name }}</measuredVariable>
       {% endfor %}
     </measuredVariables>

@@ -1,6 +1,6 @@
 {% load thumbnail %}
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,7 +55,7 @@
       {% if instrument.image %}
         <a href="/media/{{ instrument.image }}" target="_blank">
           {% thumbnail instrument.image "150" as image %}
-            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}">
+            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
           {% endthumbnail %}
         </a>
       {% endif %}
@@ -87,21 +87,21 @@
         <div class="field-label">Model name</div>
         <div class="field-content">{{ instrument.model.name }}</div>
       </div>
-      {% if instrument.types.all %}
+      {% if instrument.model.types.all %}
         <div class="field">
           <div class="field-label">Instrument types</div>
           <div class="field-content">
-            {% for type in instrument.types.all %}
+            {% for type in instrument.model.types.all %}
               {{ type.name }}{% if not forloop.last %},{% endif %}
             {% endfor %}
           </div>
         </div>
       {% endif %}
-      {% if instrument.variables.all %}
+      {% if instrument.model.variables.all %}
         <div class="field">
           <div class="field-label">Measured variables</div>
           <div class="field-content">
-            {% for variable in instrument.variables.all %}
+            {% for variable in instrument.model.variables.all %}
               {{ variable.name }}{% if not forloop.last %},{% endif %}
             {% endfor %}
           </div>
