@@ -1,5 +1,7 @@
 import uuid
 
+import requests
+from django.conf import settings
 from django.db import models
 from django.http import HttpRequest
 from django.urls import reverse
@@ -58,6 +60,7 @@ class Person(models.Model):
 
 class Instrument(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    pid = models.URLField(unique=True, null=True)
     name = models.CharField(
         max_length=255, help_text="Name by which the instrument instance is known."
     )
@@ -73,6 +76,14 @@ class Instrument(models.Model):
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
     image = ImageField(null=True, blank=True)
+
+    def create_pid(self):
+        payload = {"type": "instrument", "uuid": self.uuid}
+        res = requests.post(settings.PID_SERVICE_URL, json=payload)
+        res.raise_for_status()
+        pid = res.json()["pid"]
+        self.pid = pid
+        self.save()
 
     def get_landing_page(self, request: HttpRequest) -> str:
         return request.build_absolute_uri(

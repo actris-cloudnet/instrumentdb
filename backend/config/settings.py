@@ -27,6 +27,8 @@ DEBUG = os.environ.get("DEBUG", "0").lower() in ["y", "yes", "t", "true", "on", 
 
 PUBLIC_URL = os.environ["PUBLIC_URL"]
 
+PID_SERVICE_URL = os.environ["PID_SERVICE_URL"]
+
 ALLOWED_HOSTS = [urlparse(PUBLIC_URL).hostname]
 
 CSRF_TRUSTED_ORIGINS = [PUBLIC_URL]
