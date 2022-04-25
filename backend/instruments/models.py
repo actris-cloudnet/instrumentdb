@@ -78,7 +78,7 @@ class Instrument(models.Model):
     image = ImageField(null=True, blank=True)
 
     def create_pid(self):
-        payload = {"type": "instrument", "uuid": self.uuid}
+        payload = {"type": "instrument", "uuid": str(self.uuid)}
         res = requests.post(settings.PID_SERVICE_URL, json=payload)
         res.raise_for_status()
         pid = res.json()["pid"]
