@@ -24,3 +24,8 @@ Install [pre-commit](https://pre-commit.com/) hooks:
 ```sh
 pre-commit install
 ```
+
+To make migrations, run tests, etc., use prefix:
+```sh
+docker compose exec django ./manage.py
+```
