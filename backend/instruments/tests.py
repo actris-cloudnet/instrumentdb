@@ -28,7 +28,10 @@ class SimpleTest(TestCase):
         model.variables.add(test_variable)
         model.save()
         instrument = Instrument.objects.create(
-            uuid=cls.uuid, name="Test instrument", model=model
+            uuid=cls.uuid,
+            pid="https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
+            name="Test instrument",
+            model=model,
         )
         instrument.owners.add(company)
 
@@ -42,6 +45,7 @@ class SimpleTest(TestCase):
         test_strings = (
             "Test instrument",
             "PID",
+            "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
             "Owners",
             "Manufacturers",
             "Test company",
@@ -69,7 +73,7 @@ class SimpleTest(TestCase):
         self.assertEquals(response.status_code, 200)
         expected_json = {
             "Identifier": {
-                "identifierValue": "20.1000/5555",
+                "identifierValue": "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
                 "identifierType": "Handle",
             },
             "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6.html",

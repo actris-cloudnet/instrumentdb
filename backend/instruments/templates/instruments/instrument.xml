@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <instrument>
-  <identifier identifierType="Handle">20.1000/5555</identifier>
+  {% if instrument.pid %}
+    <identifier identifierType="Handle">{{ instrument.pid }}</identifier>
+  {% endif %}
   <schemaVersion>1.0</schemaVersion>
   <landingPage>{{ landing_page }}</landingPage>
   <name>{{ instrument.name }}</name>

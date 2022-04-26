@@ -59,12 +59,14 @@
           {% endthumbnail %}
         </a>
       {% endif %}
-      <div class="field">
-        <div class="field-label">PID</div>
-        <a class="field-content" href={{ instrument.pid }}>
-          {{ instrument.pid }}
-        </a>
-      </div>
+      {% if instrument.pid %}
+        <div class="field">
+          <div class="field-label">PID</div>
+          <a class="field-content" href={{ instrument.pid }}>
+            {{ instrument.pid }}
+          </a>
+        </div>
+      {% endif %}
       <div class="field">
         <div class="field-label">Owners</div>
         <div class="field-content">

@@ -49,10 +49,6 @@ def _organization_json(organization: Organization, prefix: str):
 
 def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
     result = {
-        "Identifier": {
-            "identifierValue": "20.1000/5555",
-            "identifierType": "Handle",
-        },
         "LandingPage": instru.get_landing_page(),
         "Name": instru.name,
         "Owners": [_organization_json(owner, "owner") for owner in instru.owners.all()],
@@ -64,6 +60,11 @@ def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
             "modelName": instru.model.name,
         },
     }
+    if instru.pid:
+        result["Identifier"] = {
+            "identifierValue": instru.pid,
+            "identifierType": "Handle",
+        }
     if description := instru.description:
         result["Description"] = description
     if types := instru.model.types.all():
