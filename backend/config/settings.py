@@ -25,7 +25,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = os.environ.get("DEBUG", "0").lower() in ["y", "yes", "t", "true", "on", "1"]
 
-PUBLIC_URL = os.environ["PUBLIC_URL"]
+PUBLIC_URL = os.environ["PUBLIC_URL"].rstrip("/")
 
 PID_SERVICE_URL = os.environ["PID_SERVICE_URL"]
 

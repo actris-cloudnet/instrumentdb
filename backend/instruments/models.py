@@ -78,19 +78,21 @@ class Instrument(models.Model):
     image = ImageField(null=True, blank=True)
 
     def create_pid(self):
-        payload = {"type": "instrument", "uuid": str(self.uuid)}
+        payload = {
+            "type": "instrument",
+            "uuid": str(self.uuid),
+            "url": self.get_landing_page(),
+        }
         res = requests.post(settings.PID_SERVICE_URL, json=payload)
         res.raise_for_status()
         pid = res.json()["pid"]
         self.pid = pid
         self.save()
 
-    def get_landing_page(self, request: HttpRequest) -> str:
-        return request.build_absolute_uri(
-            reverse(
-                "instrument",
-                kwargs={"instrument_uuid": self.uuid, "output_format": "html"},
-            )
+    def get_landing_page(self) -> str:
+        return settings.PUBLIC_URL + reverse(
+            "instrument",
+            kwargs={"instrument_uuid": self.uuid, "output_format": "html"},
         )
 
     def __str__(self) -> str:

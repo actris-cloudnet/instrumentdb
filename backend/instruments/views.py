@@ -30,7 +30,7 @@ def _instrument_xml(request: HttpRequest, instru: Instrument) -> HttpResponse:
         "instruments/instrument.xml",
         {
             "instrument": instru,
-            "landing_page": instru.get_landing_page(request),
+            "landing_page": instru.get_landing_page(),
             "dates": dates,
         },
         "application/xml",
@@ -53,7 +53,7 @@ def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
             "identifierValue": "20.1000/5555",
             "identifierType": "Handle",
         },
-        "LandingPage": instru.get_landing_page(request),
+        "LandingPage": instru.get_landing_page(),
         "Name": instru.name,
         "Owners": [_organization_json(owner, "owner") for owner in instru.owners.all()],
         "Manufacturers": [

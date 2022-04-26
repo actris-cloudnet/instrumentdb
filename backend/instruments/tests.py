@@ -72,7 +72,7 @@ class SimpleTest(TestCase):
                 "identifierValue": "20.1000/5555",
                 "identifierType": "Handle",
             },
-            "LandingPage": f"http://testserver{self.endpoint}.html",
+            "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6.html",
             "Name": "Test instrument",
             "Owners": [{"owner": {"ownerName": "Test company"}}],
             "Manufacturers": [{"manufacturer": {"manufacturerName": "Test company"}}],
