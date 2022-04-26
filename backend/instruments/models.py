@@ -60,7 +60,7 @@ class Person(models.Model):
 
 class Instrument(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    pid = models.URLField(unique=True, null=True)
+    pid = models.URLField(unique=True, null=True, verbose_name="PID")
     name = models.CharField(
         max_length=255, help_text="Name by which the instrument instance is known."
     )

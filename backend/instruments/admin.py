@@ -21,6 +21,7 @@ class AlternateIdentifierAdminInline(admin.TabularInline):
 
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     inlines = (RelatedIdentifierAdminInline, AlternateIdentifierAdminInline)
+    readonly_fields = ("pid",)
 
     @staticmethod
     def view_on_site(obj):
