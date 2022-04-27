@@ -41,6 +41,10 @@
         font-variant: small-caps;
         margin-bottom: .25rem;
       }
+      ul {
+        margin: 0;
+        padding-left: 1rem;
+      }
       img {
         float: right;
       }
@@ -103,9 +107,11 @@
         <div class="field">
           <div class="field-label">Measured variables</div>
           <div class="field-content">
+            <ul>
             {% for variable in instrument.model.variables.all %}
-              {{ variable.name }}{% if not forloop.last %},{% endif %}
+              <li>{{ variable.name }}</li>
             {% endfor %}
+            </ul>
           </div>
         </div>
       {% endif %}
