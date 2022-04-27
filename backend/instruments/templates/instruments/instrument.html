@@ -121,13 +121,17 @@
       {% if instrument.commission_date %}
         <div class="field">
           <div class="field-label">Commission date</div>
-          <div class="field-content">{{ instrument.commission_date }}</div>
+          <div class="field-content">
+            <time datetime="{{ instrument.commission_date|date:'Y-m-d' }}">{{ instrument.commission_date }}</time>
+          </div>
         </div>
       {% endif %}
       {% if instrument.decommission_date %}
         <div class="field">
           <div class="field-label">Decommission date</div>
-          <div class="field-content">{{ instrument.decommission_date }}</div>
+          <div class="field-content">
+            <time datetime="{{ instrument.decommission_date|date:'Y-m-d' }}">{{ instrument.decommission_date }}</time>
+          </div>
         </div>
       {% endif %}
       {% if instrument.description %}
