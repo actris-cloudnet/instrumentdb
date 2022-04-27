@@ -1,3 +1,4 @@
+import datetime
 import doctest
 from pathlib import Path
 
@@ -32,6 +33,8 @@ class SimpleTest(TestCase):
             pid="https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
             name="Test instrument",
             model=model,
+            commission_date=datetime.date(2002, 3, 18),
+            decommission_date=datetime.date(2011, 1, 5),
         )
         instrument.owners.add(company)
 
@@ -55,6 +58,10 @@ class SimpleTest(TestCase):
             "Test type",
             "Measured variables",
             "Test variable",
+            "Commission date",
+            "March 18, 2002",
+            "Decommission date",
+            "Jan. 5, 2011",
             "Edit",
             "JSON",
             "XML",
@@ -84,6 +91,10 @@ class SimpleTest(TestCase):
             "InstrumentType": ["Test type"],
             "MeasuredVariables": [
                 {"measuredVariable": {"variableMeasured": "Test variable"}}
+            ],
+            "Dates": [
+                {"date": {"date": "2002-03-18", "dateType": "Commissioned"}},
+                {"date": {"date": "2011-01-05", "dateType": "DeCommissioned"}},
             ],
         }
         self.assertJSONEqual(response.content, expected_json)

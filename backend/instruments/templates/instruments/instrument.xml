@@ -4,7 +4,7 @@
     <identifier identifierType="Handle">{{ instrument.pid }}</identifier>
   {% endif %}
   <schemaVersion>1.0</schemaVersion>
-  <landingPage>{{ landing_page }}</landingPage>
+  <landingPage>{{ instrument.landing_page }}</landingPage>
   <name>{{ instrument.name }}</name>
   <owners>
     {% for owner in instrument.owners.all %}
@@ -45,11 +45,14 @@
       {% endfor %}
     </measuredVariables>
   {% endif %}
-  {% if dates %}
+  {% if instrument.commission_date or instrument.decommission_date %}
     <dates>
-      {% for date in dates %}
-        <date dateType="{{ date.type }}">{{ date.date }}</date>
-      {% endfor %}
+      {% if instrument.commission_date %}
+        <date dateType="Commissioned">{{ instrument.commission_date|date:"Y-m-d" }}</date>
+      {% endif %}
+      {% if instrument.decommission_date %}
+        <date dateType="DeCommissioned">{{ instrument.decommission_date|date:"Y-m-d" }}</date>
+      {% endif %}
     </dates>
   {% endif %}
   {% if instrument.description %}

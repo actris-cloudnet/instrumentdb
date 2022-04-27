@@ -10,30 +10,8 @@ def _instrument_html(request: HttpRequest, instru: Instrument) -> HttpResponse:
 
 
 def _instrument_xml(request: HttpRequest, instru: Instrument) -> HttpResponse:
-    dates = []
-    if instru.commission_date:
-        dates.append(
-            {
-                "type": "Commissioned",
-                "date": instru.commission_date.strftime("%Y-%m-%d"),
-            }
-        )
-    if instru.decommission_date:
-        dates.append(
-            {
-                "type": "DeCommissioned",
-                "date": instru.decommission_date.strftime("%Y-%m-%d"),
-            }
-        )
     return render(
-        request,
-        "instruments/instrument.xml",
-        {
-            "instrument": instru,
-            "landing_page": instru.get_landing_page(),
-            "dates": dates,
-        },
-        "application/xml",
+        request, "instruments/instrument.xml", {"instrument": instru}, "application/xml"
     )
 
 
@@ -49,7 +27,7 @@ def _organization_json(organization: Organization, prefix: str):
 
 def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
     result = {
-        "LandingPage": instru.get_landing_page(),
+        "LandingPage": instru.landing_page,
         "Name": instru.name,
         "Owners": [_organization_json(owner, "owner") for owner in instru.owners.all()],
         "Manufacturers": [

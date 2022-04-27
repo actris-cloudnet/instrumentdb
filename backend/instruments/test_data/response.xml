@@ -24,4 +24,8 @@
     <measuredVariables>
         <measuredVariable>Test variable</measuredVariable>
     </measuredVariables>
+    <dates>
+        <date dateType="Commissioned">2002-03-18</date>
+        <date dateType="DeCommissioned">2011-01-05</date>
+    </dates>
 </instrument>

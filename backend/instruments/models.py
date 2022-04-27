@@ -81,7 +81,7 @@ class Instrument(models.Model):
         payload = {
             "type": "instrument",
             "uuid": str(self.uuid),
-            "url": self.get_landing_page(),
+            "url": self.landing_page,
         }
         res = requests.post(settings.PID_SERVICE_URL, json=payload)
         res.raise_for_status()
@@ -89,7 +89,8 @@ class Instrument(models.Model):
         self.pid = pid
         self.save()
 
-    def get_landing_page(self) -> str:
+    @property
+    def landing_page(self) -> str:
         return settings.PUBLIC_URL + reverse(
             "instrument",
             kwargs={"instrument_uuid": self.uuid, "output_format": "html"},
