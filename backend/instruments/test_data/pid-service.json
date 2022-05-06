@@ -1,0 +1,39 @@
+{
+    "type": "instrument",
+    "uuid": "8fd884df-6896-4bae-a72f-b6260b5b8744",
+    "url": "http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744.html",
+    "data": [
+      {
+        "type": "21.T11148/9a15a4735d4bda329d80",
+        "value": "\"http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744.html\""
+      },
+      {
+        "type": "21.T11148/709a23220f2c3d64d1e1",
+        "value": "\"Test instrument\""
+      },
+      {
+        "type": "21.T11148/4eaec4bc0f1df68ab2a7",
+        "value": "[{\"owner\": {\"ownerName\": \"Test company\"}}]"
+      },
+      {
+        "type": "21.T11148/1f3e82ddf0697a497432",
+        "value": "[{\"manufacturer\": {\"manufacturerName\": \"Test company\"}}]"
+      },
+      {
+        "type": "21.T11148/c1a0ec5ad347427f25d6",
+        "value": "{\"modelName\": \"Test model\"}"
+      },
+      {
+        "type": "21.T11148/f76ad9d0324302fc47dd",
+        "value": "[\"Test type\"]"
+      },
+      {
+        "type": "21.T11148/72928b84e060d491ee41",
+        "value": "[{\"measuredVariable\": {\"variableMeasured\": \"Test variable\"}}]"
+      },
+      {
+        "type": "21.T11148/22c62082a4d2d9ae2602",
+        "value": "[{\"date\": {\"date\": \"2002-03-18\", \"dateType\": \"Commissioned\"}}, {\"date\": {\"date\": \"2011-01-05\", \"dateType\": \"DeCommissioned\"}}]"
+      }
+    ]
+  }

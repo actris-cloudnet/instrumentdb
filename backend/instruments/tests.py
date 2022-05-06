@@ -1,7 +1,10 @@
 import datetime
 import doctest
+import json
 from pathlib import Path
+from unittest.mock import Mock, patch
 
+import requests
 from django.test import Client, TestCase
 
 from . import fields
@@ -28,7 +31,7 @@ class SimpleTest(TestCase):
         model.types.add(test_type)
         model.variables.add(test_variable)
         model.save()
-        instrument = Instrument.objects.create(
+        cls.instrument = Instrument.objects.create(
             uuid=cls.uuid,
             pid="https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
             name="Test instrument",
@@ -36,10 +39,31 @@ class SimpleTest(TestCase):
             commission_date=datetime.date(2002, 3, 18),
             decommission_date=datetime.date(2011, 1, 5),
         )
-        instrument.owners.add(company)
+        cls.instrument.owners.add(company)
 
     def setUp(self):
         self.client = Client()
+
+    def test_create_pid(self):
+        with patch("instruments.models.requests.post") as mock_post:
+            response = requests.models.Response()
+            response.status_code = 200
+            response._content = (
+                b'{"pid":"https://hdl.handle.net/21.12132/3.8fd884df68964bae"}'
+            )
+            mock_post.return_value = response
+
+            self.instrument.uuid = "8fd884df-6896-4bae-a72f-b6260b5b8744"
+            self.instrument.pid = None
+            self.instrument.create_pid()
+            self.assertEquals(
+                self.instrument.pid,
+                "https://hdl.handle.net/21.12132/3.8fd884df68964bae",
+            )
+
+            with open("instruments/test_data/pid-service.json") as f:
+                expected_json = json.load(f)
+            mock_post.assert_called_once_with("", json=expected_json)
 
     def test_html(self):
         response = self.client.get(f"{self.endpoint}.html")
