@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - PID_SERVICE_URL=
+      - PID_SERVICE_URL=http://pid-service.test
       - DATABASE_HOST=database
       - DATABASE_PORT=5432
       - DATABASE_NAME=cfs

@@ -63,7 +63,9 @@ class SimpleTest(TestCase):
 
             with open("instruments/test_data/pid-service.json") as f:
                 expected_json = json.load(f)
-            mock_post.assert_called_once_with("", json=expected_json)
+            mock_post.assert_called_once_with(
+                "http://pid-service.test", json=expected_json
+            )
 
     def test_html(self):
         response = self.client.get(f"{self.endpoint}.html")
