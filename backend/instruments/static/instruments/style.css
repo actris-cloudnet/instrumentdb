@@ -9,12 +9,12 @@ main {
   border-radius: 8px;
   margin: 2rem auto;
   padding: 2rem;
-  max-width: 600px;
+  max-width: 620px;
   box-shadow: 1px 1px 16px rgba(0, 0, 0, .02);
   box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 620px) {
   body {
     background-color: white;
   }
@@ -23,6 +23,19 @@ main {
     padding: 1rem;
     box-shadow: none;
   }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header a {
+  margin-left: .5rem;
+}
+
+.header a:first-of-type {
+  margin-left: auto;
 }
 
 h1 {
@@ -46,6 +59,7 @@ ul {
 
 .image-container {
   float: right;
+  margin-top: 1rem;
 }
 
 .image-container img {

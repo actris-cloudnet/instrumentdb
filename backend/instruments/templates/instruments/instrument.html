@@ -10,10 +10,12 @@
   </head>
   <body>
     <main>
-      <a href="{% url 'instrument' instrument.uuid 'xml' %}" style="float:right">XML</a>
-      <a href="{% url 'instrument' instrument.uuid 'json' %}" style="float:right;margin-right:.5rem">JSON</a>
-      <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
-      <h1>{{ instrument.name }}</h1>
+      <div class="header">
+        <h1>{{ instrument.name }}</h1>
+        <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
+        <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
+        <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
+      </div>
       {% if instrument.image %}
         <a href="/media/{{ instrument.image }}" target="_blank" class="image-container">
           {% thumbnail instrument.image "150" as image %}
