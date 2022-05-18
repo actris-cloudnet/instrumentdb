@@ -34,6 +34,10 @@
       {
         "type": "21.T11148/22c62082a4d2d9ae2602",
         "value": "[{\"date\": {\"date\": \"2002-03-18\", \"dateType\": \"Commissioned\"}}, {\"date\": {\"date\": \"2011-01-05\", \"dateType\": \"DeCommissioned\"}}]"
+      },
+      {
+        "type": "21.T11148/eb3c713572f681e6c4c3",
+        "value": "[{\"alternateIdentifier\": {\"alternateIdentifierValue\": \"836514404680691\", \"alternateIdentifierType\": \"SerialNumber\"}}]"
       }
     ]
   }

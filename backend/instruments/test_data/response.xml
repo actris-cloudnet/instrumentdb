@@ -28,4 +28,9 @@
         <date dateType="Commissioned">2002-03-18</date>
         <date dateType="DeCommissioned">2011-01-05</date>
     </dates>
+    <alternateIdentifiers>
+        <alternateIdentifier alternateIdentifierType="SerialNumber">
+            836514404680691
+        </alternateIdentifier>
+    </alternateIdentifiers>
 </instrument>

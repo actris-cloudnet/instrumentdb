@@ -67,13 +67,11 @@
       {% endfor %}
     </relatedIdentifiers>
   {% endif %}
-  {% if instrument.alternate_identifiers.all %}
+  {% if instrument.serial_number %}
     <alternateIdentifiers>
-      {% for item in instrument.alternate_identifiers.all %}
-        <alternateIdentifier alternateIdentifierType="{{ item.identifier_type }}">
-          {{ item.identifier }}
-        </alternateIdentifier>
-      {% endfor %}
+      <alternateIdentifier alternateIdentifierType="SerialNumber">
+        {{ instrument.serial_number }}
+      </alternateIdentifier>
     </alternateIdentifiers>
   {% endif %}
 </instrument>

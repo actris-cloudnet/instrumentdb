@@ -105,6 +105,12 @@
           </div>
         </div>
       {% endif %}
+      {% if instrument.serial_number %}
+        <div class="field">
+          <div class="field-label">Serial number</div>
+          <div class="field-content">{{ instrument.serial_number }}</div>
+        </div>
+      {% endif %}
       {% if instrument.description %}
         <div class="field">
           <div class="field-label">Description</div>
@@ -126,21 +132,6 @@
                       {{ item.identifier }} ({{ item.get_identifier_type_display }})
                     {% endif %}
                   </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-      {% if instrument.alternate_identifiers.all %}
-        <div class="field">
-          <div class="field-label">Alternate identifiers</div>
-          <table class="field-content">
-            <tbody>
-              {% for item in instrument.alternate_identifiers.all %}
-                <tr>
-                  <th>{{ item.get_identifier_type_display }}:</th>
-                  <td>{{ item.identifier }}</td>
                 </tr>
               {% endfor %}
             </tbody>

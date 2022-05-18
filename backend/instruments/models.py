@@ -86,6 +86,7 @@ class Instrument(models.Model):
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
     image = ImageField(null=True, blank=True)
+    serial_number = models.CharField(max_length=255, null=True, blank=True)
 
     def pidinst(self):
         result = {
@@ -135,15 +136,14 @@ class Instrument(models.Model):
             )
         if dates:
             result["Dates"] = dates
-        if identifiers := self.alternate_identifiers.all():
+        if serial_number := self.serial_number:
             result["AlternateIdentifiers"] = [
                 {
                     "alternateIdentifier": {
-                        "alternateIdentifierValue": identifier.identifier,
-                        "alternateIdentifierType": identifier.identifier_type,
+                        "alternateIdentifierValue": serial_number,
+                        "alternateIdentifierType": "SerialNumber",
                     }
                 }
-                for identifier in identifiers
             ]
         if identifiers := self.related_identifiers.all():
             result["RelatedIdentifiers"] = [
@@ -240,16 +240,3 @@ class RelatedIdentifier(models.Model):
     identifier = models.CharField(max_length=255)
     identifier_type = models.CharField(max_length=7, choices=IDENTIFIER_TYPE_CHOICES)
     relation_type = models.CharField(max_length=19, choices=RELATION_TYPE_CHOICES)
-
-
-class AlternateIdentifier(models.Model):
-    IDENTIFIER_TYPE_CHOICES = (
-        ("SerialNumber", "Serial number"),
-        ("InventoryNumber", "Inventory number"),
-        ("Other", "Other"),
-    )
-    instrument = models.ForeignKey(
-        Instrument, on_delete=models.CASCADE, related_name="alternate_identifiers"
-    )
-    identifier = models.CharField(max_length=255)
-    identifier_type = models.CharField(max_length=15, choices=IDENTIFIER_TYPE_CHOICES)

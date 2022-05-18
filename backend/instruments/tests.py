@@ -38,6 +38,7 @@ class SimpleTest(TestCase):
             model=model,
             commission_date=datetime.date(2002, 3, 18),
             decommission_date=datetime.date(2011, 1, 5),
+            serial_number="836514404680691",
         )
         cls.instrument.owners.add(company)
 
@@ -88,6 +89,8 @@ class SimpleTest(TestCase):
             '<time datetime="2002-03-18">March 18, 2002</time>',
             "Decommission date",
             '<time datetime="2011-01-05">Jan. 5, 2011</time>',
+            "Serial number",
+            "836514404680691",
             "Edit",
             "JSON",
             "XML",
@@ -121,6 +124,14 @@ class SimpleTest(TestCase):
             "Dates": [
                 {"date": {"date": "2002-03-18", "dateType": "Commissioned"}},
                 {"date": {"date": "2011-01-05", "dateType": "DeCommissioned"}},
+            ],
+            "AlternateIdentifiers": [
+                {
+                    "alternateIdentifier": {
+                        "alternateIdentifierValue": "836514404680691",
+                        "alternateIdentifierType": "SerialNumber",
+                    }
+                }
             ],
         }
         self.assertJSONEqual(response.content, expected_json)
