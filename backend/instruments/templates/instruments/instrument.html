@@ -1,4 +1,5 @@
 {% load thumbnail %}
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -45,8 +46,11 @@
         margin: 0;
         padding-left: 1rem;
       }
-      img {
+      .image-container {
         float: right;
+      }
+      .image-container img {
+        display: block;
       }
     </style>
   </head>
@@ -57,7 +61,7 @@
       <a href="{% url 'admin:instruments_instrument_change' instrument.id %}" style="float:right;margin-right:.5rem">Edit</a>
       <h1>{{ instrument.name }}</h1>
       {% if instrument.image %}
-        <a href="/media/{{ instrument.image }}" target="_blank">
+        <a href="/media/{{ instrument.image }}" target="_blank" class="image-container">
           {% thumbnail instrument.image "150" as image %}
             <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
           {% endthumbnail %}
@@ -76,7 +80,7 @@
         <div class="field-content">
           {% for owner in instrument.owners.all %}
             {{ owner.name }}
-            {% if owner.ror_id %}(<a href="https://ror.org/{{ owner.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+            {% if owner.ror_id %}<a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
         </div>
       </div>
@@ -85,7 +89,7 @@
         <div class="field-content">
           {% for manufacturer in instrument.model.manufacturers.all %}
             {{ manufacturer.name }}
-            {% if manufacturer.ror_id %}(<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">ROR</a>){% endif %}{% if not forloop.last %},{% endif %}
+            {% if manufacturer.ror_id %}<a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
           </div>
       </div>
@@ -120,7 +124,12 @@
           <div class="field-label">Contact</div>
           <div class="field-content">
             {{ instrument.contact_person.full_name }}
-            (<a href="mailto:{{ instrument.contact_person.email_address }}">Email</a>{% if instrument.contact_person.orcid_id %}, <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">ORCiD</a>{% endif %})
+            <a href="mailto:{{ instrument.contact_person.email_address }}"><img src="{% static 'instruments/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
+            {% if instrument.contact_person.orcid_id %}
+              <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">
+                <img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16" />
+              </a>
+            {% endif %}
           </div>
         </div>
       {% endif %}
