@@ -7,8 +7,14 @@ from . import models
 admin.site.register(models.Type)
 admin.site.register(models.Variable)
 admin.site.register(models.Organization)
-admin.site.register(models.Model)
 admin.site.register(models.Person)
+
+
+class ModelAdmin(AdminImageMixin, admin.ModelAdmin):
+    pass
+
+
+admin.site.register(models.Model, ModelAdmin)
 
 
 class RelatedIdentifierAdminInline(admin.TabularInline):
