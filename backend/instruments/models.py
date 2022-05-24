@@ -45,7 +45,6 @@ class Organization(models.Model):
 class Model(models.Model):
     name = models.CharField(max_length=255)
     manufacturers = models.ManyToManyField(Organization)
-
     types = models.ManyToManyField(
         Type, help_text="Classification of the type of the instrument.", blank=True
     )
@@ -54,6 +53,7 @@ class Model(models.Model):
         help_text="The variable(s) that this instrument measures or observes.",
         blank=True,
     )
+    image = ImageField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name

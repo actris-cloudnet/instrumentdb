@@ -16,13 +16,15 @@
         <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
         <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
       </div>
-      {% if instrument.image %}
-        <a href="/media/{{ instrument.image }}" target="_blank" class="image-container">
-          {% thumbnail instrument.image "150" as image %}
-            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
-          {% endthumbnail %}
-        </a>
-      {% endif %}
+      {% with image=instrument.image|default:instrument.model.image %}
+        {% if image %}
+          <a href="/media/{{ image }}" target="_blank" class="image-container">
+            {% thumbnail image "150" as image %}
+              <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+            {% endthumbnail %}
+          </a>
+        {% endif %}
+      {% endwith %}
       {% if instrument.pid %}
         <div class="field">
           <div class="field-label">PID</div>
