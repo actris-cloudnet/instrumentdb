@@ -53,7 +53,7 @@ class Model(models.Model):
         help_text="The variable(s) that this instrument measures or observes.",
         blank=True,
     )
-    image = ImageField(null=True, blank=True)
+    image = ImageField(null=True, blank=True, verbose_name="Default image")
 
     def __str__(self) -> str:
         return self.name
@@ -85,7 +85,11 @@ class Instrument(models.Model):
     )
     commission_date = models.DateField(null=True, blank=True)
     decommission_date = models.DateField(null=True, blank=True)
-    image = ImageField(null=True, blank=True)
+    image = ImageField(
+        null=True,
+        blank=True,
+        help_text="Photograph of the instrument on site. Leave empty to use default image of the model.",
+    )
     serial_number = models.CharField(max_length=255, null=True, blank=True)
 
     def pidinst(self):
