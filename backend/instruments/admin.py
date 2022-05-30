@@ -4,14 +4,42 @@ from sorl.thumbnail.admin import AdminImageMixin
 
 from . import models
 
-admin.site.register(models.Type)
-admin.site.register(models.Variable)
-admin.site.register(models.Organization)
-admin.site.register(models.Person)
+
+class TypeAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
+
+
+admin.site.register(models.Type, TypeAdmin)
+
+
+class VariableAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
+
+
+admin.site.register(models.Variable, VariableAdmin)
+
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
+
+
+admin.site.register(models.Organization, OrganizationAdmin)
+
+
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ["full_name", "email_address", "orcid_id"]
+    ordering = ["full_name"]
+
+
+admin.site.register(models.Person, PersonAdmin)
 
 
 class ModelAdmin(AdminImageMixin, admin.ModelAdmin):
-    pass
+    list_display = ["name"]
+    ordering = ["name"]
 
 
 admin.site.register(models.Model, ModelAdmin)
@@ -22,6 +50,8 @@ class RelatedIdentifierAdminInline(admin.TabularInline):
 
 
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
     inlines = [RelatedIdentifierAdminInline]
     readonly_fields = ["pid"]
 
