@@ -146,36 +146,40 @@ class SimpleTest(TestCase):
         self._test_json_response(response)
 
     def test_no_format_no_accept(self):
-        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="")
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="")
         self.assertEquals(response.status_code, 406)
 
     def test_no_format_accept_any(self):
-        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="*/*")
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="*/*")
         self._test_json_response(response)  # Arbitrarily JSON
 
     def test_no_format_accept_json(self):
-        response = self.client.get(
-            f"/instrument/{self.uuid}", HTTP_ACCEPT="application/json"
-        )
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="application/json")
         self._test_json_response(response)
 
     def test_no_format_accept_xml(self):
-        response = self.client.get(
-            f"/instrument/{self.uuid}", HTTP_ACCEPT="application/xml"
-        )
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="application/xml")
         self._test_xml_response(response)
 
     def test_no_format_accept_html(self):
-        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="text/html")
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="text/html")
         self._test_html_response(response)
 
     def test_no_format_accept_unknown_format(self):
-        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="image/png")
+        response = self.client.get(self.endpoint, HTTP_ACCEPT="image/png")
         self.assertEquals(response.status_code, 406)
 
     def test_invalid_format(self):
         response = self.client.get(f"{self.endpoint}.asd")
         self.assertEquals(response.status_code, 404)
+
+    def test_redirect_without_format(self):
+        response = self.client.get("/instrument/D8B717B816E7476A9F5E95B2A93DDFF6")
+        self.assertRedirects(
+            response,
+            self.endpoint,
+            status_code=301,
+        )
 
     def test_redirect_html(self):
         response = self.client.get("/instrument/D8B717B816E7476A9F5E95B2A93DDFF6.html")
