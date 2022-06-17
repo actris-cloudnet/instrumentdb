@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruments</title>
+    <link rel="stylesheet" href="{% static 'instruments/style.css' %}">
+  </head>
+  <body>
+    <main>
+      <h1 style="margin-bottom:1rem">Instruments</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Instrument</th>
+            <th>PID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for instrument in instruments %}
+            <tr>
+              <td>
+                <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
+              </td>
+              <td>
+                {% if instrument.pid %}
+                  <a href="{{ instrument.pid }}">{{ instrument.pid }}</a>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

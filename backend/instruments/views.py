@@ -65,3 +65,11 @@ def instrument(
     return HttpResponse(
         "Unsupported format requested", status=406, content_type="text/plain"
     )
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    return render(
+        request,
+        "instruments/index.html",
+        {"instruments": Instrument.objects.order_by("name")},
+    )
