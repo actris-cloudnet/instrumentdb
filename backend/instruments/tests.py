@@ -109,7 +109,7 @@ class SimpleTest(TestCase):
                 "identifierValue": "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
                 "identifierType": "Handle",
             },
-            "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6.html",
+            "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6",
             "Name": "Test instrument",
             "Owners": [{"owner": {"ownerName": "Test company"}}],
             "Manufacturers": [{"manufacturer": {"manufacturerName": "Test company"}}],

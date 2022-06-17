@@ -196,7 +196,7 @@ class Instrument(models.Model):
     def landing_page(self) -> str:
         return settings.PUBLIC_URL + reverse(
             "instrument",
-            kwargs={"instrument_uuid": self.uuid, "output_format": "html"},
+            kwargs={"instrument_uuid": self.uuid},
         )
 
     def __str__(self) -> str:

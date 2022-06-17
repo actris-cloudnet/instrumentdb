@@ -1,11 +1,11 @@
 {
     "type": "instrument",
     "uuid": "8fd884df-6896-4bae-a72f-b6260b5b8744",
-    "url": "http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744.html",
+    "url": "http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744",
     "data": [
       {
         "type": "21.T11148/9a15a4735d4bda329d80",
-        "value": "\"http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744.html\""
+        "value": "\"http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744\""
       },
       {
         "type": "21.T11148/709a23220f2c3d64d1e1",
