@@ -68,8 +68,7 @@ class SimpleTest(TestCase):
                 "http://pid-service.test", json=expected_json
             )
 
-    def test_html(self):
-        response = self.client.get(f"{self.endpoint}.html")
+    def _test_html_response(self, response):
         response_decoded = response.content.decode("utf-8")
         self.assertEquals(response.status_code, 200)
         test_strings = (
@@ -98,14 +97,12 @@ class SimpleTest(TestCase):
         for test_string in test_strings:
             self.assertInHTML(test_string, response_decoded)
 
-    def test_xml(self):
-        response = self.client.get(f"{self.endpoint}.xml")
+    def _test_xml_response(self, response):
         self.assertEquals(response.status_code, 200)
         expected_xml = Path("instruments/test_data/response.xml").read_text()
         self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
 
-    def test_json(self):
-        response = self.client.get(f"{self.endpoint}.json")
+    def _test_json_response(self, response):
         self.assertEquals(response.status_code, 200)
         expected_json = {
             "Identifier": {
@@ -136,9 +133,45 @@ class SimpleTest(TestCase):
         }
         self.assertJSONEqual(response.content, expected_json)
 
-    def test_no_format(self):
-        response = self.client.get(f"/instrument/{self.uuid}")
-        self.assertEquals(response.status_code, 404)
+    def test_html(self):
+        response = self.client.get(f"{self.endpoint}.html")
+        self._test_html_response(response)
+
+    def test_xml(self):
+        response = self.client.get(f"{self.endpoint}.xml")
+        self._test_xml_response(response)
+
+    def test_json(self):
+        response = self.client.get(f"{self.endpoint}.json")
+        self._test_json_response(response)
+
+    def test_no_format_no_accept(self):
+        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="")
+        self.assertEquals(response.status_code, 406)
+
+    def test_no_format_accept_any(self):
+        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="*/*")
+        self._test_json_response(response)  # Arbitrarily JSON
+
+    def test_no_format_accept_json(self):
+        response = self.client.get(
+            f"/instrument/{self.uuid}", HTTP_ACCEPT="application/json"
+        )
+        self._test_json_response(response)
+
+    def test_no_format_accept_xml(self):
+        response = self.client.get(
+            f"/instrument/{self.uuid}", HTTP_ACCEPT="application/xml"
+        )
+        self._test_xml_response(response)
+
+    def test_no_format_accept_html(self):
+        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="text/html")
+        self._test_html_response(response)
+
+    def test_no_format_accept_unknown_format(self):
+        response = self.client.get(f"/instrument/{self.uuid}", HTTP_ACCEPT="image/png")
+        self.assertEquals(response.status_code, 406)
 
     def test_invalid_format(self):
         response = self.client.get(f"{self.endpoint}.asd")
