@@ -2,6 +2,7 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from .decorators import cors
 from .models import Instrument
 
 
@@ -22,6 +23,7 @@ def _instrument_xml(request: HttpRequest, instru: Instrument) -> HttpResponse:
     )
 
 
+@cors(allow_origin="*")
 def instrument(
     request: HttpRequest, instrument_uuid: str, output_format: str | None = None
 ) -> HttpResponse:
