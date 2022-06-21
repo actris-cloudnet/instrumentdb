@@ -9,7 +9,7 @@ done
 echo "PostgreSQL started"
 set -e
 
-if [ "$DEBUG" != "1" ]; then
+if [ "$MODE" = "production" ]; then
   ./manage.py collectstatic --noinput --clear
 fi
 
