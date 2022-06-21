@@ -18,7 +18,6 @@ services:
       - DATABASE_SERVICE_HOST=database
       - DATABASE_SERVICE_PORT=5432
       - SECRET_KEY=donutsteel
-      - DEBUG=1
       - PUBLIC_URL=http://localhost:8000
     depends_on:
       - database

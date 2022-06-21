@@ -21,9 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
+MODE = os.environ.get("MODE", "development")
+if MODE not in ("development", "production"):
+    raise Exception("Invalid MODE, expected 'development' or 'production'")
+
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-DEBUG = os.environ.get("DEBUG", "0").lower() in ["y", "yes", "t", "true", "on", "1"]
+DEBUG = MODE == "development"
 
 PUBLIC_URL = os.environ["PUBLIC_URL"].rstrip("/")
 
@@ -128,7 +132,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+STATICFILES_STORAGE = (
+    "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    if MODE == "production"
+    else "django.contrib.staticfiles.storage.StaticFilesStorage"
+)
 
 STATIC_URL = "static/"
 
