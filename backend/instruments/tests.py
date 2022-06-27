@@ -90,7 +90,6 @@ class SimpleTest(TestCase):
             '<time datetime="2011-01-05">Jan. 5, 2011</time>',
             "Serial number",
             "836514404680691",
-            "Edit",
             "JSON",
             "XML",
         )
