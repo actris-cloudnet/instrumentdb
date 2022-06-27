@@ -12,7 +12,11 @@
     <main>
       <div class="header">
         <h1>{{ instrument.name }}</h1>
-        <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
+        {% else %}
+          <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
+        {% endif %}
         <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
         <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
       </div>
@@ -80,7 +84,9 @@
           <div class="field-label">Contact</div>
           <div class="field-content">
             {{ instrument.contact_person.full_name }}
-            <a href="mailto:{{ instrument.contact_person.email_address }}"><img src="{% static 'instruments/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
+            {% if user.is_authenticated %}
+              <a href="mailto:{{ instrument.contact_person.email_address }}"><img src="{% static 'instruments/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
+            {% endif %}
             {% if instrument.contact_person.orcid_id %}
               <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">
                 <img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16" />

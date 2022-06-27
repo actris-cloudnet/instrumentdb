@@ -9,7 +9,14 @@
   </head>
   <body>
     <main style="max-width:800px">
-      <h1 style="margin-bottom:1rem">Instruments</h1>
+      <div class="header" style="margin-bottom:1rem">
+        <h1>Instruments</h1>
+        {% if user.is_authenticated %}
+          <a href="{% url 'admin:instruments_instrument_add' %}">Add instrument</a>
+        {% else %}
+          <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
+        {% endif %}
+      </div>
       <table>
         <thead>
           <tr>
