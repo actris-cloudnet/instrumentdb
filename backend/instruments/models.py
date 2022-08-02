@@ -27,6 +27,7 @@ class Variable(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=16, null=True, blank=True)
     ror_id = RorIdField(null=True, blank=True, verbose_name="ROR ID", unique=True)
 
     def pidinst(self, prefix: str):
@@ -38,8 +39,21 @@ class Organization(models.Model):
             }
         return {prefix: obj}
 
+    def update_from_ror(self):
+        if not self.ror_id:
+            return
+        res = requests.get(f"https://api.ror.org/organizations/{self.ror_id}")
+        res.raise_for_status()
+        data = res.json()
+        self.name = data["name"]
+        if data["acronyms"]:
+            self.acronym = data["acronyms"][0]
+
     def __str__(self) -> str:
-        return self.name
+        result = self.name
+        if self.acronym:
+            result += f" ({self.acronym})"
+        return result
 
 
 class Model(models.Model):

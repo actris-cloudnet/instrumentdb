@@ -41,7 +41,7 @@
         <div class="field-label">Owners</div>
         <div class="field-content">
           {% for owner in instrument.owners.all %}
-            {{ owner.name }}{% if owner.ror_id %} <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
+            {{ owner.name }}{% if owner.acronym %} ({{ owner.acronym }}){% endif %}{% if owner.ror_id %} <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
         </div>
       </div>
@@ -49,7 +49,7 @@
         <div class="field-label">Manufacturers</div>
         <div class="field-content">
           {% for manufacturer in instrument.model.manufacturers.all %}
-            {{ manufacturer.name }}{% if manufacturer.ror_id %} <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
+            {{ manufacturer.name }}{% if manufacturer.acronym %} ({{ manufacturer.acronym }}){% endif %}{% if manufacturer.ror_id %} <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
           </div>
       </div>
