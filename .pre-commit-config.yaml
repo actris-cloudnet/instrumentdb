@@ -23,6 +23,8 @@ repos:
         entry: scripts/fix-style
         language: system
         require_serial: true
+        types: [python]
+        include: ^backend/
   - repo: local
     hooks:
       - id: check-types
@@ -30,3 +32,5 @@ repos:
         entry: scripts/check-types
         language: system
         require_serial: true
+        types: [python]
+        include: ^backend/

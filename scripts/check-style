@@ -1,4 +1,22 @@
-#!/bin/sh
-set -e
-docker compose run django isort --profile black .
-docker compose run django black --check .
+#!/usr/bin/env python3
+import sys
+import subprocess
+
+def run(args):
+    p = subprocess.run(["docker", "compose", "run", "-T", "django", *args])
+    if p.returncode != 0:
+        sys.exit(1)
+
+if len(sys.argv) == 1:
+    paths = ['.']
+else:
+    prefix = "backend/"
+    paths = [
+        path[len(prefix) :]
+        for path in sys.argv
+        if path.startswith(prefix)
+    ]
+
+if paths:
+    run(["isort", "--profile", "black", "--check", *paths])
+    run(["black",  "--check", *paths])
