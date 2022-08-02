@@ -41,14 +41,14 @@ def parse_orcid_id(value: str) -> str:
         ...
     django.core.exceptions.ValidationError: ['Invalid check digit.']
     """
-    m = re.fullmatch(
+    match = re.fullmatch(
         r"(?:(?:https?://)?(?:www\.)?orcid.org/)?\s*(\d{4})-?(\d{4})-?(\d{4})-?(\d{3})([\dX])",
         value,
         re.I,
     )
-    if m is None:
+    if match is None:
         raise ValidationError("Invalid structure.")
-    aaaa, bbbb, cccc, ddd, e = m.groups()
+    aaaa, bbbb, cccc, ddd, e = match.groups()
     e = e.upper()
     if generate_check_digit(aaaa + bbbb + cccc + ddd) != e:
         raise ValidationError("Invalid check digit.")
@@ -78,18 +78,18 @@ def parse_ror_id(value: str) -> str:
         ...
     django.core.exceptions.ValidationError: ['Invalid structure.']
     """
-    m = re.fullmatch(
-        r"(?:(?:https?://)?(?:www\.)?ror.org/)?\s*0(?P<n>.{6})(?P<checksum>.{2})",
+    match = re.fullmatch(
+        r"(?:(?:https?://)?(?:www\.)?ror.org/)?\s*0(?P<chars>.{6})(?P<checksum>.{2})",
         value,
         re.I,
     )
-    if m is None:
+    if match is None:
         raise ValidationError("Invalid structure.")
-    n = base32_crockford.decode(m["n"])
+    n = base32_crockford.decode(match["chars"])
     checksum = str(98 - ((n * 100) % 97)).zfill(2)
-    if checksum != m["checksum"]:
-        raise ValidationError(f"Invalid checksum.")
-    return "0" + m["n"].lower() + m["checksum"]
+    if checksum != match["checksum"]:
+        raise ValidationError("Invalid checksum.")
+    return "0" + match["chars"].lower() + match["checksum"]
 
 
 class OrcidIdField(CharField):

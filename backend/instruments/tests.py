@@ -2,7 +2,7 @@ import datetime
 import doctest
 import json
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import requests
 from django.test import Client, TestCase
@@ -20,6 +20,7 @@ class SimpleTest(TestCase):
 
     uuid = "d8b717b8-16e7-476a-9f5e-95b2a93ddff6"
     endpoint = f"/instrument/{uuid}"
+    instrument: Instrument
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -57,20 +58,20 @@ class SimpleTest(TestCase):
             self.instrument.uuid = "8fd884df-6896-4bae-a72f-b6260b5b8744"
             self.instrument.pid = None
             self.instrument.create_pid()
-            self.assertEquals(
+            self.assertEqual(
                 self.instrument.pid,
                 "https://hdl.handle.net/21.12132/3.8fd884df68964bae",
             )
 
-            with open("instruments/test_data/pid-service.json") as f:
-                expected_json = json.load(f)
+            with open("instruments/test_data/pid-service.json", "rb") as test_file:
+                expected_json = json.load(test_file)
             mock_post.assert_called_once_with(
                 "http://pid-service.test", json=expected_json
             )
 
     def _test_html_response(self, response):
         response_decoded = response.content.decode("utf-8")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         test_strings = (
             "Test instrument",
             "PID",
@@ -97,12 +98,12 @@ class SimpleTest(TestCase):
             self.assertInHTML(test_string, response_decoded)
 
     def _test_xml_response(self, response):
-        self.assertEquals(response.status_code, 200)
-        expected_xml = Path("instruments/test_data/response.xml").read_text()
+        self.assertEqual(response.status_code, 200)
+        expected_xml = Path("instruments/test_data/response.xml").read_text("utf-8")
         self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
 
     def _test_json_response(self, response):
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         expected_json = {
             "Identifier": {
                 "identifierValue": "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
@@ -146,7 +147,7 @@ class SimpleTest(TestCase):
 
     def test_no_format_no_accept(self):
         response = self.client.get(self.endpoint, HTTP_ACCEPT="")
-        self.assertEquals(response.status_code, 406)
+        self.assertEqual(response.status_code, 406)
 
     def test_no_format_accept_any(self):
         response = self.client.get(self.endpoint, HTTP_ACCEPT="*/*")
@@ -166,11 +167,11 @@ class SimpleTest(TestCase):
 
     def test_no_format_accept_unknown_format(self):
         response = self.client.get(self.endpoint, HTTP_ACCEPT="image/png")
-        self.assertEquals(response.status_code, 406)
+        self.assertEqual(response.status_code, 406)
 
     def test_invalid_format(self):
         response = self.client.get(f"{self.endpoint}.asd")
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_redirect_without_format(self):
         response = self.client.get("/instrument/D8B717B816E7476A9F5E95B2A93DDFF6")

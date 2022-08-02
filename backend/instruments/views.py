@@ -32,10 +32,10 @@ def instrument(
     # A single UUID has multiple textual representations with differences in
     # dashes and letter case. Let's accept the different representations but
     # redirect the user to the URL with canonical form.
-    kwargs = {"instrument_uuid": instru.uuid}
+    kwargs = {"instrument_uuid": str(instru.uuid)}
     if output_format is not None:
         kwargs["output_format"] = output_format
-    canonical_path = reverse(request.resolver_match.view_name, kwargs=kwargs)
+    canonical_path = reverse(request.resolver_match.view_name, kwargs=kwargs)  # type: ignore
     if request.path != canonical_path:
         return redirect(canonical_path, permanent=True)
 

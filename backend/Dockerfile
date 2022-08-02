@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 FROM base AS dev
+COPY requirements_dev.txt .
+RUN pip install --no-cache-dir -r requirements_dev.txt
 CMD ["./entrypoint.sh", "python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 FROM base AS prod

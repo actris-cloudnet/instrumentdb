@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+
+
+def run(args):
+    p = subprocess.run(["docker", "compose", "run", "-T", "django", *args])
+    if p.returncode != 0:
+        sys.exit(1)
+
+
+prefix = "backend/"
+paths = [
+    path[len(prefix) :]
+    for path in sys.argv
+    if path.startswith(prefix) and path.endswith(".py")
+]
+run(["isort", "--profile", "black", *paths])
+run(["black", *paths])

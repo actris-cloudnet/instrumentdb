@@ -1,10 +1,10 @@
 import json
 import uuid
+from typing import Any
 
 import requests
 from django.conf import settings
 from django.db import models
-from django.http import HttpRequest
 from django.urls import reverse
 from sorl.thumbnail import ImageField
 
@@ -30,7 +30,7 @@ class Organization(models.Model):
     ror_id = RorIdField(null=True, blank=True, verbose_name="ROR ID", unique=True)
 
     def pidinst(self, prefix: str):
-        obj = {f"{prefix}Name": self.name}
+        obj: dict[str, Any] = {f"{prefix}Name": self.name}
         if self.ror_id:
             obj[f"{prefix}Identifier"] = {
                 f"{prefix}IdentifierValue": self.ror_id,
