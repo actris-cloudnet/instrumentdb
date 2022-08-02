@@ -15,5 +15,6 @@ paths = [
     for path in sys.argv
     if path.startswith(prefix) and path.endswith(".py")
 ]
-run(["isort", "--profile", "black", *paths])
-run(["black", *paths])
+if paths:
+    run(["isort", "--profile", "black", *paths])
+    run(["black", *paths])

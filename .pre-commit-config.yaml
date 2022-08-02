@@ -18,9 +18,9 @@ repos:
       - id: shellcheck
   - repo: local
     hooks:
-      - id: format-code
-        name: format code
-        entry: scripts/format-code
+      - id: fix-style
+        name: fix style
+        entry: scripts/fix-style
         language: system
         require_serial: true
   - repo: local

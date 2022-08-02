@@ -15,4 +15,5 @@ paths = [
     for path in sys.argv
     if path.startswith(prefix) and path.endswith(".py")
 ]
-run(["mypy", *paths])
+if paths:
+    run(["mypy", *paths])

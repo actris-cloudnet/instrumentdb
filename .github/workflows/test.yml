@@ -15,3 +15,9 @@ jobs:
 
       - name: Test
         run: docker-compose run django ./manage.py test
+
+      - name: Check style
+        run: ./scripts/check-style
+
+      - name: Check types
+        run: ./scripts/check-types
