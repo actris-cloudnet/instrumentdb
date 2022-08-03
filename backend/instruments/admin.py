@@ -22,6 +22,13 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ["name"]
     ordering = ["name"]
 
+    class Media:
+        js = [
+            "https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js",
+            "instruments/organization.js",
+        ]
+        css = {"all": ["instruments/autoComplete.css"]}
+
 
 @admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):

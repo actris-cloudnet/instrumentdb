@@ -1,0 +1,55 @@
+.autoComplete_wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.autoComplete_wrapper > ul {
+  position: absolute;
+  max-height: 226px;
+  overflow-y: scroll;
+  left: 0;
+  right: 0;
+  margin: .5rem 0 0 0 !important;
+  padding: 0 !important;
+  z-index: 1;
+  list-style: none;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid rgba(33, 33, 33, 0.07);
+  box-shadow: 0 3px 6px rgba(149, 157, 165, 0.15);
+  outline: none;
+}
+
+.autoComplete_wrapper > ul[hidden],
+.autoComplete_wrapper > ul:empty {
+  display: block;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.autoComplete_wrapper > ul > li {
+  margin: 0.3rem;
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+  font-size: 1rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autoComplete_wrapper > ul > li mark {
+  background-color: transparent;
+  color: rgb(135, 122, 255);
+  font-weight: bold;
+}
+
+.autoComplete_wrapper > ul > li:hover {
+  cursor: pointer;
+  background-color: rgba(135, 122, 255, 0.15);
+}
+
+.autoComplete_wrapper > ul > li[aria-selected="true"] {
+  background-color: rgba(135, 122, 255, 0.15);
+}
