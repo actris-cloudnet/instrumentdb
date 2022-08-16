@@ -171,3 +171,5 @@ LOGGING = {
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
 logging.getLogger("sorl.thumbnail").addHandler(handler)
+
+THUMBNAIL_PRESERVE_FORMAT = True
