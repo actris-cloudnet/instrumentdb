@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
 from urllib.parse import urlparse
+
+from sorl.thumbnail.log import ThumbnailLogHandler
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,3 +167,7 @@ LOGGING = {
         "level": "WARNING",
     },
 }
+
+handler = ThumbnailLogHandler()
+handler.setLevel(logging.ERROR)
+logging.getLogger("sorl.thumbnail").addHandler(handler)
