@@ -24,7 +24,7 @@ repos:
         language: system
         require_serial: true
         types: [python]
-        include: ^backend/
+        files: ^backend/
   - repo: local
     hooks:
       - id: check-types
@@ -33,4 +33,4 @@ repos:
         language: system
         require_serial: true
         types: [python]
-        include: ^backend/
+        files: ^backend/
