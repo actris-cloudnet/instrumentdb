@@ -38,7 +38,7 @@
         </div>
       {% endif %}
       <div class="field">
-        <div class="field-label">Owners</div>
+        <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
         <div class="field-content">
           {% for owner in instrument.owners.all %}
             {{ owner.name }}{% if owner.acronym %} ({{ owner.acronym }}){% endif %}{% if owner.ror_id %} <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
@@ -46,15 +46,15 @@
         </div>
       </div>
       <div class="field">
-        <div class="field-label">Manufacturers</div>
+        <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
         <div class="field-content">
           {% for manufacturer in instrument.model.manufacturers.all %}
             {{ manufacturer.name }}{% if manufacturer.acronym %} ({{ manufacturer.acronym }}){% endif %}{% if manufacturer.ror_id %} <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16" /></a>{% endif %}{% if not forloop.last %},{% endif %}
           {% endfor %}
-          </div>
+        </div>
       </div>
       <div class="field">
-        <div class="field-label">Model name</div>
+        <div class="field-label">Model</div>
         <div class="field-content">
           {% if instrument.model.concept_url %}
             <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>

@@ -24,7 +24,8 @@ class SimpleTest(TestCase):
 
     @classmethod
     def setUpTestData(cls) -> None:
-        company = Organization.objects.create(name="Test company")
+        owner = Organization.objects.create(name="Test owner")
+        manufacturer = Organization.objects.create(name="Test manufacturer")
         model = Model.objects.create(
             name="Test model", concept_url="http://vocab.test/testmodel"
         )
@@ -34,7 +35,7 @@ class SimpleTest(TestCase):
         test_variable = Variable.objects.create(
             name="Test variable", concept_url="http://vocab.test/testvariable"
         )
-        model.manufacturers.add(company)
+        model.manufacturers.add(manufacturer)
         model.types.add(test_type)
         model.variables.add(test_variable)
         model.save()
@@ -47,7 +48,7 @@ class SimpleTest(TestCase):
             decommission_date=datetime.date(2011, 1, 5),
             serial_number="836514404680691",
         )
-        cls.instrument.owners.add(company)
+        cls.instrument.owners.add(owner)
 
     def setUp(self):
         self.client = Client()
@@ -82,10 +83,11 @@ class SimpleTest(TestCase):
             "Test instrument",
             "PID",
             "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
-            "Owners",
-            "Manufacturers",
-            "Test company",
-            "Model name",
+            "Owner",
+            "Test owner",
+            "Manufacturer",
+            "Test manufacturer",
+            "Model",
             '<a href="http://vocab.test/testmodel">Test model</a>',
             "Instrument types",
             '<a href="http://vocab.test/testtype">Test type</a>',
@@ -117,8 +119,10 @@ class SimpleTest(TestCase):
             },
             "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6",
             "Name": "Test instrument",
-            "Owners": [{"owner": {"ownerName": "Test company"}}],
-            "Manufacturers": [{"manufacturer": {"manufacturerName": "Test company"}}],
+            "Owners": [{"owner": {"ownerName": "Test owner"}}],
+            "Manufacturers": [
+                {"manufacturer": {"manufacturerName": "Test manufacturer"}}
+            ],
             "Model": {
                 "model": {
                     "modelName": "Test model",

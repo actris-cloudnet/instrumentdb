@@ -5,12 +5,12 @@
     <name>Test instrument</name>
     <owners>
         <owner>
-            <ownerName>Test company</ownerName>
+            <ownerName>Test owner</ownerName>
         </owner>
     </owners>
     <manufacturers>
         <manufacturer>
-            <manufacturerName>Test company</manufacturerName>
+            <manufacturerName>Test manufacturer</manufacturerName>
         </manufacturer>
     </manufacturers>
     <model>

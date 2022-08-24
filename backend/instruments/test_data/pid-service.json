@@ -13,11 +13,11 @@
       },
       {
         "type": "21.T11148/4eaec4bc0f1df68ab2a7",
-        "value": "[{\"owner\": {\"ownerName\": \"Test company\"}}]"
+        "value": "[{\"owner\": {\"ownerName\": \"Test owner\"}}]"
       },
       {
         "type": "21.T11148/1f3e82ddf0697a497432",
-        "value": "[{\"manufacturer\": {\"manufacturerName\": \"Test company\"}}]"
+        "value": "[{\"manufacturer\": {\"manufacturerName\": \"Test manufacturer\"}}]"
       },
       {
         "type": "21.T11148/c1a0ec5ad347427f25d6",
