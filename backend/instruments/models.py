@@ -13,6 +13,16 @@ from .fields import OrcidIdField, RorIdField
 
 class Type(models.Model):
     name = models.CharField(max_length=255)
+    concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
+
+    def pidinst(self):
+        result = {"instrumentTypeName": self.name}
+        if self.concept_url:
+            result["instrumentTypeIdentifier"] = {
+                "instrumentTypeIdentifierValue": self.concept_url,
+                "instrumentTypeIdentifierType": "URL",
+            }
+        return {"instrumentType": result}
 
     def __str__(self) -> str:
         return self.name
@@ -20,6 +30,7 @@ class Type(models.Model):
 
 class Variable(models.Model):
     name = models.CharField(max_length=255)
+    concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
 
     def __str__(self) -> str:
         return self.name
@@ -68,6 +79,16 @@ class Model(models.Model):
         blank=True,
     )
     image = ImageField(null=True, blank=True, verbose_name="Default image")
+    concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
+
+    def pidinst(self):
+        result = {"modelName": self.name}
+        if self.concept_url:
+            result["modelIdentifier"] = {
+                "modelIdentifierValue": self.concept_url,
+                "modelIdentifierType": "URL",
+            }
+        return {"model": result}
 
     def __str__(self) -> str:
         return self.name
@@ -115,9 +136,7 @@ class Instrument(models.Model):
                 manufacturer.pidinst("manufacturer")
                 for manufacturer in self.model.manufacturers.all()
             ],
-            "Model": {
-                "modelName": self.model.name,
-            },
+            "Model": self.model.pidinst(),
         }
         if self.pid:
             result["Identifier"] = {
@@ -127,7 +146,7 @@ class Instrument(models.Model):
         if description := self.description:
             result["Description"] = description
         if types := self.model.types.all():
-            result["InstrumentType"] = [type.name for type in types]
+            result["InstrumentType"] = [type.pidinst() for type in types]
         if variables := self.model.variables.all():
             result["MeasuredVariables"] = [
                 {"measuredVariable": {"variableMeasured": variable.name}}

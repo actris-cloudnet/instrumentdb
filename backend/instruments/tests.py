@@ -25,9 +25,15 @@ class SimpleTest(TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         company = Organization.objects.create(name="Test company")
-        model = Model.objects.create(name="Test model")
-        test_type = Type.objects.create(name="Test type")
-        test_variable = Variable.objects.create(name="Test variable")
+        model = Model.objects.create(
+            name="Test model", concept_url="http://vocab.test/testmodel"
+        )
+        test_type = Type.objects.create(
+            name="Test type", concept_url="http://vocab.test/testtype"
+        )
+        test_variable = Variable.objects.create(
+            name="Test variable", concept_url="http://vocab.test/testvariable"
+        )
         model.manufacturers.add(company)
         model.types.add(test_type)
         model.variables.add(test_variable)
@@ -80,11 +86,11 @@ class SimpleTest(TestCase):
             "Manufacturers",
             "Test company",
             "Model name",
-            "Test model",
+            '<a href="http://vocab.test/testmodel">Test model</a>',
             "Instrument types",
-            "Test type",
+            '<a href="http://vocab.test/testtype">Test type</a>',
             "Measured variables",
-            "Test variable",
+            '<a href="http://vocab.test/testvariable">Test variable</a>',
             "Commission date",
             '<time datetime="2002-03-18">March 18, 2002</time>',
             "Decommission date",
@@ -113,8 +119,26 @@ class SimpleTest(TestCase):
             "Name": "Test instrument",
             "Owners": [{"owner": {"ownerName": "Test company"}}],
             "Manufacturers": [{"manufacturer": {"manufacturerName": "Test company"}}],
-            "Model": {"modelName": "Test model"},
-            "InstrumentType": ["Test type"],
+            "Model": {
+                "model": {
+                    "modelName": "Test model",
+                    "modelIdentifier": {
+                        "modelIdentifierValue": "http://vocab.test/testmodel",
+                        "modelIdentifierType": "URL",
+                    },
+                }
+            },
+            "InstrumentType": [
+                {
+                    "instrumentType": {
+                        "instrumentTypeName": "Test type",
+                        "instrumentTypeIdentifier": {
+                            "instrumentTypeIdentifierValue": "http://vocab.test/testtype",
+                            "instrumentTypeIdentifierType": "URL",
+                        },
+                    }
+                }
+            ],
             "MeasuredVariables": [
                 {"measuredVariable": {"variableMeasured": "Test variable"}}
             ],

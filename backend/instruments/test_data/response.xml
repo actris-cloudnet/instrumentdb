@@ -15,10 +15,12 @@
     </manufacturers>
     <model>
         <modelName>Test model</modelName>
+        <modelIdentifier modelIdentifierType="URL">http://vocab.test/testmodel</modelIdentifier>
     </model>
     <instrumentTypes>
         <instrumentType>
             <instrumentTypeName>Test type</instrumentTypeName>
+            <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">http://vocab.test/testtype</instrumentTypeIdentifier>
         </instrumentType>
     </instrumentTypes>
     <measuredVariables>

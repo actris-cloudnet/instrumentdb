@@ -21,11 +21,11 @@
       },
       {
         "type": "21.T11148/c1a0ec5ad347427f25d6",
-        "value": "{\"modelName\": \"Test model\"}"
+        "value": "{\"model\": {\"modelName\": \"Test model\", \"modelIdentifier\": {\"modelIdentifierValue\": \"http://vocab.test/testmodel\", \"modelIdentifierType\": \"URL\"}}}"
       },
       {
         "type": "21.T11148/f76ad9d0324302fc47dd",
-        "value": "[\"Test type\"]"
+        "value": "[{\"instrumentType\": {\"instrumentTypeName\": \"Test type\", \"instrumentTypeIdentifier\": {\"instrumentTypeIdentifierValue\": \"http://vocab.test/testtype\", \"instrumentTypeIdentifierType\": \"URL\"}}}]"
       },
       {
         "type": "21.T11148/72928b84e060d491ee41",

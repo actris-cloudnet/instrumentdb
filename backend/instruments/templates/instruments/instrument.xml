@@ -28,12 +28,18 @@
   </manufacturers>
   <model>
     <modelName>{{ instrument.model.name }}</modelName>
+    {% if instrument.model.concept_url %}
+      <modelIdentifier modelIdentifierType="URL">{{ instrument.model.concept_url }}</modelIdentifier>
+    {% endif %}
   </model>
   {% if instrument.model.types.all %}
     <instrumentTypes>
       {% for type in instrument.model.types.all %}
         <instrumentType>
           <instrumentTypeName>{{ type.name }}</instrumentTypeName>
+          {% if type.concept_url %}
+            <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">{{ type.concept_url }}</instrumentTypeIdentifier>
+          {% endif %}
         </instrumentType>
       {% endfor %}
     </instrumentTypes>

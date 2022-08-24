@@ -55,15 +55,29 @@
       </div>
       <div class="field">
         <div class="field-label">Model name</div>
-        <div class="field-content">{{ instrument.model.name }}</div>
+        <div class="field-content">
+          {% if instrument.model.concept_url %}
+            <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
+          {% else %}
+            {{ instrument.model.name }}
+          {% endif %}
+        </div>
       </div>
       {% if instrument.model.types.all %}
         <div class="field">
           <div class="field-label">Instrument types</div>
           <div class="field-content">
+            <ul>
             {% for type in instrument.model.types.all %}
-              {{ type.name }}{% if not forloop.last %},{% endif %}
+              <li>
+                {% if type.concept_url %}
+                  <a href="{{ type.concept_url }}">{{ type.name }}</a>
+                {% else %}
+                  {{ type.name }}
+                {% endif %}
+              </li>
             {% endfor %}
+            </ul>
           </div>
         </div>
       {% endif %}
@@ -73,7 +87,13 @@
           <div class="field-content">
             <ul>
             {% for variable in instrument.model.variables.all %}
-              <li>{{ variable.name }}</li>
+              <li>
+                {% if variable.concept_url %}
+                  <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+                {% else %}
+                  {{ variable.name }}
+                {% endif %}
+              </li>
             {% endfor %}
             </ul>
           </div>
