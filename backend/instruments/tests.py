@@ -46,7 +46,7 @@ class SimpleTest(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def test_create_pid(self):
+    def test_create_or_update_pid(self):
         with patch("instruments.models.requests.post") as mock_post:
             response = requests.models.Response()
             response.status_code = 200
@@ -57,7 +57,7 @@ class SimpleTest(TestCase):
 
             self.instrument.uuid = "8fd884df-6896-4bae-a72f-b6260b5b8744"
             self.instrument.pid = None
-            self.instrument.create_pid()
+            self.instrument.create_or_update_pid()
             self.assertEqual(
                 self.instrument.pid,
                 "https://hdl.handle.net/21.12132/3.8fd884df68964bae",

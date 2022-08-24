@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.db.models import QuerySet
 from django.urls import reverse
 from sorl.thumbnail.admin import AdminImageMixin
 
@@ -73,11 +74,11 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         )
 
     @admin.action(description="Create PIDs for selected instruments")
-    def create_pids(self, request, queryset):
+    def create_pids(self, request, queryset: "QuerySet[models.Instrument]"):
         created_pids = 0
         try:
             for obj in queryset:
-                obj.create_pid()
+                obj.create_or_update_pid()
                 created_pids += 1
         except Exception as err:
             self.message_user(request, f"Failed to create PID: {err}.", messages.ERROR)
@@ -85,3 +86,8 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
             self.message_user(
                 request, f"Created {created_pids} PIDs successfully.", messages.SUCCESS
             )
+
+    def save_model(self, request, obj: models.Instrument, form, change):
+        super().save_model(request, obj, form, change)
+        if obj.pid:
+            obj.create_or_update_pid()

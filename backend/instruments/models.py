@@ -176,7 +176,7 @@ class Instrument(models.Model):
             ]
         return result
 
-    def create_pid(self):
+    def create_or_update_pid(self):
         types = {
             "Identifier": "21.T11148/8eb858ee0b12e8e463a5",
             "LandingPage": "21.T11148/9a15a4735d4bda329d80",
