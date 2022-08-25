@@ -88,7 +88,7 @@ class Model(models.Model):
                 "modelIdentifierValue": self.concept_url,
                 "modelIdentifierType": "URL",
             }
-        return {"model": result}
+        return result
 
     def __str__(self) -> str:
         return self.name

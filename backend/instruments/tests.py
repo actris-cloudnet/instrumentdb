@@ -124,13 +124,11 @@ class SimpleTest(TestCase):
                 {"manufacturer": {"manufacturerName": "Test manufacturer"}}
             ],
             "Model": {
-                "model": {
-                    "modelName": "Test model",
-                    "modelIdentifier": {
-                        "modelIdentifierValue": "http://vocab.test/testmodel",
-                        "modelIdentifierType": "URL",
-                    },
-                }
+                "modelName": "Test model",
+                "modelIdentifier": {
+                    "modelIdentifierValue": "http://vocab.test/testmodel",
+                    "modelIdentifierType": "URL",
+                },
             },
             "InstrumentType": [
                 {
