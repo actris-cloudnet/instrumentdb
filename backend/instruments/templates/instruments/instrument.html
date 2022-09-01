@@ -11,7 +11,7 @@
   <body>
     <main>
       <div class="header">
-        <h1>{{ instrument.name }}</h1>
+        <a href="{% url 'index' %}" style="margin-right:auto">Instruments</a>
         {% if user.is_authenticated %}
           <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
         {% else %}
@@ -20,6 +20,7 @@
         <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
         <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
       </div>
+      <h1 style="margin-top:.5rem">{{ instrument.name }}</h1>
       {% with image=instrument.image|default:instrument.model.image %}
         {% if image %}
           <a href="/media/{{ image }}" target="_blank" class="image-container">
@@ -179,6 +180,9 @@
           </table>
         </div>
       {% endif %}
+      <div style="margin-top: 2rem; font-style: italic;">
+        If you notice any incorrect or outdated information, please send email to <a href="mailto:actris-cloudnet@fmi.fi">actris-cloudnet@fmi.fi</a>.
+      </div>
     </main>
   </body>
 </html>

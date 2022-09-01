@@ -10,7 +10,7 @@
   <body>
     <main style="max-width:800px">
       <div class="header" style="margin-bottom:1rem">
-        <h1>Instruments</h1>
+        <h1 style="margin-right:auto">Instruments</h1>
         {% if user.is_authenticated %}
           <a href="{% url 'admin:instruments_instrument_add' %}">Add instrument</a>
         {% else %}
@@ -41,7 +41,9 @@
           {% endfor %}
         </tbody>
       </table>
-        <div style="margin-top: 2rem; margin-left: 0.5rem">If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/1QIhNSf9YzUMzAL36B_lo_08C8jHin7k5yRjWhX_M6B8/">fill this form</a>.</div>
+      <div style="margin-top: 2rem; font-style: italic;">
+        If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/1QIhNSf9YzUMzAL36B_lo_08C8jHin7k5yRjWhX_M6B8/">fill this form</a>.
+      </div>
     </main>
   </body>
 </html>

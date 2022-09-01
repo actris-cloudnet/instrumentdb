@@ -31,12 +31,8 @@ main {
   align-items: center;
 }
 
-.header a {
+.header a + a {
   margin-left: .5rem;
-}
-
-.header a:first-of-type {
-  margin-left: auto;
 }
 
 h1 {
