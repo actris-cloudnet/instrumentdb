@@ -279,17 +279,18 @@ class Campaign(models.Model):
             date_range = f"since {self.date_range.lower}"
         return f"{name} {date_range}"
 
-    class Meta:
-        constraints = [
-            ExclusionConstraint(
-                name="exclude_overlapping_campaigns",
-                violation_error_message="Overlaps with another campaign.",  # type: ignore
-                expressions=[
-                    ("date_range", RangeOperators.OVERLAPS),
-                    ("instrument_id", RangeOperators.EQUAL),
-                ],
-            ),
-        ]
+    # XXX: Constraint doesn't seem to work properly with a foreign key...
+    # class Meta:
+    #     constraints = [
+    #         ExclusionConstraint(
+    #             name="exclude_overlapping_campaigns",
+    #             violation_error_message="Overlaps with another campaign.",  # type: ignore
+    #             expressions=[
+    #                 ("date_range", RangeOperators.OVERLAPS),
+    #                 ("instrument_id", RangeOperators.EQUAL),
+    #             ],
+    #         ),
+    #     ]
 
 
 class RelatedIdentifier(models.Model):
