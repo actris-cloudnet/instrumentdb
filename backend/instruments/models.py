@@ -1,10 +1,14 @@
 import json
 import uuid
-from typing import Any
+from datetime import date
+from typing import Any, Optional
 
 import requests
 from django.conf import settings
+from django.contrib.postgres.constraints import ExclusionConstraint
+from django.contrib.postgres.fields import DateRangeField, RangeOperators
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 from sorl.thumbnail import ImageField
 
@@ -103,6 +107,13 @@ class Person(models.Model):
         return self.full_name
 
 
+class Location(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Instrument(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     pid = models.URLField(unique=True, null=True, verbose_name="PID")
@@ -118,14 +129,13 @@ class Instrument(models.Model):
     contact_person = models.ForeignKey(
         Person, on_delete=models.PROTECT, null=True, blank=True
     )
-    commission_date = models.DateField(null=True, blank=True)
-    decommission_date = models.DateField(null=True, blank=True)
     image = ImageField(
         null=True,
         blank=True,
         help_text="Photograph of the instrument on site. Leave empty to use default image of the model.",
     )
     serial_number = models.CharField(max_length=255, null=True, blank=True)
+    locations = models.ManyToManyField(Location, through="Campaign")
 
     def pidinst(self):
         result = {
@@ -232,8 +242,54 @@ class Instrument(models.Model):
             kwargs={"instrument_uuid": self.uuid},
         )
 
+    @property
+    def campaigns(self) -> "QuerySet[Campaign]":
+        return self.campaign_set.order_by("-date_range")
+
+    @property
+    def commission_date(self) -> Optional[date]:
+        obj = self.campaign_set.order_by("date_range").first()
+        return obj.date_range.lower if obj else None
+
+    @property
+    def decommission_date(self) -> Optional[date]:
+        obj = self.campaign_set.order_by("date_range").last()
+        return obj.date_range.upper if obj else None
+
     def __str__(self) -> str:
         return self.name
+
+
+class Campaign(models.Model):
+    # TODO: Make not null once all information is filled.
+    location = models.ForeignKey(
+        Location, on_delete=models.PROTECT, null=True, blank=True
+    )
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    date_range = DateRangeField()
+
+    def __str__(self) -> str:
+        if self.location:
+            name = self.location.name
+        else:
+            name = "Unknown"
+        if self.date_range.upper:
+            date_range = f"from {self.date_range.lower} to {self.date_range.upper}"
+        else:
+            date_range = f"since {self.date_range.lower}"
+        return f"{name} {date_range}"
+
+    class Meta:
+        constraints = [
+            ExclusionConstraint(
+                name="exclude_overlapping_campaigns",
+                violation_error_message="Overlaps with another campaign.",  # type: ignore
+                expressions=[
+                    ("date_range", RangeOperators.OVERLAPS),
+                    ("instrument_id", RangeOperators.EQUAL),
+                ],
+            ),
+        ]
 
 
 class RelatedIdentifier(models.Model):

@@ -45,13 +45,20 @@ class ModelAdmin(AdminImageMixin, admin.ModelAdmin):
 
 class RelatedIdentifierAdminInline(admin.TabularInline):
     model = models.RelatedIdentifier
+    extra = 0
+
+
+class CampaignAdminInline(admin.TabularInline):
+    model = models.Campaign
+    ordering = ["-date_range"]
+    extra = 0
 
 
 @admin.register(models.Instrument)
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     list_display = ["name", "pid"]
     ordering = ["name"]
-    inlines = [RelatedIdentifierAdminInline]
+    inlines = [RelatedIdentifierAdminInline, CampaignAdminInline]
     fields = [
         "pid",
         "name",
@@ -59,8 +66,6 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         "model",
         "description",
         "contact_person",
-        "commission_date",
-        "decommission_date",
         "image",
         "serial_number",
     ]
@@ -91,3 +96,9 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if obj.pid:
             obj.create_or_update_pid()
+
+
+@admin.register(models.Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]

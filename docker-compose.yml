@@ -11,12 +11,9 @@ services:
       - PID_SERVICE_URL=http://pid-service.test
       - DATABASE_HOST=database
       - DATABASE_PORT=5432
-      - DATABASE_NAME=cfs
-      - DATABASE_USER=AzureDiamond
-      - DATABASE_PASSWORD=hunter2
-      - DATABASE_SERVICE=database
-      - DATABASE_SERVICE_HOST=database
-      - DATABASE_SERVICE_PORT=5432
+      - DATABASE_NAME=instrumentdb
+      - DATABASE_USER=admin
+      - DATABASE_PASSWORD=supersecret
       - SECRET_KEY=donutsteel
       - PUBLIC_URL=http://localhost:8000
       - MODE=development
@@ -26,6 +23,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: AzureDiamond
-      POSTGRES_PASSWORD: hunter2
-      POSTGRES_DB: cfs
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: supersecret
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d

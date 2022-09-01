@@ -8,7 +8,7 @@ import requests
 from django.test import Client, TestCase
 
 from . import fields
-from .models import Instrument, Model, Organization, Type, Variable
+from .models import Campaign, Instrument, Location, Model, Organization, Type, Variable
 
 
 def load_tests(loader, tests, ignore):
@@ -44,11 +44,21 @@ class SimpleTest(TestCase):
             pid="https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
             name="Test instrument",
             model=model,
-            commission_date=datetime.date(2002, 3, 18),
-            decommission_date=datetime.date(2011, 1, 5),
             serial_number="836514404680691",
         )
         cls.instrument.owners.add(owner)
+        location1 = Location.objects.create(name="Location 1")
+        location2 = Location.objects.create(name="Location 2")
+        Campaign.objects.create(
+            instrument=cls.instrument,
+            location=location1,
+            date_range=(datetime.date(2002, 3, 18), datetime.date(2005, 6, 24)),
+        )
+        Campaign.objects.create(
+            instrument=cls.instrument,
+            location=location2,
+            date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
+        )
 
     def setUp(self):
         self.client = Client()
@@ -93,10 +103,13 @@ class SimpleTest(TestCase):
             '<a href="http://vocab.test/testtype">Test type</a>',
             "Measured variables",
             '<a href="http://vocab.test/testvariable">Test variable</a>',
-            "Commission date",
+            "Locations",
             '<time datetime="2002-03-18">March 18, 2002</time>',
-            "Decommission date",
+            '<time datetime="2005-06-24">June 24, 2005</time>',
+            "Location 1",
+            '<time datetime="2008-02-10">Feb. 10, 2008</time>',
             '<time datetime="2011-01-05">Jan. 5, 2011</time>',
+            "Location 2",
             "Serial number",
             "836514404680691",
             "JSON",

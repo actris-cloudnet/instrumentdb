@@ -115,20 +115,35 @@
           </div>
         </div>
       {% endif %}
-      {% if instrument.commission_date %}
+      {% if instrument.campaigns %}
         <div class="field">
-          <div class="field-label">Commission date</div>
-          <div class="field-content">
-            <time datetime="{{ instrument.commission_date|date:'Y-m-d' }}">{{ instrument.commission_date }}</time>
-          </div>
-        </div>
-      {% endif %}
-      {% if instrument.decommission_date %}
-        <div class="field">
-          <div class="field-label">Decommission date</div>
-          <div class="field-content">
-            <time datetime="{{ instrument.decommission_date|date:'Y-m-d' }}">{{ instrument.decommission_date }}</time>
-          </div>
+          <div class="field-label">Locations</div>
+          <table class="field-content">
+            <tbody>
+            {% for campaign in instrument.campaigns %}
+              <tr>
+                <td style="white-space:nowrap;padding:0;color:#555">
+                  {% if campaign.date_range.lower %}
+                    <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
+                      {{ campaign.date_range.lower }}
+                    </time>
+                  {% endif %}
+                </td>
+                <td style="color:#555">–</td>
+                <td style="white-space:nowrap;padding:0;color:#555">
+                  {% if campaign.date_range.upper %}
+                    <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
+                      {{ campaign.date_range.upper }}
+                    </time>
+                  {% endif %}
+                </td>
+                <td style="width:99%">
+                  {{ campaign.location.name|default:'Unknown' }}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
         </div>
       {% endif %}
       {% if instrument.serial_number %}
