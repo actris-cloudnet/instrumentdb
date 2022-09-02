@@ -1,9 +1,12 @@
+from datetime import date
+
+from django.db.models import OuterRef, Subquery
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .decorators import cors
-from .models import Instrument
+from .models import Campaign, Instrument
 
 
 def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
@@ -68,8 +71,14 @@ def instrument(
 
 
 def index(request: HttpRequest) -> HttpResponse:
+    current_campaigns = Campaign.objects.filter(
+        instrument=OuterRef("pk"), date_range__contains=date.today()
+    ).order_by("date_range__startswith")
+    instruments = Instrument.objects.annotate(
+        location_name=Subquery(current_campaigns.values("location__name")[:1])
+    ).order_by("location_name", "name")
     return render(
         request,
         "instruments/index.html",
-        {"instruments": Instrument.objects.order_by("name")},
+        {"instruments": instruments},
     )

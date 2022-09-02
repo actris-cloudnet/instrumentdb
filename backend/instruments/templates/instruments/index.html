@@ -21,22 +21,16 @@
         <thead>
           <tr>
             <th>Instrument</th>
+            <th>Location</th>
             <th>PID</th>
           </tr>
         </thead>
         <tbody>
           {% for instrument in instruments %}
             <tr>
-              <td>
-                <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
-              </td>
-              <td>
-                {% if instrument.pid %}
-                  <a href="{{ instrument.pid }}">{{ instrument.pid }}</a>
-                {% else %}
-                  -
-                {% endif %}
-              </td>
+              <td><a href="{{ instrument.landing_page }}">{{ instrument.name }}</a></td>
+              <td>{{ instrument.location_name|default:'Unknown' }}</td>
+              <td>{{ instrument.pid|default:'-' }}</td>
             </tr>
           {% endfor %}
         </tbody>
