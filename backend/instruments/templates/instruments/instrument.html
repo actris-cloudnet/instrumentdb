@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ instrument.name }}</title>
     <link rel="stylesheet" href="{% static 'instruments/style.css' %}">
+    {% if instrument.pid %}
+      <meta name="DC.identifier" content="{{ instrument.pid }}">
+    {% endif %}
   </head>
   <body>
     <main>
@@ -33,7 +36,7 @@
       {% if instrument.pid %}
         <div class="field">
           <div class="field-label">PID</div>
-          <a class="field-content" href={{ instrument.pid }}>
+          <a class="field-content" href="{{ instrument.pid }}">
             {{ instrument.pid }}
           </a>
         </div>
