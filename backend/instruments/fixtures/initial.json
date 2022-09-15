@@ -1,0 +1,105 @@
+[
+{
+    "model": "instruments.type",
+    "pk": 1,
+    "fields": {
+        "name": "ceilometer",
+        "concept_url": null
+    }
+},
+{
+    "model": "instruments.variable",
+    "pk": 1,
+    "fields": {
+        "name": "volume linear depolarisation ratio",
+        "concept_url": null
+    }
+},
+{
+    "model": "instruments.variable",
+    "pk": 2,
+    "fields": {
+        "name": "attenuated backscatter coefficient",
+        "concept_url": null
+    }
+},
+{
+    "model": "instruments.organization",
+    "pk": 1,
+    "fields": {
+        "name": "Finnish Meteorological Institute",
+        "acronym": "FMI",
+        "ror_id": "05hppb561"
+    }
+},
+{
+    "model": "instruments.organization",
+    "pk": 2,
+    "fields": {
+        "name": "Vaisala",
+        "acronym": null,
+        "ror_id": "05yhgzh28"
+    }
+},
+{
+    "model": "instruments.model",
+    "pk": 1,
+    "fields": {
+        "name": "CL61",
+        "image": "",
+        "concept_url": null,
+        "manufacturers": [
+            2
+        ],
+        "types": [
+            1
+        ],
+        "variables": [
+            1,
+            2
+        ]
+    }
+},
+{
+    "model": "instruments.person",
+    "pk": 1,
+    "fields": {
+        "full_name": "Matti Meikäläinen",
+        "email_address": "matti.meikalainen@example.org",
+        "orcid_id": null
+    }
+},
+{
+    "model": "instruments.location",
+    "pk": 1,
+    "fields": {
+        "name": "Kumpula"
+    }
+},
+{
+    "model": "instruments.instrument",
+    "pk": 1,
+    "fields": {
+        "uuid": "c5a704fa-aaf5-435b-b9ad-a8fca393cc11",
+        "pid": null,
+        "name": "FMI CL61",
+        "model": 1,
+        "description": "",
+        "contact_person": 1,
+        "image": "",
+        "serial_number": null,
+        "owners": [
+            1
+        ]
+    }
+},
+{
+    "model": "instruments.campaign",
+    "pk": 1,
+    "fields": {
+        "location": 1,
+        "instrument": 1,
+        "date_range": "{\"bounds\": \"[)\", \"lower\": \"2022-01-01\", \"upper\": null}"
+    }
+}
+]

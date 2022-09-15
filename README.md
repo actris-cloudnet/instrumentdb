@@ -11,13 +11,15 @@ Start application:
 docker compose up
 ```
 
-Create admin user:
+Initialize database:
 
 ```sh
+docker compose exec django ./manage.py migrate
+docker compose exec django ./manage.py loaddata instruments/fixtures/initial.json
 docker compose exec django ./manage.py createsuperuser
 ```
 
-Log in and create some instruments in <http://localhost:8000/admin>.
+Navigate to <http://localhost:8000>.
 
 Install [pre-commit](https://pre-commit.com/) hooks:
 
