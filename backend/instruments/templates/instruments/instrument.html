@@ -1,221 +1,222 @@
+{% extends 'instruments/base.html' %}
+
 {% load thumbnail %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ instrument.name }}</title>
-    <link rel="stylesheet" href="{% static 'instruments/style.css' %}">
-    {% if instrument.pid %}
-      <meta name="DC.identifier" content="{{ instrument.pid }}">
-    {% endif %}
-  </head>
-  <body>
-    <main>
-      <div class="header">
-        <a href="{% url 'index' %}" style="margin-right:auto">Instruments</a>
-        {% if user.is_authenticated %}
-          <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
-        {% else %}
-          <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
-        {% endif %}
-        <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
-        <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
-      </div>
-      <h1 style="margin-top:.5rem">{{ instrument.name }}</h1>
-      {% with image=instrument.image|default:instrument.model.image %}
-        {% if image %}
-          <a href="/media/{{ image }}" target="_blank" class="image-container">
-            {% thumbnail image "150" as image %}
-              <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
-            {% endthumbnail %}
-          </a>
-        {% endif %}
-      {% endwith %}
-      {% if instrument.pid %}
-        <div class="field">
-          <div class="field-label">PID</div>
-          <a class="field-content" href="{{ instrument.pid }}">
-            {{ instrument.pid }}
-          </a>
-        </div>
+
+{% block title %}
+  {{ instrument.name }}
+{% endblock %}
+
+{% block head %}
+  {% if instrument.pid %}
+    <meta name="DC.identifier" content="{{ instrument.pid }}">
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  <main>
+    <div class="header">
+      <a href="{% url 'index' %}" style="margin-right:auto">Instruments</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
+      {% else %}
+        <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
       {% endif %}
+      <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
+      <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
+    </div>
+    <h1 style="margin-top:.5rem">{{ instrument.name }}</h1>
+    {% with image=instrument.image|default:instrument.model.image %}
+      {% if image %}
+        <a href="/media/{{ image }}" target="_blank" class="image-container">
+          {% thumbnail image "150" as image %}
+            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+          {% endthumbnail %}
+        </a>
+      {% endif %}
+    {% endwith %}
+    {% if instrument.pid %}
       <div class="field">
-        <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
-        <div class="field-content">
-          <ul>
-            {% for owner in instrument.owners.all %}
-            <li>
-              {{ owner.name }}
-              {% if owner.acronym %}
-                ({{ owner.acronym }})
-              {% endif %}
-              {% if owner.ror_id %}
-                <a href="https://ror.org/{{ owner.ror_id }}" target="_blank">
-                  <img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16">
-                </a>
-              {% endif %}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
+        <div class="field-label">PID</div>
+        <a class="field-content" href="{{ instrument.pid }}">
+          {{ instrument.pid }}
+        </a>
       </div>
+    {% endif %}
+    <div class="field">
+      <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
+      <div class="field-content">
+        <ul>
+          {% for owner in instrument.owners.all %}
+          <li>
+            {{ owner.name }}
+            {% if owner.acronym %}
+              ({{ owner.acronym }})
+            {% endif %}
+            {% if owner.ror_id %}
+              <a href="https://ror.org/{{ owner.ror_id }}" target="_blank">
+                <img alt="ROR logo" src="{% static 'instruments/images/ror-icon-rgb-16.png' %}" width="23" height="16">
+              </a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
+      <div class="field-content">
+        <ul>
+        {% for manufacturer in instrument.model.manufacturers.all %}
+          <li>
+            {{ manufacturer.name }}
+            {% if manufacturer.acronym %}
+              ({{ manufacturer.acronym }})
+            {% endif %}
+            {% if manufacturer.ror_id %}
+              <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">
+                <img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16">
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Model</div>
+      <div class="field-content">
+        {% if instrument.model.concept_url %}
+          <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
+        {% else %}
+          {{ instrument.model.name }}
+        {% endif %}
+      </div>
+    </div>
+    {% if instrument.model.types.all %}
       <div class="field">
-        <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
+        <div class="field-label">Instrument type{{ instrument.model.types.all|pluralize }}</div>
         <div class="field-content">
           <ul>
-          {% for manufacturer in instrument.model.manufacturers.all %}
+          {% for type in instrument.model.types.all %}
             <li>
-              {{ manufacturer.name }}
-              {% if manufacturer.acronym %}
-                ({{ manufacturer.acronym }})
-              {% endif %}
-              {% if manufacturer.ror_id %}
-                <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">
-                  <img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16">
-                </a>
+              {% if type.concept_url %}
+                <a href="{{ type.concept_url }}">{{ type.name }}</a>
+              {% else %}
+                {{ type.name }}
               {% endif %}
             </li>
           {% endfor %}
           </ul>
         </div>
       </div>
+    {% endif %}
+    {% if instrument.model.variables.all %}
       <div class="field">
-        <div class="field-label">Model</div>
+        <div class="field-label">Measured variable{{ instrument.model.variables.all|pluralize }}</div>
         <div class="field-content">
-          {% if instrument.model.concept_url %}
-            <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
-          {% else %}
-            {{ instrument.model.name }}
+          <ul>
+          {% for variable in instrument.model.variables.all %}
+            <li>
+              {% if variable.concept_url %}
+                <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+              {% else %}
+                {{ variable.name }}
+              {% endif %}
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+    {% if instrument.contact_person %}
+      <div class="field">
+        <div class="field-label">Contact</div>
+        <div class="field-content">
+          {{ instrument.contact_person.full_name }}
+          {% if user.is_authenticated %}
+            <a href="mailto:{{ instrument.contact_person.email_address }}">
+              <img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16">
+            </a>
+          {% endif %}
+          {% if instrument.contact_person.orcid_id %}
+            <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">
+              <img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16">
+            </a>
           {% endif %}
         </div>
       </div>
-      {% if instrument.model.types.all %}
-        <div class="field">
-          <div class="field-label">Instrument type{{ instrument.model.types.all|pluralize }}</div>
-          <div class="field-content">
-            <ul>
-            {% for type in instrument.model.types.all %}
-              <li>
-                {% if type.concept_url %}
-                  <a href="{{ type.concept_url }}">{{ type.name }}</a>
+    {% endif %}
+    {% if instrument.description %}
+      <div class="field">
+        <div class="field-label">Description</div>
+        <div class="field-content">{{ instrument.description }}</div>
+      </div>
+    {% endif %}
+    {% if instrument.campaigns.all %}
+      <div class="field">
+        <div class="field-label">Location{{ instrument.campaigns.all|pluralize }}</div>
+        <table class="field-content">
+          <tbody>
+          {% for campaign in instrument.campaigns.all %}
+            <tr>
+              <td style="white-space:nowrap;padding:0;color:#555">
+                {% if campaign.date_range.lower %}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
+                    {{ campaign.date_range.lower }}
+                  </time>
                 {% else %}
-                  {{ type.name }}
+                  N/A
                 {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
-          </div>
-        </div>
-      {% endif %}
-      {% if instrument.model.variables.all %}
-        <div class="field">
-          <div class="field-label">Measured variable{{ instrument.model.variables.all|pluralize }}</div>
-          <div class="field-content">
-            <ul>
-            {% for variable in instrument.model.variables.all %}
-              <li>
-                {% if variable.concept_url %}
-                  <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+              </td>
+              <td style="color:#555">–</td>
+              <td style="white-space:nowrap;padding:0;color:#555">
+                {% if campaign.date_range.upper %}
+                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
+                    {{ campaign.date_range.upper }}
+                  </time>
                 {% else %}
-                  {{ variable.name }}
+                  Now
                 {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
-          </div>
-        </div>
-      {% endif %}
-      {% if instrument.contact_person %}
-        <div class="field">
-          <div class="field-label">Contact</div>
-          <div class="field-content">
-            {{ instrument.contact_person.full_name }}
-            {% if user.is_authenticated %}
-              <a href="mailto:{{ instrument.contact_person.email_address }}">
-                <img src="{% static 'instruments/envelope-solid.svg' %}" alt="Email" width="16" height="16">
-              </a>
-            {% endif %}
-            {% if instrument.contact_person.orcid_id %}
-              <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">
-                <img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16">
-              </a>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-      {% if instrument.description %}
-        <div class="field">
-          <div class="field-label">Description</div>
-          <div class="field-content">{{ instrument.description }}</div>
-        </div>
-      {% endif %}
-      {% if instrument.campaigns.all %}
-        <div class="field">
-          <div class="field-label">Location{{ instrument.campaigns.all|pluralize }}</div>
-          <table class="field-content">
-            <tbody>
-            {% for campaign in instrument.campaigns.all %}
+              </td>
+              <td style="width:99%">
+                {{ campaign.location.name|default:'Unknown' }}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    {% if instrument.serial_number %}
+      <div class="field">
+        <div class="field-label">Serial number</div>
+        <div class="field-content">{{ instrument.serial_number }}</div>
+      </div>
+    {% endif %}
+    {% if instrument.related_identifiers.all %}
+      <div class="field">
+        <div class="field-label">Related identifier{{ instrument.related_identifiers.all|pluralize }}</div>
+        <table class="field-content">
+          <tbody>
+            {% for item in instrument.related_identifiers.all %}
               <tr>
-                <td style="white-space:nowrap;padding:0;color:#555">
-                  {% if campaign.date_range.lower %}
-                    <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
-                      {{ campaign.date_range.lower }}
-                    </time>
+                <th>{{ item.get_relation_type_display }}:</th>
+                <td>
+                  {% if item.identifier_type == 'URL' %}
+                    <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
                   {% else %}
-                    N/A
+                    {{ item.identifier }} ({{ item.get_identifier_type_display }})
                   {% endif %}
-                </td>
-                <td style="color:#555">–</td>
-                <td style="white-space:nowrap;padding:0;color:#555">
-                  {% if campaign.date_range.upper %}
-                    <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
-                      {{ campaign.date_range.upper }}
-                    </time>
-                  {% else %}
-                    Now
-                  {% endif %}
-                </td>
-                <td style="width:99%">
-                  {{ campaign.location.name|default:'Unknown' }}
                 </td>
               </tr>
             {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-      {% if instrument.serial_number %}
-        <div class="field">
-          <div class="field-label">Serial number</div>
-          <div class="field-content">{{ instrument.serial_number }}</div>
-        </div>
-      {% endif %}
-      {% if instrument.related_identifiers.all %}
-        <div class="field">
-          <div class="field-label">Related identifier{{ instrument.related_identifiers.all|pluralize }}</div>
-          <table class="field-content">
-            <tbody>
-              {% for item in instrument.related_identifiers.all %}
-                <tr>
-                  <th>{{ item.get_relation_type_display }}:</th>
-                  <td>
-                    {% if item.identifier_type == 'URL' %}
-                      <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
-                    {% else %}
-                      {{ item.identifier }} ({{ item.get_identifier_type_display }})
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-      <div style="margin-top: 2rem; font-style: italic;">
-        If you notice any incorrect or outdated information, please send email to <a href="mailto:actris-cloudnet@fmi.fi">actris-cloudnet@fmi.fi</a>.
+          </tbody>
+        </table>
       </div>
-    </main>
-  </body>
-</html>
+    {% endif %}
+    <div style="margin-top: 2rem; font-style: italic;">
+      If you notice any incorrect or outdated information, please send email to <a href="mailto:actris-cloudnet@fmi.fi">actris-cloudnet@fmi.fi</a>.
+    </div>
+  </main>
+{% endblock %}

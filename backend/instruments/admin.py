@@ -25,10 +25,10 @@ class OrganizationAdmin(admin.ModelAdmin):
 
     class Media:
         js = [
-            "https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js",
-            "instruments/organization.js",
+            "instruments/scripts/autoComplete.min.js",
+            "instruments/scripts/organization.js",
         ]
-        css = {"all": ["instruments/autoComplete.css"]}
+        css = {"all": ["instruments/styles/autoComplete.css"]}
 
 
 @admin.register(models.Person)

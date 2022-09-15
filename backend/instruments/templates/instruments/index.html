@@ -1,43 +1,39 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instruments</title>
-    <link rel="stylesheet" href="{% static 'instruments/style.css' %}">
-  </head>
-  <body>
-    <main style="max-width:1000px">
-      <div class="header" style="margin-bottom:1rem">
-        <h1 style="margin-right:auto">Instruments</h1>
-        {% if user.is_authenticated %}
-          <a href="{% url 'admin:instruments_instrument_add' %}">Add instrument</a>
-        {% else %}
-          <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
-        {% endif %}
-      </div>
-      <table>
-        <thead>
+{% extends 'instruments/base.html' %}
+
+{% block title %}
+  Instruments
+{% endblock %}
+
+{% block body %}
+  <main style="max-width:1000px">
+    <div class="header" style="margin-bottom:1rem">
+      <h1 style="margin-right:auto">Instruments</h1>
+      {% if user.is_authenticated %}
+        <a href="{% url 'admin:instruments_instrument_add' %}">Add instrument</a>
+      {% else %}
+        <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
+      {% endif %}
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Instrument</th>
+          <th>Location</th>
+          <th>PID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for instrument in instruments %}
           <tr>
-            <th>Instrument</th>
-            <th>Location</th>
-            <th>PID</th>
+            <td><a href="{{ instrument.landing_page }}">{{ instrument.name }}</a></td>
+            <td>{{ instrument.location_name|default:'Unknown' }}</td>
+            <td>{{ instrument.pid|default:'-' }}</td>
           </tr>
-        </thead>
-        <tbody>
-          {% for instrument in instruments %}
-            <tr>
-              <td><a href="{{ instrument.landing_page }}">{{ instrument.name }}</a></td>
-              <td>{{ instrument.location_name|default:'Unknown' }}</td>
-              <td>{{ instrument.pid|default:'-' }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <div style="margin-top: 2rem; font-style: italic;">
-        If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/1QIhNSf9YzUMzAL36B_lo_08C8jHin7k5yRjWhX_M6B8/">fill this form</a>.
-      </div>
-    </main>
-  </body>
-</html>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div style="margin-top: 2rem; font-style: italic;">
+      If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/1QIhNSf9YzUMzAL36B_lo_08C8jHin7k5yRjWhX_M6B8/">fill this form</a>.
+    </div>
+  </main>
+{% endblock %}
