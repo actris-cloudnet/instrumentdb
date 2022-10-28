@@ -144,21 +144,19 @@
             <tr>
               <td style="white-space:nowrap;padding:0;color:#555">
                 {% if campaign.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
-                    {{ campaign.date_range.lower }}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y.m.d' }}" style="font-family:monospace;font-size:125%">
+                      {{ campaign.date_range.lower|date:'Y.m.d' }}
                   </time>
                 {% else %}
                   N/A
                 {% endif %}
               </td>
-              <td style="color:#555">–</td>
-              <td style="white-space:nowrap;color:#555">
+              <td style="color:#555;">&#8211;</td>
+              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
                 {% if campaign.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
-                    {{ campaign.date_range.upper }}
+                  <time datetime="{{ campaign.date_range.upper|date:'Y.m.d' }}" style="font-family:monospace;font-size:125%">
+                    {{ campaign.date_range.upper|date:'Y.m.d' }}
                   </time>
-                {% else %}
-                  Now
                 {% endif %}
               </td>
               <td style="width:99%; padding-left: 30px">
@@ -179,21 +177,19 @@
             <tr>
               <td style="white-space:nowrap;padding:0;color:#555">
                 {% if pi.date_range.lower %}
-                  <time datetime="{{ pi.date_range.lower|date:'Y-m-d' }}">
-                    {{ pi.date_range.lower }}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y.m.d' }}" style="font-family:monospace;font-size:125%">
+                    {{ pi.date_range.lower|date:'Y.m.d' }}
                   </time>
                 {% else %}
                   N/A
                 {% endif %}
               </td>
-              <td style="color:#555">–</td>
-              <td style="white-space:nowrap;padding:0;color:#555">
+              <td style="color:#555">&#8211;</td>
+              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
                 {% if pi.date_range.upper %}
-                  <time datetime="{{ pi.date_range.upper|date:'Y-m-d' }}">
-                    {{ pi.date_range.upper }}
+                  <time datetime="{{ campaign.date_range.upper|date:'Y.m.d' }}" style="font-family:monospace;font-size:125%">
+                    {{ pi.date_range.upper|date:'Y.m.d' }}
                   </time>
-                {% else %}
-                  Now
                 {% endif %}
               </td>
               <td style="width:99%; padding-left: 30px">
