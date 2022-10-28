@@ -82,3 +82,10 @@ def index(request: HttpRequest) -> HttpResponse:
         "instruments/index.html",
         {"instruments": instruments},
     )
+
+
+@cors(allow_origin="*")
+def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
+    instru = get_object_or_404(Instrument, uuid=instrument_uuid)
+    date_param = request.GET.get("date", None)
+    return JsonResponse(instru.get_pi(date_param))

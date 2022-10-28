@@ -1,3 +1,4 @@
+import datetime
 import json
 import uuid
 from datetime import date
@@ -125,9 +126,6 @@ class Instrument(models.Model):
         blank=True,
         help_text="Technical description of the device and its capabilities.",
     )
-    # contact_person = models.ForeignKey(
-    #     Person, on_delete=models.PROTECT, null=True, blank=True
-    # )
     image = ImageField(
         null=True,
         blank=True,
@@ -136,6 +134,28 @@ class Instrument(models.Model):
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
     persons = models.ManyToManyField(Person, through="Pi")
+
+    def get_pi(self, date_param: Optional[str] = None) -> dict:
+        data = []
+        date_in = None
+        if date_param:
+            date_components = [int(d) for d in date_param.split("-")]
+            date_in = datetime.date(*date_components)
+        for pi in self.pis.all():
+            start_date = pi.date_range.lower
+            end_date = pi.date_range.upper
+            end_date = datetime.date.today() if end_date is None else end_date
+            if date_in and not (start_date <= date_in <= end_date):
+                continue
+            data.append(
+                {
+                    "name": pi.person.full_name if pi.person else None,
+                    "orchid": pi.person.orcid_id if pi.person else None,
+                    "startDate": pi.date_range.lower,
+                    "endDate": pi.date_range.upper,
+                }
+            )
+        return {"InstrumentPI": data}
 
     def pidinst(self):
         result = {
@@ -288,17 +308,6 @@ class Pi(models.Model):
     person = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     date_range = DateRangeField()
-
-    def __str__(self) -> str:
-        if self.person:
-            name = self.person.full_name
-        else:
-            name = "Unknown"
-        if self.date_range.upper:
-            date_range = f"from {self.date_range.lower} to {self.date_range.upper}"
-        else:
-            date_range = f"since {self.date_range.lower}"
-        return f"{name} {date_range}"
 
 
 class RelatedIdentifier(models.Model):
