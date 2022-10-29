@@ -85,7 +85,6 @@
         "name": "FMI CL61",
         "model": 1,
         "description": "",
-        "contact_person": 1,
         "image": "",
         "serial_number": null,
         "owners": [
@@ -101,5 +100,15 @@
         "instrument": 1,
         "date_range": "{\"bounds\": \"[)\", \"lower\": \"2022-01-01\", \"upper\": null}"
     }
+},
+{
+    "model": "instruments.pi",
+    "pk": 1,
+    "fields": {
+        "person": 1,
+        "instrument": 1,
+        "date_range": "{\"bounds\": \"[)\", \"lower\": \"2022-01-01\", \"upper\": null}"
+    }
 }
+
 ]
