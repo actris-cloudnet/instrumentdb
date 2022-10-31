@@ -98,10 +98,11 @@ def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     for p in pis:
         data.append(
             {
-                "name": p.person.full_name,
-                "orcid": p.person.orcid_id,
-                "startDate": p.date_range.lower,
-                "endDate": p.date_range.upper,
+                "first_name": p.person.first_name,
+                "last_name": p.person.last_name,
+                "orcid_id": p.person.orcid_id,
+                "start_date": p.date_range.lower,
+                "end_date": p.date_range.upper,
             }
         )
     return JsonResponse(data, safe=False)

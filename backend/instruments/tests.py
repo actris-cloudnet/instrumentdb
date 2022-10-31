@@ -204,16 +204,18 @@ class SimpleTest(TestCase):
     def _test_pi_api(self, response):
         expected_json = [
             {
-                "name": "Jane Doe",
-                "orcid": None,
-                "startDate": "2008-02-10",
-                "endDate": "2011-01-05",
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "orcid_id": None,
+                "start_date": "2008-02-10",
+                "end_date": "2011-01-05",
             },
             {
-                "name": "John Doe",
-                "orcid": None,
-                "startDate": "2002-03-18",
-                "endDate": "2005-06-24",
+                "first_name": "John",
+                "last_name": "Doe",
+                "orcid_id": None,
+                "start_date": "2002-03-18",
+                "end_date": "2005-06-24",
             },
         ]
         self.assertJSONEqual(response.content, expected_json)
@@ -221,10 +223,11 @@ class SimpleTest(TestCase):
     def _test_pi_api_single(self, response):
         expected_json = [
             {
-                "name": "Jane Doe",
-                "orcid": None,
-                "startDate": "2008-02-10",
-                "endDate": "2011-01-05",
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "orcid_id": None,
+                "start_date": "2008-02-10",
+                "end_date": "2011-01-05",
             }
         ]
         self.assertJSONEqual(response.content, expected_json)
