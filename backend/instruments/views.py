@@ -88,21 +88,19 @@ def index(request: HttpRequest) -> HttpResponse:
 
 @cors(allow_origin="*")
 def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
-    data = []
     instru = get_object_or_404(Instrument, uuid=instrument_uuid)
-    if date_param := request.GET.get("date", None):
+    pis = instru.pis
+    if date_param := request.GET.get("date"):
         date_in = datetime.date.fromisoformat(date_param)
-        pis = instru.pis.filter(date_range__contains=date_in)
-    else:
-        pis = instru.pis
-    for p in pis:
-        data.append(
-            {
-                "first_name": p.person.first_name,
-                "last_name": p.person.last_name,
-                "orcid_id": p.person.orcid_id,
-                "start_date": p.date_range.lower,
-                "end_date": p.date_range.upper,
-            }
-        )
+        pis = pis.filter(date_range__contains=date_in)
+    data = [
+        {
+            "first_name": pi.person.first_name,
+            "last_name": pi.person.last_name,
+            "orcid_id": pi.person.orcid_id,
+            "start_date": pi.date_range.lower,
+            "end_date": pi.date_range.upper,
+        }
+        for pi in pis
+    ]
     return JsonResponse(data, safe=False)
