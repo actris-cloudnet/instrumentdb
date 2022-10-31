@@ -8,7 +8,17 @@ import requests
 from django.test import Client, TestCase
 
 from . import fields
-from .models import Campaign, Instrument, Location, Model, Organization, Type, Variable
+from .models import (
+    Campaign,
+    Instrument,
+    Location,
+    Model,
+    Organization,
+    Person,
+    Pi,
+    Type,
+    Variable,
+)
 
 
 def load_tests(loader, tests, ignore):
@@ -59,6 +69,18 @@ class SimpleTest(TestCase):
             location=location2,
             date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
         )
+        person1 = Person.objects.create(full_name="Person 1")
+        person2 = Person.objects.create(full_name="Person 2")
+        Pi.objects.create(
+            instrument=cls.instrument,
+            person=person1,
+            date_range=(datetime.date(2002, 3, 18), datetime.date(2005, 6, 24)),
+        )
+        Pi.objects.create(
+            instrument=cls.instrument,
+            person=person2,
+            date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
+        )
 
     def setUp(self):
         self.client = Client()
@@ -104,12 +126,19 @@ class SimpleTest(TestCase):
             "Measured variable",
             '<a href="http://vocab.test/testvariable">Test variable</a>',
             "Locations",
-            '<time datetime="2002-03-18">March 18, 2002</time>',
-            '<time datetime="2005-06-24">June 24, 2005</time>',
+            '<time datetime="2002-03-18" style="font-family:monospace;font-size:125%">2002-03-18</time>',
+            '<time datetime="2005-06-24" style="font-family:monospace;font-size:125%">2005-06-24</time>',
             "Location 1",
-            '<time datetime="2008-02-10">Feb. 10, 2008</time>',
-            '<time datetime="2011-01-05">Jan. 5, 2011</time>',
+            '<time datetime="2008-02-10" style="font-family:monospace;font-size:125%">2008-02-10</time>',
+            '<time datetime="2011-01-05" style="font-family:monospace;font-size:125%">2011-01-05</time>',
             "Location 2",
+            "Principal Investigators",
+            '<time datetime="2002-03-18" style="font-family:monospace;font-size:125%">2002-03-18</time>',
+            '<time datetime="2005-06-24" style="font-family:monospace;font-size:125%">2005-06-24</time>',
+            "Person 1",
+            '<time datetime="2008-02-10" style="font-family:monospace;font-size:125%">2008-02-10</time>',
+            '<time datetime="2011-01-05" style="font-family:monospace;font-size:125%">2011-01-05</time>',
+            "Person 2",
             "Serial number",
             "836514404680691",
             "JSON",
@@ -172,9 +201,45 @@ class SimpleTest(TestCase):
         }
         self.assertJSONEqual(response.content, expected_json)
 
+    def _test_pi_api(self, response):
+        expected_json = [
+            {
+                "name": "Person 2",
+                "orcid": None,
+                "startDate": "2008-02-10",
+                "endDate": "2011-01-05",
+            },
+            {
+                "name": "Person 1",
+                "orcid": None,
+                "startDate": "2002-03-18",
+                "endDate": "2005-06-24",
+            },
+        ]
+        self.assertJSONEqual(response.content, expected_json)
+
+    def _test_pi_api_single(self, response):
+        expected_json = [
+            {
+                "name": "Person 2",
+                "orcid": None,
+                "startDate": "2008-02-10",
+                "endDate": "2011-01-05",
+            }
+        ]
+        self.assertJSONEqual(response.content, expected_json)
+
+    def _test_pi_api_single_2(self, response):
+        expected_json = []
+        self.assertJSONEqual(response.content, expected_json)
+
     def test_html(self):
         response = self.client.get(f"{self.endpoint}.html")
         self._test_html_response(response)
+
+    def test_pi_api(self):
+        response = self.client.get(f"{self.endpoint}/pi")
+        self._test_pi_api(response)
 
     def test_xml(self):
         response = self.client.get(f"{self.endpoint}.xml")
@@ -243,3 +308,11 @@ class SimpleTest(TestCase):
             f"{self.endpoint}.json",
             status_code=301,
         )
+
+    def test_pi_api_single_date(self):
+        response = self.client.get(f"{self.endpoint}/pi?date=2009-01-01")
+        self._test_pi_api_single(response)
+
+    def test_pi_api_date_out_of_range(self):
+        response = self.client.get(f"{self.endpoint}/pi?date=1990-01-01")
+        self._test_pi_api_single_2(response)

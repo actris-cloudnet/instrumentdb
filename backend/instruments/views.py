@@ -1,4 +1,6 @@
+import datetime
 from datetime import date
+from typing import Optional
 
 from django.db.models import OuterRef, Subquery
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
@@ -82,3 +84,24 @@ def index(request: HttpRequest) -> HttpResponse:
         "instruments/index.html",
         {"instruments": instruments},
     )
+
+
+@cors(allow_origin="*")
+def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
+    data = []
+    instru = get_object_or_404(Instrument, uuid=instrument_uuid)
+    if date_param := request.GET.get("date", None):
+        date_in = datetime.date.fromisoformat(date_param)
+        pis = instru.pis.filter(date_range__contains=date_in)
+    else:
+        pis = instru.pis
+    for p in pis:
+        data.append(
+            {
+                "name": p.person.full_name if p.person else None,
+                "orcid": p.person.orcid_id if p.person else None,
+                "startDate": p.date_range.lower,
+                "endDate": p.date_range.upper,
+            }
+        )
+    return JsonResponse(data, safe=False)

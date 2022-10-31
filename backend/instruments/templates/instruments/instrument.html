@@ -129,24 +129,6 @@
         </div>
       </div>
     {% endif %}
-    {% if instrument.contact_person %}
-      <div class="field">
-        <div class="field-label">Contact</div>
-        <div class="field-content">
-          {{ instrument.contact_person.full_name }}
-          {% if user.is_authenticated %}
-            <a href="mailto:{{ instrument.contact_person.email_address }}">
-              <img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16">
-            </a>
-          {% endif %}
-          {% if instrument.contact_person.orcid_id %}
-            <a href="https://orcid.org/{{ instrument.contact_person.orcid_id }}" target="_blank">
-              <img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16">
-            </a>
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
     {% if instrument.description %}
       <div class="field">
         <div class="field-label">Description</div>
@@ -162,25 +144,70 @@
             <tr>
               <td style="white-space:nowrap;padding:0;color:#555">
                 {% if campaign.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
-                    {{ campaign.date_range.lower }}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                      {{ campaign.date_range.lower|date:'Y-m-d' }}
                   </time>
                 {% else %}
                   N/A
                 {% endif %}
               </td>
-              <td style="color:#555">–</td>
-              <td style="white-space:nowrap;padding:0;color:#555">
+              <td style="color:#555;">&#8211;</td>
+              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
                 {% if campaign.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
-                    {{ campaign.date_range.upper }}
+                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                    {{ campaign.date_range.upper|date:'Y-m-d' }}
                   </time>
-                {% else %}
-                  Now
                 {% endif %}
               </td>
-              <td style="width:99%">
+              <td style="width:99%; padding-left: 30px">
                 {{ campaign.location.name|default:'Unknown' }}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    {% if instrument.pis.all %}
+      <div class="field">
+        <div class="field-label">Principal Investigator{{ instrument.pis.all|pluralize }}</div>
+        <table class="field-content">
+          <tbody>
+          {% for pi in instrument.pis.all %}
+            <tr>
+              <td style="white-space:nowrap;padding:0;color:#555">
+                {% if pi.date_range.lower %}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                    {{ pi.date_range.lower|date:'Y-m-d' }}
+                  </time>
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td style="color:#555">&#8211;</td>
+              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
+                {% if pi.date_range.upper %}
+                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                    {{ pi.date_range.upper|date:'Y-m-d' }}
+                  </time>
+                {% endif %}
+              </td>
+              <td style="width:99%; padding-left: 30px">
+                {{ pi.person.full_name|default:'Unknown' }}
+              </td>
+              <td>
+              {% if user.is_authenticated %}
+                <a href="mailto:{{ pi.person.email_address }}">
+                  <img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16">
+                </a>
+              {% endif %}
+              </td>
+              <td>
+              {% if pi.person.orcid_id %}
+                 <a href="https://orcid.org/{{ pi.person.orcid_id }}" target="_blank">
+                   <img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16">
+                 </a>
+              {% endif %}
               </td>
             </tr>
           {% endfor %}

@@ -10,4 +10,5 @@ urlpatterns = [
         name="instrument",
     ),
     path("instrument/<instrument_uuid>", views.instrument, name="instrument"),
+    path("instrument/<instrument_uuid>/pi", views.pi, name="pi"),
 ]

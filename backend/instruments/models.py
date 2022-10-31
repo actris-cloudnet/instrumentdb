@@ -1,3 +1,4 @@
+import datetime
 import json
 import uuid
 from datetime import date
@@ -5,7 +6,6 @@ from typing import Any, Optional
 
 import requests
 from django.conf import settings
-from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import DateRangeField, RangeOperators
 from django.db import models
 from django.db.models import QuerySet
@@ -126,9 +126,6 @@ class Instrument(models.Model):
         blank=True,
         help_text="Technical description of the device and its capabilities.",
     )
-    contact_person = models.ForeignKey(
-        Person, on_delete=models.PROTECT, null=True, blank=True
-    )
     image = ImageField(
         null=True,
         blank=True,
@@ -136,6 +133,7 @@ class Instrument(models.Model):
     )
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
+    persons = models.ManyToManyField(Person, through="Pi")
 
     def pidinst(self):
         result = {
@@ -247,6 +245,10 @@ class Instrument(models.Model):
         return self.campaign_set.order_by("-date_range")
 
     @property
+    def pis(self) -> "QuerySet[Pi]":
+        return self.pi_set.order_by("-date_range")
+
+    @property
     def commission_date(self) -> Optional[date]:
         obj = self.campaign_set.order_by("date_range").first()
         return obj.date_range.lower if obj else None
@@ -279,18 +281,11 @@ class Campaign(models.Model):
             date_range = f"since {self.date_range.lower}"
         return f"{name} {date_range}"
 
-    # XXX: Constraint doesn't seem to work properly with a foreign key...
-    # class Meta:
-    #     constraints = [
-    #         ExclusionConstraint(
-    #             name="exclude_overlapping_campaigns",
-    #             violation_error_message="Overlaps with another campaign.",  # type: ignore
-    #             expressions=[
-    #                 ("date_range", RangeOperators.OVERLAPS),
-    #                 ("instrument_id", RangeOperators.EQUAL),
-    #             ],
-    #         ),
-    #     ]
+
+class Pi(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
+    instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
+    date_range = DateRangeField()
 
 
 class RelatedIdentifier(models.Model):
