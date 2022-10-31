@@ -98,8 +98,8 @@ def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     for p in pis:
         data.append(
             {
-                "name": p.person.full_name if p.person else None,
-                "orcid": p.person.orcid_id if p.person else None,
+                "name": p.person.full_name,
+                "orcid": p.person.orcid_id,
                 "startDate": p.date_range.lower,
                 "endDate": p.date_range.upper,
             }

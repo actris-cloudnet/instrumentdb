@@ -263,10 +263,7 @@ class Instrument(models.Model):
 
 
 class Campaign(models.Model):
-    # TODO: Make not null once all information is filled.
-    location = models.ForeignKey(
-        Location, on_delete=models.PROTECT, null=True, blank=True
-    )
+    location = models.ForeignKey(Location, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     date_range = DateRangeField()
 
@@ -283,7 +280,7 @@ class Campaign(models.Model):
 
 
 class Pi(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     date_range = DateRangeField()
 
