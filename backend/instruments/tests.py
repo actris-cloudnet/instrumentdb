@@ -126,18 +126,18 @@ class SimpleTest(TestCase):
             "Measured variable",
             '<a href="http://vocab.test/testvariable">Test variable</a>',
             "Locations",
-            '<time datetime="2002.03.18" style="font-family:monospace;font-size:125%">2002.03.18</time>',
-            '<time datetime="2005.06.24" style="font-family:monospace;font-size:125%">2005.06.24</time>',
+            '<time datetime="2002-03-18" style="font-family:monospace;font-size:125%">2002-03-18</time>',
+            '<time datetime="2005-06-24" style="font-family:monospace;font-size:125%">2005-06-24</time>',
             "Location 1",
-            '<time datetime="2008.02.10" style="font-family:monospace;font-size:125%">2008.02.10</time>',
-            '<time datetime="2011.01.05" style="font-family:monospace;font-size:125%">2011.01.05</time>',
+            '<time datetime="2008-02-10" style="font-family:monospace;font-size:125%">2008-02-10</time>',
+            '<time datetime="2011-01-05" style="font-family:monospace;font-size:125%">2011-01-05</time>',
             "Location 2",
             "Principal Investigators",
-            '<time datetime="2002.03.18" style="font-family:monospace;font-size:125%">2002.03.18</time>',
-            '<time datetime="2005.06.24" style="font-family:monospace;font-size:125%">2005.06.24</time>',
+            '<time datetime="2002-03-18" style="font-family:monospace;font-size:125%">2002-03-18</time>',
+            '<time datetime="2005-06-24" style="font-family:monospace;font-size:125%">2005-06-24</time>',
             "Person 1",
-            '<time datetime="2008.02.10" style="font-family:monospace;font-size:125%">2008.02.10</time>',
-            '<time datetime="2011.01.05" style="font-family:monospace;font-size:125%">2011.01.05</time>',
+            '<time datetime="2008-02-10" style="font-family:monospace;font-size:125%">2008-02-10</time>',
+            '<time datetime="2011-01-05" style="font-family:monospace;font-size:125%">2011-01-05</time>',
             "Person 2",
             "Serial number",
             "836514404680691",
@@ -201,9 +201,45 @@ class SimpleTest(TestCase):
         }
         self.assertJSONEqual(response.content, expected_json)
 
+    def _test_pi_api(self, response):
+        expected_json = [
+            {
+                "name": "Person 2",
+                "orcid": None,
+                "startDate": "2008-02-10",
+                "endDate": "2011-01-05",
+            },
+            {
+                "name": "Person 1",
+                "orcid": None,
+                "startDate": "2002-03-18",
+                "endDate": "2005-06-24",
+            },
+        ]
+        self.assertJSONEqual(response.content, expected_json)
+
+    def _test_pi_api_single(self, response):
+        expected_json = [
+            {
+                "name": "Person 2",
+                "orcid": None,
+                "startDate": "2008-02-10",
+                "endDate": "2011-01-05",
+            }
+        ]
+        self.assertJSONEqual(response.content, expected_json)
+
+    def _test_pi_api_single_2(self, response):
+        expected_json = []
+        self.assertJSONEqual(response.content, expected_json)
+
     def test_html(self):
         response = self.client.get(f"{self.endpoint}.html")
         self._test_html_response(response)
+
+    def test_pi_api(self):
+        response = self.client.get(f"{self.endpoint}/pi")
+        self._test_pi_api(response)
 
     def test_xml(self):
         response = self.client.get(f"{self.endpoint}.xml")
@@ -272,3 +308,11 @@ class SimpleTest(TestCase):
             f"{self.endpoint}.json",
             status_code=301,
         )
+
+    def test_pi_api_single_date(self):
+        response = self.client.get(f"{self.endpoint}/pi?date=2009-01-01")
+        self._test_pi_api_single(response)
+
+    def test_pi_api_date_out_of_range(self):
+        response = self.client.get(f"{self.endpoint}/pi?date=1990-01-01")
+        self._test_pi_api_single_2(response)
