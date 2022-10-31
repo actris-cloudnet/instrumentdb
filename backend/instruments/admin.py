@@ -33,8 +33,8 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ["full_name", "email_address", "orcid_id"]
-    ordering = ["full_name"]
+    list_display = ["first_name", "last_name", "email_address", "orcid_id"]
+    ordering = ["last_name", "first_name"]
 
 
 @admin.register(models.Model)

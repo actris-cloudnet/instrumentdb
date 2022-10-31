@@ -99,9 +99,14 @@ class Model(models.Model):
 
 
 class Person(models.Model):
-    full_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     email_address = models.EmailField()
     orcid_id = OrcidIdField(null=True, blank=True, verbose_name="ORCID iD", unique=True)
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}"
 
     def __str__(self) -> str:
         return self.full_name

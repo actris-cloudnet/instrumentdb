@@ -64,7 +64,8 @@
     "model": "instruments.person",
     "pk": 1,
     "fields": {
-        "full_name": "Matti Meikäläinen",
+        "first_name": "Matti",
+        "last_name": "Meikäläinen",
         "email_address": "matti.meikalainen@example.org",
         "orcid_id": null
     }
