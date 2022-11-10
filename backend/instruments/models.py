@@ -287,7 +287,7 @@ class Campaign(models.Model):
 
 
 class Pi(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.PROTECT, null=True, blank=True)
+    person = models.ForeignKey(Person, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     date_range = DateRangeField()
 
