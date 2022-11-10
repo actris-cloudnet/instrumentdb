@@ -268,11 +268,9 @@ class Instrument(models.Model):
 
 
 class Campaign(models.Model):
-    location = models.ForeignKey(
-        Location, on_delete=models.PROTECT, null=True, blank=True
-    )
+    location = models.ForeignKey(Location, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
-    date_range = DateRangeField()
+    date_range = DateRangeField(blank=True)
 
     def __str__(self) -> str:
         if self.location:
@@ -289,7 +287,7 @@ class Campaign(models.Model):
 class Pi(models.Model):
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
-    date_range = DateRangeField()
+    date_range = DateRangeField(blank=True)
 
 
 class RelatedIdentifier(models.Model):
