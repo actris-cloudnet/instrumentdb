@@ -16,7 +16,7 @@
 {% block body %}
   <main>
     <div class="header">
-      <a href="{% url 'index' %}" style="margin-right:auto">Instruments</a>
+      <a href="{% url 'index' %}">« Instruments</a>
       {% if user.is_authenticated %}
         <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
       {% else %}
@@ -25,22 +25,16 @@
       <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
       <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
     </div>
-    <h1 style="margin-top:.5rem">{{ instrument.name }}</h1>
+    <h1 style="margin-top:.25rem">{{ instrument.name }}</h1>
     {% with image=instrument.image|default:instrument.model.image %}
       {% if image %}
-        <a href="/media/{{ image }}" target="_blank" class="image-container">
-          {% thumbnail image "150" as image %}
-            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
-          {% endthumbnail %}
-        </a>
+        <a href="/media/{{ image }}" target="_blank" class="image-container">{% thumbnail image "150" as image %}<img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">{% endthumbnail %}</a>
       {% endif %}
     {% endwith %}
     {% if instrument.pid %}
       <div class="field">
         <div class="field-label">PID</div>
-        <a class="field-content" href="{{ instrument.pid }}">
-          {{ instrument.pid }}
-        </a>
+        <a class="field-content" href="{{ instrument.pid }}">{{ instrument.pid }}</a>
       </div>
     {% endif %}
     <div class="field">
@@ -54,9 +48,7 @@
               ({{ owner.acronym }})
             {% endif %}
             {% if owner.ror_id %}
-              <a href="https://ror.org/{{ owner.ror_id }}" target="_blank">
-                <img alt="ROR logo" src="{% static 'instruments/images/ror-icon-rgb-16.png' %}" width="23" height="16">
-              </a>
+              <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="{% static 'instruments/images/ror-icon-rgb-16.png' %}" width="23" height="16"></a>
             {% endif %}
           </li>
           {% endfor %}
@@ -74,9 +66,7 @@
               ({{ manufacturer.acronym }})
             {% endif %}
             {% if manufacturer.ror_id %}
-              <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank">
-                <img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16">
-              </a>
+              <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16"></a>
             {% endif %}
           </li>
         {% endfor %}
@@ -142,24 +132,26 @@
           <tbody>
           {% for campaign in instrument.campaigns.all %}
             <tr>
-              <td style="white-space:nowrap;padding:0;color:#555">
+              <td class="cell-date">
                 {% if campaign.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
-                      {{ campaign.date_range.lower|date:'Y-m-d' }}
+                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
+                    {{ campaign.date_range.lower|date:'Y-m-d' }}
                   </time>
                 {% else %}
-                  N/A
+		  n/a
                 {% endif %}
               </td>
-              <td style="color:#555;">&#8211;</td>
-              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
+              <td class="cell-dash">&#8211;</td>
+              <td class="cell-date">
                 {% if campaign.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
                     {{ campaign.date_range.upper|date:'Y-m-d' }}
                   </time>
+                {% else %}
+		  now
                 {% endif %}
               </td>
-              <td style="width:99%; padding-left: 30px">
+              <td class="cell-fill">
                 {{ campaign.location.name|default:'Unknown' }}
               </td>
             </tr>
@@ -175,40 +167,38 @@
           <tbody>
           {% for pi in instrument.pis.all %}
             <tr>
-              <td style="white-space:nowrap;padding:0;color:#555">
+              <td class="cell-date">
                 {% if pi.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
                     {{ pi.date_range.lower|date:'Y-m-d' }}
                   </time>
                 {% else %}
-                  N/A
+		  n/a
                 {% endif %}
               </td>
-              <td style="color:#555">&#8211;</td>
-              <td style="white-space:nowrap;padding:0;color:#555;min-width:90px">
+              <td class="cell-dash">&#8211;</td>
+              <td class="cell-date">
                 {% if pi.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}" style="font-family:monospace;font-size:125%">
+                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
                     {{ pi.date_range.upper|date:'Y-m-d' }}
                   </time>
+                {% else %}
+		  now
                 {% endif %}
               </td>
-              <td style="width:99%; padding-left: 30px">
+              <td class="cell-fill">
                 {{ pi.person.full_name|default:'Unknown' }}
               </td>
-              <td>
-              {% if user.is_authenticated %}
-                <a href="mailto:{{ pi.person.email_address }}">
-                  <img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16">
-                </a>
-              {% endif %}
-              </td>
-              <td>
               {% if pi.person.orcid_id %}
-                 <a href="https://orcid.org/{{ pi.person.orcid_id }}" target="_blank">
-                   <img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16">
-                 </a>
+                <td class="cell-action">
+                  <a href="https://orcid.org/{{ pi.person.orcid_id }}" target="_blank"><img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16"></a>
+                </td>
               {% endif %}
-              </td>
+              {% if user.is_authenticated %}
+                <td class="cell-action">
+                  <a href="mailto:{{ pi.person.email_address }}"><img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
+                </td>
+              {% endif %}
             </tr>
           {% endfor %}
           </tbody>

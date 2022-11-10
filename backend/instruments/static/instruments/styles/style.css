@@ -1,5 +1,6 @@
 body {
-  font-family: 'Helvetica Neue', 'Arial Nova', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
   margin: 0;
   background-color: #edecf9;
 }
@@ -35,6 +36,11 @@ main {
   margin-left: .5rem;
 }
 
+.header a:first-child {
+  margin-right: auto;
+  text-decoration: none;
+}
+
 h1 {
   margin: 0;
 }
@@ -44,8 +50,7 @@ h1 {
 }
 
 .field-label {
-  font-weight: bold;
-  font-variant: small-caps;
+  font-weight: 600;
   margin-bottom: .25rem;
 }
 
@@ -81,11 +86,39 @@ thead tr {
   border-bottom: 2px solid #ccc;
 }
 
-tbody tr {
-  border-bottom: 1px solid #eee;
+tbody tr + tr {
+  border-top: 1px solid #eee;
 }
 
 td, th {
   padding: 0.5rem;
   text-align: left;
+}
+
+.cell-date,
+.cell-dash {
+  color: #555;
+  white-space: nowrap;
+}
+
+.cell-date {
+  padding: 0;
+  font-variant: tabular-nums;
+  font-size: 90%;
+}
+
+.cell-date:nth-child(1) {
+  text-align: right;
+}
+
+.cell-date:nth-child(3) {
+  min-width: 100px;
+}
+
+.cell-fill {
+  width: 99%;
+}
+
+.cell-action img {
+  vertical-align: middle;
 }
