@@ -10,12 +10,12 @@ main {
   border-radius: 8px;
   margin: 2rem auto;
   padding: 2rem;
-  max-width: 620px;
+  max-width: 650px;
   box-shadow: 1px 1px 16px rgba(0, 0, 0, .02);
   box-sizing: border-box;
 }
 
-@media (max-width: 620px) {
+@media (max-width: 650px) {
   body {
     background-color: white;
   }
@@ -70,7 +70,7 @@ li:only-child {
 
 .image-container {
   float: right;
-  margin-top: 1rem;
+  margin: 1rem 0 1rem 1rem;
 }
 
 .image-container img {
