@@ -26,11 +26,13 @@
       <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
     </div>
     <h1 style="margin-top:.25rem">{{ instrument.name }}</h1>
-    {% with image=instrument.image|default:instrument.model.image %}
-      {% if image %}
-        <a href="/media/{{ image }}" target="_blank" class="image-container">{% thumbnail image "150" as image %}<img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">{% endthumbnail %}</a>
-      {% endif %}
-    {% endwith %}
+    {% if instrument.model %}
+      {% with image=instrument.image|default:instrument.model.image %}
+        {% if image %}
+          <a href="/media/{{ image }}" target="_blank" class="image-container">{% thumbnail image "150" as image %}<img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">{% endthumbnail %}</a>
+        {% endif %}
+      {% endwith %}
+    {% endif %}
     {% if instrument.pid %}
       <div class="field">
         <div class="field-label">PID</div>
@@ -55,69 +57,71 @@
         </ul>
       </div>
     </div>
-    <div class="field">
-      <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
-      <div class="field-content">
-        <ul>
-        {% for manufacturer in instrument.model.manufacturers.all %}
-          <li>
-            {{ manufacturer.name }}
-            {% if manufacturer.acronym %}
-              ({{ manufacturer.acronym }})
-            {% endif %}
-            {% if manufacturer.ror_id %}
-              <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16"></a>
-            {% endif %}
-          </li>
-        {% endfor %}
-        </ul>
-      </div>
-    </div>
-    <div class="field">
-      <div class="field-label">Model</div>
-      <div class="field-content">
-        {% if instrument.model.concept_url %}
-          <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
-        {% else %}
-          {{ instrument.model.name }}
-        {% endif %}
-      </div>
-    </div>
-    {% if instrument.model.types.all %}
+    {% if instrument.model %}
       <div class="field">
-        <div class="field-label">Instrument type{{ instrument.model.types.all|pluralize }}</div>
+        <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
         <div class="field-content">
           <ul>
-          {% for type in instrument.model.types.all %}
+          {% for manufacturer in instrument.model.manufacturers.all %}
             <li>
-              {% if type.concept_url %}
-                <a href="{{ type.concept_url }}">{{ type.name }}</a>
-              {% else %}
-                {{ type.name }}
+              {{ manufacturer.name }}
+              {% if manufacturer.acronym %}
+                ({{ manufacturer.acronym }})
+              {% endif %}
+              {% if manufacturer.ror_id %}
+                <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16"></a>
               {% endif %}
             </li>
           {% endfor %}
           </ul>
         </div>
       </div>
-    {% endif %}
-    {% if instrument.model.variables.all %}
       <div class="field">
-        <div class="field-label">Measured variable{{ instrument.model.variables.all|pluralize }}</div>
+        <div class="field-label">Model</div>
         <div class="field-content">
-          <ul>
-          {% for variable in instrument.model.variables.all %}
-            <li>
-              {% if variable.concept_url %}
-                <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
-              {% else %}
-                {{ variable.name }}
-              {% endif %}
-            </li>
-          {% endfor %}
-          </ul>
+          {% if instrument.model.concept_url %}
+            <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
+          {% else %}
+            {{ instrument.model.name }}
+          {% endif %}
         </div>
       </div>
+      {% if instrument.model.types.all %}
+        <div class="field">
+          <div class="field-label">Instrument type{{ instrument.model.types.all|pluralize }}</div>
+          <div class="field-content">
+            <ul>
+            {% for type in instrument.model.types.all %}
+              <li>
+                {% if type.concept_url %}
+                  <a href="{{ type.concept_url }}">{{ type.name }}</a>
+                {% else %}
+                  {{ type.name }}
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+      {% if instrument.model.variables.all %}
+        <div class="field">
+          <div class="field-label">Measured variable{{ instrument.model.variables.all|pluralize }}</div>
+          <div class="field-content">
+            <ul>
+            {% for variable in instrument.model.variables.all %}
+              <li>
+                {% if variable.concept_url %}
+                  <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+                {% else %}
+                  {{ variable.name }}
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
     {% endif %}
     {% if instrument.description %}
       <div class="field">
@@ -173,7 +177,7 @@
                     {{ pi.date_range.lower|date:'Y-m-d' }}
                   </time>
                 {% else %}
-		  n/a
+                  n/a
                 {% endif %}
               </td>
               <td class="cell-dash">&#8211;</td>
@@ -183,7 +187,7 @@
                     {{ pi.date_range.upper|date:'Y-m-d' }}
                   </time>
                 {% else %}
-		  now
+                  now
                 {% endif %}
               </td>
               <td class="cell-fill">
@@ -209,6 +213,37 @@
       <div class="field">
         <div class="field-label">Serial number</div>
         <div class="field-content">{{ instrument.serial_number }}</div>
+      </div>
+    {% endif %}
+    {% if instrument.components.all %}
+      <div class="field">
+        <div class="field-label">Components</div>
+        <table class="field-content">
+          <ul>
+            {% for component in instrument.components.all %}
+              <li>
+                <a href="{{ component.landing_page }}">{{ component.name }}</a>
+                {% for type in component.model.types.all %}
+                  {{ type.name }}
+                {% endfor %}
+              </li>
+            {% endfor %}
+            </ul>
+        </table>
+      </div>
+    {% endif %}
+    {% if instrument.parents %}
+      <div class="field">
+        <div class="field-label">Component of</div>
+        <table class="field-content">
+          <ul>
+            {% for parent in instrument.parents %}
+              <li>
+                <a href="{{ parent.landing_page }}">{{ parent.name }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </table>
       </div>
     {% endif %}
     {% if instrument.related_identifiers.all %}

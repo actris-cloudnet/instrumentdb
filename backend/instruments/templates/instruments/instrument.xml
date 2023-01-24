@@ -16,57 +16,59 @@
       </owner>
     {% endfor %}
   </owners>
-  <manufacturers>
-    {% for manufacturer in instrument.model.manufacturers.all %}
-      <manufacturer>
-        <manufacturerName>{{ manufacturer.name }}</manufacturerName>
-        {% if manufacturer.ror_id %}
-          <manufacturerIdentifier manufacturerIdentifierType="ROR">{{ manufacturer.ror_id }}</manufacturerIdentifier>
-        {% endif %}
-      </manufacturer>
-    {% endfor %}
-  </manufacturers>
-  <model>
-    <modelName>{{ instrument.model.name }}</modelName>
-    {% if instrument.model.concept_url %}
-      <modelIdentifier modelIdentifierType="URL">{{ instrument.model.concept_url }}</modelIdentifier>
-    {% endif %}
-  </model>
-  {% if instrument.model.types.all %}
-    <instrumentTypes>
-      {% for type in instrument.model.types.all %}
-        <instrumentType>
-          <instrumentTypeName>{{ type.name }}</instrumentTypeName>
-          {% if type.concept_url %}
-            <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">{{ type.concept_url }}</instrumentTypeIdentifier>
+  {% if instrument.model %}
+    <manufacturers>
+      {% for manufacturer in instrument.model.manufacturers.all %}
+        <manufacturer>
+          <manufacturerName>{{ manufacturer.name }}</manufacturerName>
+          {% if manufacturer.ror_id %}
+            <manufacturerIdentifier manufacturerIdentifierType="ROR">{{ manufacturer.ror_id }}</manufacturerIdentifier>
           {% endif %}
-        </instrumentType>
+        </manufacturer>
       {% endfor %}
-    </instrumentTypes>
-  {% endif %}
-  {% if instrument.model.variables.all %}
-    <measuredVariables>
-      {% for variable in instrument.model.variables.all %}
-        <measuredVariable>{{ variable.name }}</measuredVariable>
-      {% endfor %}
-    </measuredVariables>
-  {% endif %}
-  {% if instrument.commission_date or instrument.decommission_date %}
-    <dates>
-      {% if instrument.commission_date %}
-        <date dateType="Commissioned">{{ instrument.commission_date|date:"Y-m-d" }}</date>
+    </manufacturers>
+    <model>
+      <modelName>{{ instrument.model.name }}</modelName>
+      {% if instrument.model.concept_url %}
+        <modelIdentifier modelIdentifierType="URL">{{ instrument.model.concept_url }}</modelIdentifier>
       {% endif %}
-      {% if instrument.decommission_date %}
-        <date dateType="DeCommissioned">{{ instrument.decommission_date|date:"Y-m-d" }}</date>
-      {% endif %}
-    </dates>
+    </model>
+    {% if instrument.model.types.all %}
+      <instrumentTypes>
+        {% for type in instrument.model.types.all %}
+          <instrumentType>
+            <instrumentTypeName>{{ type.name }}</instrumentTypeName>
+            {% if type.concept_url %}
+              <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">{{ type.concept_url }}</instrumentTypeIdentifier>
+            {% endif %}
+          </instrumentType>
+        {% endfor %}
+      </instrumentTypes>
+    {% endif %}
+    {% if instrument.model.variables.all %}
+      <measuredVariables>
+        {% for variable in instrument.model.variables.all %}
+          <measuredVariable>{{ variable.name }}</measuredVariable>
+        {% endfor %}
+      </measuredVariables>
+    {% endif %}
+    {% if instrument.commission_date or instrument.decommission_date %}
+      <dates>
+        {% if instrument.commission_date %}
+          <date dateType="Commissioned">{{ instrument.commission_date|date:"Y-m-d" }}</date>
+        {% endif %}
+        {% if instrument.decommission_date %}
+          <date dateType="DeCommissioned">{{ instrument.decommission_date|date:"Y-m-d" }}</date>
+        {% endif %}
+      </dates>
+    {% endif %}
   {% endif %}
   {% if instrument.description %}
     <description>{{ instrument.description }}</description>
   {% endif %}
-  {% if instrument.related_identifiers.all %}
+  {% if instrument.get_related_identifiers %}
     <relatedIdentifiers>
-      {% for item in instrument.related_identifiers.all %}
+      {% for item in instrument.get_related_identifiers %}
         <relatedIdentifier relatedIdentifierType="{{ item.identifier_type }}" relationType="{{ item.relation_type }}">
           {{ item.identifier }}
         </relatedIdentifier>

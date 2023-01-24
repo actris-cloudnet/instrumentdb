@@ -126,7 +126,7 @@ class Instrument(models.Model):
         max_length=255, help_text="Name by which the instrument instance is known."
     )
     owners = models.ManyToManyField(Organization)
-    model = models.ForeignKey(Model, on_delete=models.PROTECT)
+    model = models.ForeignKey(Model, on_delete=models.PROTECT, null=True, blank=True)
     description = models.TextField(
         blank=True,
         help_text="Technical description of the device and its capabilities.",
@@ -139,18 +139,20 @@ class Instrument(models.Model):
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
     persons = models.ManyToManyField(Person, through="Pi")
+    components = models.ManyToManyField("self", blank=True, symmetrical=False)
 
     def pidinst(self):
         result = {
             "LandingPage": self.landing_page,
             "Name": self.name,
             "Owners": [owner.pidinst("owner") for owner in self.owners.all()],
-            "Manufacturers": [
+        }
+        if self.model:
+            result["Manufacturers"] = [
                 manufacturer.pidinst("manufacturer")
                 for manufacturer in self.model.manufacturers.all()
-            ],
-            "Model": self.model.pidinst(),
-        }
+            ]
+            result["Model"] = self.model.pidinst()
         if self.pid:
             result["Identifier"] = {
                 "identifierValue": self.pid,
@@ -158,13 +160,14 @@ class Instrument(models.Model):
             }
         if description := self.description:
             result["Description"] = description
-        if types := self.model.types.all():
-            result["InstrumentType"] = [type.pidinst() for type in types]
-        if variables := self.model.variables.all():
-            result["MeasuredVariables"] = [
-                {"measuredVariable": {"variableMeasured": variable.name}}
-                for variable in variables
-            ]
+        if self.model:
+            if types := self.model.types.all():
+                result["InstrumentType"] = [type.pidinst() for type in types]
+            if variables := self.model.variables.all():
+                result["MeasuredVariables"] = [
+                    {"measuredVariable": {"variableMeasured": variable.name}}
+                    for variable in variables
+                ]
         dates = []
         if date := self.commission_date:
             dates.append(
@@ -195,16 +198,16 @@ class Instrument(models.Model):
                     }
                 }
             ]
-        if identifiers := self.related_identifiers.all():
+        if related_identifiers := self.get_related_identifiers():
             result["RelatedIdentifiers"] = [
                 {
                     "relatedIdentifier": {
-                        "relatedIdentifierValue": identifier.identifier,
-                        "relatedIdentifierType": identifier.identifier_type,
-                        "relationType": identifier.relation_type,
+                        "relatedIdentifierValue": identifier["identifier"],
+                        "relatedIdentifierType": identifier["identifier_type"],
+                        "relationType": identifier["relation_type"],
                     }
                 }
-                for identifier in identifiers
+                for identifier in related_identifiers
             ]
         return result
 
@@ -262,6 +265,40 @@ class Instrument(models.Model):
     def decommission_date(self) -> Optional[date]:
         obj = self.campaign_set.order_by("date_range").last()
         return obj.date_range.upper if obj else None
+
+    @property
+    def parents(self):
+        return Instrument.objects.filter(components=self)
+
+    def get_related_identifiers(self):
+        output = []
+        for identifier in self.related_identifiers.all():
+            output.append(
+                {
+                    "identifier": identifier.identifier,
+                    "identifier_type": identifier.identifier_type,
+                    "relation_type": identifier.relation_type,
+                }
+            )
+        for component in self.components.all():
+            output.append(
+                {
+                    "identifier": component.pid
+                    if component.pid
+                    else component.landing_page,
+                    "identifier_type": "Handle" if component.pid else "URL",
+                    "relation_type": "HasComponent",
+                }
+            )
+        for parent in self.parents:
+            output.append(
+                {
+                    "identifier": parent.pid if parent.pid else parent.landing_page,
+                    "identifier_type": "Handle" if parent.pid else "URL",
+                    "relation_type": "IsComponentOf",
+                }
+            )
+        return output
 
     def __str__(self) -> str:
         return self.name

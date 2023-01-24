@@ -319,3 +319,184 @@ class SimpleTest(TestCase):
     def test_pi_api_date_out_of_range(self):
         response = self.client.get(f"{self.endpoint}/pi?date=1990-01-01")
         self._test_pi_api_single_2(response)
+
+
+class ComponentsTest(TestCase):
+    instrument: Instrument
+    instrument2: Instrument
+    instrument3: Instrument
+    instrument4: Instrument
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        owner = Organization.objects.create(name="My institute")
+
+        manufacturer = Organization.objects.create(name="ACME")
+
+        model = Model.objects.create(name="ACME T1")
+        model.manufacturers.add(manufacturer)
+        model.types.add(
+            Type.objects.create(
+                name="Temperature sensor",
+                concept_url="http://vocab.test/temperaturesensor",
+            )
+        )
+        cls.instrument = Instrument.objects.create(
+            uuid="b8e85a25-8ad1-42b4-ba86-9fde15013b15",
+            pid="https://hdl.handle.net/21.12132/3.b8e85a258ad142b4",
+            name="Old temperature sensor",
+            model=model,
+        )
+        cls.instrument.owners.add(owner)
+
+        cls.instrument2 = Instrument.objects.create(
+            uuid="a13475b3-5ed3-4ea3-ba81-0eaa884f11ab",
+            pid="https://hdl.handle.net/21.12132/3.a13475b35ed34ea3",
+            name="New temperature sensor",
+            model=model,
+        )
+        cls.instrument2.owners.add(owner)
+
+        model3 = Model.objects.create(name="ACME H1")
+        model3.manufacturers.add(manufacturer)
+        model3.types.add(
+            Type.objects.create(
+                name="Humidity sensor", concept_url="http://vocab.test/humiditysensor"
+            )
+        )
+        cls.instrument3 = Instrument.objects.create(
+            uuid="eab72e88-6cb4-4902-ad64-40f3665f949c",
+            pid="https://hdl.handle.net/21.12132/3.eab72e886cb44902",
+            name="My humidity sensor",
+            model=model3,
+        )
+        cls.instrument3.owners.add(owner)
+
+        cls.instrument4 = Instrument.objects.create(
+            uuid="90845957-31eb-4900-89a5-78696ec0453d",
+            pid="https://hdl.handle.net/21.12132/3.9084595731eb4900",
+            name="My weather station",
+        )
+        cls.instrument4.owners.add(owner)
+        cls.instrument4.components.add(cls.instrument2, cls.instrument3)
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_parent_xml(self):
+        response = self.client.get(
+            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.xml"
+        )
+        self.assertEqual(response.status_code, 200)
+        expected_xml = Path("instruments/test_data/parent.xml").read_text("utf-8")
+        self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
+
+    def test_child_xml(self):
+        self.maxDiff = None
+        response = self.client.get(
+            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.xml"
+        )
+        self.assertEqual(response.status_code, 200)
+        expected_xml = Path("instruments/test_data/child.xml").read_text("utf-8")
+        self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
+
+    def test_parent_html(self):
+        response = self.client.get(
+            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.html"
+        )
+        response_decoded = response.content.decode("utf-8")
+        self.assertEqual(response.status_code, 200)
+        test_strings = (
+            "My weather station",
+            "Components",
+            "New temperature sensor",
+            "My humidity sensor",
+            "My humidity sensor",
+        )
+        for test_string in test_strings:
+            self.assertInHTML(test_string, response_decoded)
+
+    def test_child_html(self):
+        response = self.client.get(
+            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.html"
+        )
+        response_decoded = response.content.decode("utf-8")
+        self.assertEqual(response.status_code, 200)
+        test_strings = (
+            "Component of",
+            "My weather station",
+        )
+        for test_string in test_strings:
+            self.assertInHTML(test_string, response_decoded)
+
+    def test_parent_json(self):
+        response = self.client.get(
+            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.json"
+        )
+        self.assertEqual(response.status_code, 200)
+        expected_json = {
+            "Identifier": {
+                "identifierValue": "https://hdl.handle.net/21.12132/3.9084595731eb4900",
+                "identifierType": "Handle",
+            },
+            "LandingPage": "http://localhost:8000/instrument/90845957-31eb-4900-89a5-78696ec0453d",
+            "Name": "My weather station",
+            "Owners": [{"owner": {"ownerName": "My institute"}}],
+            "RelatedIdentifiers": [
+                {
+                    "relatedIdentifier": {
+                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.a13475b35ed34ea3",
+                        "relatedIdentifierType": "Handle",
+                        "relationType": "HasComponent",
+                    },
+                },
+                {
+                    "relatedIdentifier": {
+                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.eab72e886cb44902",
+                        "relatedIdentifierType": "Handle",
+                        "relationType": "HasComponent",
+                    },
+                },
+            ],
+        }
+        self.assertJSONEqual(response.content, expected_json)
+
+    def test_child_json(self):
+        response = self.client.get(
+            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.json"
+        )
+        self.assertEqual(response.status_code, 200)
+        expected_json = {
+            "Identifier": {
+                "identifierValue": "https://hdl.handle.net/21.12132/3.a13475b35ed34ea3",
+                "identifierType": "Handle",
+            },
+            "LandingPage": "http://localhost:8000/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab",
+            "Name": "New temperature sensor",
+            "Owners": [{"owner": {"ownerName": "My institute"}}],
+            "Manufacturers": [{"manufacturer": {"manufacturerName": "ACME"}}],
+            "Model": {
+                "modelName": "ACME T1",
+            },
+            "InstrumentType": [
+                {
+                    "instrumentType": {
+                        "instrumentTypeName": "Temperature sensor",
+                        "instrumentTypeIdentifier": {
+                            "instrumentTypeIdentifierValue": "http://vocab.test/temperaturesensor",
+                            "instrumentTypeIdentifierType": "URL",
+                        },
+                    }
+                }
+            ],
+            "RelatedIdentifiers": [
+                {
+                    "relatedIdentifier": {
+                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.9084595731eb4900",
+                        "relatedIdentifierType": "Handle",
+                        "relationType": "IsComponentOf",
+                    },
+                },
+            ],
+        }
+        self.assertJSONEqual(response.content, expected_json)

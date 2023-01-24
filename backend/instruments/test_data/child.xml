@@ -1,0 +1,30 @@
+<instrument>
+    <identifier identifierType="Handle">https://hdl.handle.net/21.12132/3.a13475b35ed34ea3</identifier>
+    <schemaVersion>1.0</schemaVersion>
+    <landingPage>http://localhost:8000/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab</landingPage>
+    <name>New temperature sensor</name>
+    <owners>
+        <owner>
+            <ownerName>My institute</ownerName>
+        </owner>
+    </owners>
+    <manufacturers>
+        <manufacturer>
+            <manufacturerName>ACME</manufacturerName>
+        </manufacturer>
+    </manufacturers>
+    <model>
+        <modelName>ACME T1</modelName>
+    </model>
+    <instrumentTypes>
+        <instrumentType>
+            <instrumentTypeName>Temperature sensor</instrumentTypeName>
+            <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">http://vocab.test/temperaturesensor</instrumentTypeIdentifier>
+        </instrumentType>
+    </instrumentTypes>
+    <relatedIdentifiers>
+        <relatedIdentifier relatedIdentifierType="Handle" relationType="IsComponentOf">
+            https://hdl.handle.net/21.12132/3.9084595731eb4900
+        </relatedIdentifier>
+    </relatedIdentifiers>
+</instrument>
