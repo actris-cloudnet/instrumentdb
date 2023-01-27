@@ -143,6 +143,7 @@ class Instrument(models.Model):
 
     def pidinst(self):
         result = {
+            "SchemaVersion": "1.0",
             "LandingPage": self.landing_page,
             "Name": self.name,
             "Owners": [owner.pidinst("owner") for owner in self.owners.all()],
@@ -214,6 +215,7 @@ class Instrument(models.Model):
     def create_or_update_pid(self):
         types = {
             "Identifier": "21.T11148/8eb858ee0b12e8e463a5",
+            "SchemaVersion": "21.T11148/f5e68cc7718a6af2a96c",
             "LandingPage": "21.T11148/9a15a4735d4bda329d80",
             "Name": "21.T11148/709a23220f2c3d64d1e1",
             "Owners": "21.T11148/4eaec4bc0f1df68ab2a7",

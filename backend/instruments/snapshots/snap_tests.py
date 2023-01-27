@@ -36,6 +36,7 @@ snapshots["ComponentsTest::test_child_json 1"] = {
             }
         }
     ],
+    "SchemaVersion": "1.0",
 }
 
 snapshots[
@@ -95,6 +96,7 @@ snapshots["ComponentsTest::test_parent_json 1"] = {
             }
         },
     ],
+    "SchemaVersion": "1.0",
 }
 
 snapshots[
@@ -121,6 +123,7 @@ snapshots[
 
 snapshots["SimpleTest::test_create_or_update_pid 1"] = {
     "data": [
+        {"type": "21.T11148/f5e68cc7718a6af2a96c", "value": '"1.0"'},
         {
             "type": "21.T11148/9a15a4735d4bda329d80",
             "value": '"http://localhost:8000/instrument/8fd884df-6896-4bae-a72f-b6260b5b8744"',
@@ -200,6 +203,7 @@ snapshots["SimpleTest::test_json 1"] = {
     },
     "Name": "Test instrument",
     "Owners": [{"owner": {"ownerName": "Test owner"}}],
+    "SchemaVersion": "1.0",
 }
 
 snapshots["SimpleTest::test_no_format_accept_any 1"] = {
@@ -242,6 +246,7 @@ snapshots["SimpleTest::test_no_format_accept_any 1"] = {
     },
     "Name": "Test instrument",
     "Owners": [{"owner": {"ownerName": "Test owner"}}],
+    "SchemaVersion": "1.0",
 }
 
 snapshots["SimpleTest::test_no_format_accept_json 1"] = {
@@ -284,6 +289,7 @@ snapshots["SimpleTest::test_no_format_accept_json 1"] = {
     },
     "Name": "Test instrument",
     "Owners": [{"owner": {"ownerName": "Test owner"}}],
+    "SchemaVersion": "1.0",
 }
 
 snapshots[
