@@ -26,7 +26,7 @@ def load_tests(loader, tests, ignore):
     return tests
 
 
-def _pretty_xml(src: str) -> str:
+def _pretty_xml(src: bytes) -> str:
     element = ET.XML(src)
     ET.indent(element)
     return ET.tostring(element, encoding="unicode")
@@ -193,8 +193,7 @@ class SimpleTest(TestCase):
         self.assertJSONEqual(response.content, expected_json)
 
     def _test_pi_api_single_2(self, response):
-        expected_json = []
-        self.assertJSONEqual(response.content, expected_json)
+        self.assertJSONEqual(response.content, [])
 
     def test_html(self):
         response = self.client.get(f"{self.endpoint}.html")

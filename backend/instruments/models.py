@@ -1,7 +1,7 @@
 import datetime
 import json
 import uuid
-from typing import Any, Optional
+from typing import Optional
 
 import requests
 from django.conf import settings
@@ -19,7 +19,7 @@ class Type(models.Model):
     concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
 
     def pidinst(self):
-        result = {"instrumentTypeName": self.name}
+        result: dict = {"instrumentTypeName": self.name}
         if self.concept_url:
             result["instrumentTypeIdentifier"] = {
                 "instrumentTypeIdentifierValue": self.concept_url,
@@ -45,7 +45,7 @@ class Organization(models.Model):
     ror_id = RorIdField(null=True, blank=True, verbose_name="ROR ID", unique=True)
 
     def pidinst(self, prefix: str):
-        obj: dict[str, Any] = {f"{prefix}Name": self.name}
+        obj: dict = {f"{prefix}Name": self.name}
         if self.ror_id:
             obj[f"{prefix}Identifier"] = {
                 f"{prefix}IdentifierValue": self.ror_id,
@@ -85,7 +85,7 @@ class Model(models.Model):
     concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
 
     def pidinst(self):
-        result = {"modelName": self.name}
+        result: dict = {"modelName": self.name}
         if self.concept_url:
             result["modelIdentifier"] = {
                 "modelIdentifierValue": self.concept_url,
@@ -141,7 +141,7 @@ class Instrument(models.Model):
     components = models.ManyToManyField("self", blank=True, symmetrical=False)
 
     def pidinst(self):
-        result = {
+        result: dict = {
             "SchemaVersion": "1.0",
             "LandingPage": self.landing_page,
             "Name": self.name,
