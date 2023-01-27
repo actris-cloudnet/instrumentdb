@@ -19,5 +19,8 @@ jobs:
       - name: Check style
         run: ./scripts/check-style
 
+      - name: Lint
+        run: ./scripts/lint
+
       - name: Check types
         run: ./scripts/check-types

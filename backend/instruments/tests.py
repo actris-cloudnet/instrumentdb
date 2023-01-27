@@ -345,7 +345,7 @@ class ComponentsTest(TestCase):
 
     def test_parent_xml(self):
         response = self.client.get(
-            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.xml"
+            "/instrument/90845957-31eb-4900-89a5-78696ec0453d.xml"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/xml")
@@ -354,7 +354,7 @@ class ComponentsTest(TestCase):
     def test_child_xml(self):
         self.maxDiff = None
         response = self.client.get(
-            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.xml"
+            "/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.xml"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/xml")
@@ -362,7 +362,7 @@ class ComponentsTest(TestCase):
 
     def test_parent_html(self):
         response = self.client.get(
-            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.html"
+            "/instrument/90845957-31eb-4900-89a5-78696ec0453d.html"
         )
         response_decoded = response.content.decode("utf-8")
         self.assertEqual(response.status_code, 200)
@@ -378,7 +378,7 @@ class ComponentsTest(TestCase):
 
     def test_child_html(self):
         response = self.client.get(
-            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.html"
+            "/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.html"
         )
         response_decoded = response.content.decode("utf-8")
         self.assertEqual(response.status_code, 200)
@@ -391,7 +391,7 @@ class ComponentsTest(TestCase):
 
     def test_parent_json(self):
         response = self.client.get(
-            f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.json"
+            "/instrument/90845957-31eb-4900-89a5-78696ec0453d.json"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/json")
@@ -399,7 +399,7 @@ class ComponentsTest(TestCase):
 
     def test_child_json(self):
         response = self.client.get(
-            f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.json"
+            "/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.json"
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/json")

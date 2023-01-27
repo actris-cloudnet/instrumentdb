@@ -19,5 +19,3 @@ else:
 
 if paths:
     run(["flake8", *paths])
-    run(["isort", "--profile", "black", "--check", *paths])
-    run(["black",  "--check", *paths])

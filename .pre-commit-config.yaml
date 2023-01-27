@@ -27,6 +27,15 @@ repos:
         files: ^backend/
   - repo: local
     hooks:
+      - id: lint
+        name: lint
+        entry: scripts/lint
+        language: system
+        require_serial: true
+        types: [python]
+        files: ^backend/
+  - repo: local
+    hooks:
       - id: check-types
         name: check types
         entry: scripts/check-types

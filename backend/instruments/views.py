@@ -1,6 +1,5 @@
 import datetime
 from datetime import date
-from typing import Optional
 
 from django.db.models import OuterRef, Subquery
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse

@@ -1,12 +1,11 @@
 import datetime
 import json
 import uuid
-from datetime import date
 from typing import Any, Optional
 
 import requests
 from django.conf import settings
-from django.contrib.postgres.fields import DateRangeField, RangeOperators
+from django.contrib.postgres.fields import DateRangeField
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -259,12 +258,12 @@ class Instrument(models.Model):
         return self.pi_set.order_by("-date_range")
 
     @property
-    def commission_date(self) -> Optional[date]:
+    def commission_date(self) -> Optional[datetime.date]:
         obj = self.campaign_set.order_by("date_range").first()
         return obj.date_range.lower if obj else None
 
     @property
-    def decommission_date(self) -> Optional[date]:
+    def decommission_date(self) -> Optional[datetime.date]:
         obj = self.campaign_set.order_by("date_range").last()
         return obj.date_range.upper if obj else None
 
