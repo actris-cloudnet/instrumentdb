@@ -1,11 +1,11 @@
 import datetime
 import doctest
-import json
-from pathlib import Path
+import xml.etree.ElementTree as ET
 from unittest.mock import patch
 
 import requests
-from django.test import Client, TestCase
+from django.test import Client
+from snapshottest.django import TestCase
 
 from . import fields
 from .models import (
@@ -24,6 +24,12 @@ from .models import (
 def load_tests(loader, tests, ignore):
     tests.addTests(doctest.DocTestSuite(fields))
     return tests
+
+
+def _pretty_xml(src: str) -> str:
+    element = ET.XML(src)
+    ET.indent(element)
+    return ET.tostring(element, encoding="unicode")
 
 
 class SimpleTest(TestCase):
@@ -102,11 +108,9 @@ class SimpleTest(TestCase):
                 "https://hdl.handle.net/21.12132/3.8fd884df68964bae",
             )
 
-            with open("instruments/test_data/pid-service.json", "rb") as test_file:
-                expected_json = json.load(test_file)
-            mock_post.assert_called_once_with(
-                "http://pid-service.test", json=expected_json
-            )
+            mock_post.assert_called_once()
+            self.assertIn("json", mock_post.call_args.kwargs)
+            self.assertMatchSnapshot(mock_post.call_args.kwargs["json"])
 
     def _test_html_response(self, response):
         response_decoded = response.content.decode("utf-8")
@@ -149,57 +153,13 @@ class SimpleTest(TestCase):
 
     def _test_xml_response(self, response):
         self.assertEqual(response.status_code, 200)
-        expected_xml = Path("instruments/test_data/response.xml").read_text("utf-8")
-        self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
+        self.assertEqual(response.headers["Content-Type"], "application/xml")
+        self.assertMatchSnapshot(_pretty_xml(response.content))
 
     def _test_json_response(self, response):
         self.assertEqual(response.status_code, 200)
-        expected_json = {
-            "Identifier": {
-                "identifierValue": "https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
-                "identifierType": "Handle",
-            },
-            "LandingPage": "http://localhost:8000/instrument/d8b717b8-16e7-476a-9f5e-95b2a93ddff6",
-            "Name": "Test instrument",
-            "Owners": [{"owner": {"ownerName": "Test owner"}}],
-            "Manufacturers": [
-                {"manufacturer": {"manufacturerName": "Test manufacturer"}}
-            ],
-            "Model": {
-                "modelName": "Test model",
-                "modelIdentifier": {
-                    "modelIdentifierValue": "http://vocab.test/testmodel",
-                    "modelIdentifierType": "URL",
-                },
-            },
-            "InstrumentType": [
-                {
-                    "instrumentType": {
-                        "instrumentTypeName": "Test type",
-                        "instrumentTypeIdentifier": {
-                            "instrumentTypeIdentifierValue": "http://vocab.test/testtype",
-                            "instrumentTypeIdentifierType": "URL",
-                        },
-                    }
-                }
-            ],
-            "MeasuredVariables": [
-                {"measuredVariable": {"variableMeasured": "Test variable"}}
-            ],
-            "Dates": [
-                {"date": {"date": "2002-03-18", "dateType": "Commissioned"}},
-                {"date": {"date": "2011-01-05", "dateType": "DeCommissioned"}},
-            ],
-            "AlternateIdentifiers": [
-                {
-                    "alternateIdentifier": {
-                        "alternateIdentifierValue": "836514404680691",
-                        "alternateIdentifierType": "SerialNumber",
-                    }
-                }
-            ],
-        }
-        self.assertJSONEqual(response.content, expected_json)
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertMatchSnapshot(response.json())
 
     def _test_pi_api(self, response):
         expected_json = [
@@ -388,8 +348,8 @@ class ComponentsTest(TestCase):
             f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.xml"
         )
         self.assertEqual(response.status_code, 200)
-        expected_xml = Path("instruments/test_data/parent.xml").read_text("utf-8")
-        self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
+        self.assertEqual(response.headers["Content-Type"], "application/xml")
+        self.assertMatchSnapshot(_pretty_xml(response.content))
 
     def test_child_xml(self):
         self.maxDiff = None
@@ -397,8 +357,8 @@ class ComponentsTest(TestCase):
             f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.xml"
         )
         self.assertEqual(response.status_code, 200)
-        expected_xml = Path("instruments/test_data/child.xml").read_text("utf-8")
-        self.assertXMLEqual(response.content.decode("utf-8"), expected_xml)
+        self.assertEqual(response.headers["Content-Type"], "application/xml")
+        self.assertMatchSnapshot(_pretty_xml(response.content))
 
     def test_parent_html(self):
         response = self.client.get(
@@ -434,69 +394,13 @@ class ComponentsTest(TestCase):
             f"/instrument/90845957-31eb-4900-89a5-78696ec0453d.json"
         )
         self.assertEqual(response.status_code, 200)
-        expected_json = {
-            "Identifier": {
-                "identifierValue": "https://hdl.handle.net/21.12132/3.9084595731eb4900",
-                "identifierType": "Handle",
-            },
-            "LandingPage": "http://localhost:8000/instrument/90845957-31eb-4900-89a5-78696ec0453d",
-            "Name": "My weather station",
-            "Owners": [{"owner": {"ownerName": "My institute"}}],
-            "RelatedIdentifiers": [
-                {
-                    "relatedIdentifier": {
-                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.a13475b35ed34ea3",
-                        "relatedIdentifierType": "Handle",
-                        "relationType": "HasComponent",
-                    },
-                },
-                {
-                    "relatedIdentifier": {
-                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.eab72e886cb44902",
-                        "relatedIdentifierType": "Handle",
-                        "relationType": "HasComponent",
-                    },
-                },
-            ],
-        }
-        self.assertJSONEqual(response.content, expected_json)
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertMatchSnapshot(response.json())
 
     def test_child_json(self):
         response = self.client.get(
             f"/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab.json"
         )
         self.assertEqual(response.status_code, 200)
-        expected_json = {
-            "Identifier": {
-                "identifierValue": "https://hdl.handle.net/21.12132/3.a13475b35ed34ea3",
-                "identifierType": "Handle",
-            },
-            "LandingPage": "http://localhost:8000/instrument/a13475b3-5ed3-4ea3-ba81-0eaa884f11ab",
-            "Name": "New temperature sensor",
-            "Owners": [{"owner": {"ownerName": "My institute"}}],
-            "Manufacturers": [{"manufacturer": {"manufacturerName": "ACME"}}],
-            "Model": {
-                "modelName": "ACME T1",
-            },
-            "InstrumentType": [
-                {
-                    "instrumentType": {
-                        "instrumentTypeName": "Temperature sensor",
-                        "instrumentTypeIdentifier": {
-                            "instrumentTypeIdentifierValue": "http://vocab.test/temperaturesensor",
-                            "instrumentTypeIdentifierType": "URL",
-                        },
-                    }
-                }
-            ],
-            "RelatedIdentifiers": [
-                {
-                    "relatedIdentifier": {
-                        "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.9084595731eb4900",
-                        "relatedIdentifierType": "Handle",
-                        "relationType": "IsComponentOf",
-                    },
-                },
-            ],
-        }
-        self.assertJSONEqual(response.content, expected_json)
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertMatchSnapshot(response.json())

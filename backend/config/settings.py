@@ -173,3 +173,5 @@ handler.setLevel(logging.ERROR)
 logging.getLogger("sorl.thumbnail").addHandler(handler)
 
 THUMBNAIL_PRESERVE_FORMAT = True
+
+TEST_RUNNER = "snapshottest.django.TestRunner"
