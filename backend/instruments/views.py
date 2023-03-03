@@ -1,13 +1,12 @@
 import datetime
 from datetime import date
 
-from django.db.models import OuterRef, Subquery
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .decorators import cors
-from .models import Campaign, Instrument
+from .models import Instrument, Location
 
 
 def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
@@ -71,17 +70,41 @@ def instrument(
     )
 
 
+def _filter_instruments(instruments, user):
+    if user.is_authenticated:
+        return instruments
+    return instruments.filter(pid__isnull=False)
+
+
 def index(request: HttpRequest) -> HttpResponse:
-    current_campaigns = Campaign.objects.filter(
-        instrument=OuterRef("pk"), date_range__contains=date.today()
-    ).order_by("date_range__startswith")
-    instruments = Instrument.objects.annotate(
-        location_name=Subquery(current_campaigns.values("location__name")[:1])
-    ).order_by("location_name", "name")
+    locations: list = []
+    for location in Location.objects.order_by("name"):
+        locations.append(
+            {
+                "name": location.name,
+                "instruments": _filter_instruments(
+                    Instrument.objects.filter(
+                        campaign__location=location,
+                        campaign__date_range__contains=date.today(),
+                        components=None,
+                    ),
+                    request.user,
+                ),
+            }
+        )
+    locations.append(
+        {
+            "name": "Unknown",
+            "instruments": _filter_instruments(
+                Instrument.objects.exclude(campaign__date_range__contains=date.today()),
+                request.user,
+            ),
+        }
+    )
     return render(
         request,
         "instruments/index.html",
-        {"instruments": instruments},
+        {"locations": locations},
     )
 
 

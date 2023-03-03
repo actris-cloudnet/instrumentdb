@@ -122,3 +122,9 @@ td, th {
 .cell-action img {
   vertical-align: middle;
 }
+
+.instruments {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
