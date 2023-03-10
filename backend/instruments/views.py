@@ -70,37 +70,31 @@ def instrument(
     )
 
 
-def _filter_instruments(instruments, user):
-    if user.is_authenticated:
-        return instruments
-    return instruments.filter(pid__isnull=False)
-
-
 def index(request: HttpRequest) -> HttpResponse:
+    instruments = Instrument.objects.filter(component_of=None)
+    if not request.user.is_authenticated:
+        instruments = instruments.filter(pid__isnull=False)
+
     locations: list = []
     for location in Location.objects.order_by("name"):
         locations.append(
             {
                 "name": location.name,
-                "instruments": _filter_instruments(
-                    Instrument.objects.filter(
-                        campaign__location=location,
-                        campaign__date_range__contains=date.today(),
-                        components=None,
-                    ),
-                    request.user,
+                "instruments": instruments.filter(
+                    campaign__location=location,
+                    campaign__date_range__contains=date.today(),
                 ),
             }
         )
     locations.append(
         {
             "name": "Unknown",
-            "instruments": _filter_instruments(
-                Instrument.objects.exclude(campaign__date_range__contains=date.today()),
-                request.user,
+            "instruments": instruments.exclude(
+                campaign__date_range__contains=date.today()
             ),
         }
     )
+
     return render(
         request,
         "instruments/index.html",

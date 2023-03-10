@@ -138,7 +138,9 @@ class Instrument(models.Model):
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
     persons = models.ManyToManyField(Person, through="Pi")
-    components = models.ManyToManyField("self", blank=True, symmetrical=False)
+    components = models.ManyToManyField(
+        "self", blank=True, symmetrical=False, related_name="component_of"
+    )
 
     def pidinst(self):
         result: dict = {
