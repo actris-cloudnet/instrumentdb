@@ -22,8 +22,8 @@
           {% for instrument in location.instruments %}
             <div class="instrument">
               <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a><br>
-              {% if instrument.model %}
-                {% for type in instrument.model.types.all %}
+              {% if instrument.get_types %}
+                {% for type in instrument.get_types %}
                   {{ type }}
                 {% endfor %}
               {% else %}
