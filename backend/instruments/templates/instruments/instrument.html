@@ -57,12 +57,12 @@
         </ul>
       </div>
     </div>
-    {% if instrument.model %}
+    {% if instrument.get_manufacturers %}
       <div class="field">
-        <div class="field-label">Manufacturer{{ instrument.model.manufacturers.all|pluralize }}</div>
+        <div class="field-label">Manufacturer{{ instrument.get_manufacturers|pluralize }}</div>
         <div class="field-content">
           <ul>
-          {% for manufacturer in instrument.model.manufacturers.all %}
+          {% for manufacturer in instrument.get_manufacturers %}
             <li>
               {{ manufacturer.name }}
               {% if manufacturer.acronym %}
@@ -76,6 +76,8 @@
           </ul>
         </div>
       </div>
+    {% endif %}
+    {% if instrument.model %}
       <div class="field">
         <div class="field-label">Model</div>
         <div class="field-content">
@@ -86,42 +88,42 @@
           {% endif %}
         </div>
       </div>
-      {% if instrument.model.types.all %}
-        <div class="field">
-          <div class="field-label">Instrument type{{ instrument.model.types.all|pluralize }}</div>
-          <div class="field-content">
-            <ul>
-            {% for type in instrument.model.types.all %}
-              <li>
-                {% if type.concept_url %}
-                  <a href="{{ type.concept_url }}">{{ type.name }}</a>
-                {% else %}
-                  {{ type.name }}
-                {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
-          </div>
+    {% endif %}
+    {% if instrument.get_types %}
+      <div class="field">
+        <div class="field-label">Instrument type{{ instrument.get_types|pluralize }}</div>
+        <div class="field-content">
+          <ul>
+          {% for type in instrument.get_types %}
+            <li>
+              {% if type.concept_url %}
+                <a href="{{ type.concept_url }}">{{ type.name }}</a>
+              {% else %}
+                {{ type.name }}
+              {% endif %}
+            </li>
+          {% endfor %}
+          </ul>
         </div>
-      {% endif %}
-      {% if instrument.model.variables.all %}
-        <div class="field">
-          <div class="field-label">Measured variable{{ instrument.model.variables.all|pluralize }}</div>
-          <div class="field-content">
-            <ul>
-            {% for variable in instrument.model.variables.all %}
-              <li>
-                {% if variable.concept_url %}
-                  <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
-                {% else %}
-                  {{ variable.name }}
-                {% endif %}
-              </li>
-            {% endfor %}
-            </ul>
-          </div>
+      </div>
+    {% endif %}
+    {% if instrument.get_variables %}
+      <div class="field">
+        <div class="field-label">Measured variable{{ instrument.get_variables|pluralize }}</div>
+        <div class="field-content">
+          <ul>
+          {% for variable in instrument.get_variables %}
+            <li>
+              {% if variable.concept_url %}
+                <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+              {% else %}
+                {{ variable.name }}
+              {% endif %}
+            </li>
+          {% endfor %}
+          </ul>
         </div>
-      {% endif %}
+      </div>
     {% endif %}
     {% if instrument.description %}
       <div class="field">

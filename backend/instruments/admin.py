@@ -70,6 +70,8 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         "name",
         "owners",
         "model",
+        "types",
+        "manufacturers",
         "description",
         "image",
         "serial_number",

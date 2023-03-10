@@ -337,6 +337,13 @@ class ComponentsTest(TestCase):
             name="My weather station",
         )
         cls.instrument4.owners.add(owner)
+        cls.instrument4.manufacturers.add(owner)
+        cls.instrument4.types.add(
+            Type.objects.create(
+                name="Weather station type",
+                concept_url="http://vocab.test/weatherstation",
+            )
+        )
         cls.instrument4.components.add(cls.instrument2, cls.instrument3)
 
     def setUp(self):
@@ -367,6 +374,8 @@ class ComponentsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         test_strings = (
             "My weather station",
+            "Instrument type",
+            "Weather station type",
             "Components",
             "New temperature sensor",
             "My humidity sensor",
@@ -382,6 +391,8 @@ class ComponentsTest(TestCase):
         response_decoded = response.content.decode("utf-8")
         self.assertEqual(response.status_code, 200)
         test_strings = (
+            "Instrument type",
+            "Temperature sensor",
             "Component of",
             "My weather station",
         )

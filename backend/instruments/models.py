@@ -124,8 +124,17 @@ class Instrument(models.Model):
     name = models.CharField(
         max_length=255, help_text="Name by which the instrument instance is known."
     )
-    owners = models.ManyToManyField(Organization)
+    owners = models.ManyToManyField(Organization, related_name="owned_instruments")
     model = models.ForeignKey(Model, on_delete=models.PROTECT, null=True, blank=True)
+    manufacturers = models.ManyToManyField(
+        Organization,
+        related_name="manufactured_instruments",
+        blank=True,
+        help_text="Leavy empty if model is specified.",
+    )
+    types = models.ManyToManyField(
+        Type, blank=True, help_text="Leavy empty if model is specified."
+    )
     description = models.TextField(
         blank=True,
         help_text="Technical description of the device and its capabilities.",
@@ -149,11 +158,11 @@ class Instrument(models.Model):
             "Name": self.name,
             "Owners": [owner.pidinst("owner") for owner in self.owners.all()],
         }
+        result["Manufacturers"] = [
+            manufacturer.pidinst("manufacturer")
+            for manufacturer in self.get_manufacturers()
+        ]
         if self.model:
-            result["Manufacturers"] = [
-                manufacturer.pidinst("manufacturer")
-                for manufacturer in self.model.manufacturers.all()
-            ]
             result["Model"] = self.model.pidinst()
         if self.pid:
             result["Identifier"] = {
@@ -162,14 +171,13 @@ class Instrument(models.Model):
             }
         if description := self.description:
             result["Description"] = description
-        if self.model:
-            if types := self.model.types.all():
-                result["InstrumentType"] = [type.pidinst() for type in types]
-            if variables := self.model.variables.all():
-                result["MeasuredVariables"] = [
-                    {"measuredVariable": {"variableMeasured": variable.name}}
-                    for variable in variables
-                ]
+        if types := self.get_types():
+            result["InstrumentType"] = [type.pidinst() for type in types]
+        if variables := self.get_variables():
+            result["MeasuredVariables"] = [
+                {"measuredVariable": {"variableMeasured": variable.name}}
+                for variable in variables
+            ]
         dates = []
         if date := self.commission_date:
             dates.append(
@@ -272,6 +280,21 @@ class Instrument(models.Model):
     @property
     def parents(self):
         return Instrument.objects.filter(components=self)
+
+    def get_manufacturers(self):
+        if self.model:
+            return self.model.manufacturers.all()
+        return self.manufacturers.all()
+
+    def get_types(self):
+        if self.model:
+            return self.model.types.all()
+        return self.types.all()
+
+    def get_variables(self):
+        if self.model is None:
+            return []
+        return self.model.variables.all()
 
     def get_related_identifiers(self):
         output = []

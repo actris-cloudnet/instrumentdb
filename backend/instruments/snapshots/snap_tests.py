@@ -77,7 +77,19 @@ snapshots["ComponentsTest::test_parent_json 1"] = {
         "identifierType": "Handle",
         "identifierValue": "https://hdl.handle.net/21.12132/3.9084595731eb4900",
     },
+    "InstrumentType": [
+        {
+            "instrumentType": {
+                "instrumentTypeIdentifier": {
+                    "instrumentTypeIdentifierType": "URL",
+                    "instrumentTypeIdentifierValue": "http://vocab.test/weatherstation",
+                },
+                "instrumentTypeName": "Weather station type",
+            }
+        }
+    ],
     "LandingPage": "http://localhost:8000/instrument/90845957-31eb-4900-89a5-78696ec0453d",
+    "Manufacturers": [{"manufacturer": {"manufacturerName": "My institute"}}],
     "Name": "My weather station",
     "Owners": [{"owner": {"ownerName": "My institute"}}],
     "RelatedIdentifiers": [
@@ -111,6 +123,17 @@ snapshots[
       <ownerName>My institute</ownerName>
     </owner>
   </owners>
+  <manufacturers>
+    <manufacturer>
+      <manufacturerName>My institute</manufacturerName>
+    </manufacturer>
+  </manufacturers>
+  <instrumentTypes>
+    <instrumentType>
+      <instrumentTypeName>Weather station type</instrumentTypeName>
+      <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">http://vocab.test/weatherstation</instrumentTypeIdentifier>
+    </instrumentType>
+  </instrumentTypes>
   <relatedIdentifiers>
     <relatedIdentifier relatedIdentifierType="Handle" relationType="HasComponent">
           https://hdl.handle.net/21.12132/3.a13475b35ed34ea3

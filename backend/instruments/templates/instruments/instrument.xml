@@ -16,52 +16,52 @@
       </owner>
     {% endfor %}
   </owners>
+  <manufacturers>
+    {% for manufacturer in instrument.get_manufacturers %}
+      <manufacturer>
+        <manufacturerName>{{ manufacturer.name }}</manufacturerName>
+        {% if manufacturer.ror_id %}
+          <manufacturerIdentifier manufacturerIdentifierType="ROR">{{ manufacturer.ror_id }}</manufacturerIdentifier>
+        {% endif %}
+      </manufacturer>
+    {% endfor %}
+  </manufacturers>
   {% if instrument.model %}
-    <manufacturers>
-      {% for manufacturer in instrument.model.manufacturers.all %}
-        <manufacturer>
-          <manufacturerName>{{ manufacturer.name }}</manufacturerName>
-          {% if manufacturer.ror_id %}
-            <manufacturerIdentifier manufacturerIdentifierType="ROR">{{ manufacturer.ror_id }}</manufacturerIdentifier>
-          {% endif %}
-        </manufacturer>
-      {% endfor %}
-    </manufacturers>
     <model>
       <modelName>{{ instrument.model.name }}</modelName>
       {% if instrument.model.concept_url %}
         <modelIdentifier modelIdentifierType="URL">{{ instrument.model.concept_url }}</modelIdentifier>
       {% endif %}
     </model>
-    {% if instrument.model.types.all %}
-      <instrumentTypes>
-        {% for type in instrument.model.types.all %}
-          <instrumentType>
-            <instrumentTypeName>{{ type.name }}</instrumentTypeName>
-            {% if type.concept_url %}
-              <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">{{ type.concept_url }}</instrumentTypeIdentifier>
-            {% endif %}
-          </instrumentType>
-        {% endfor %}
-      </instrumentTypes>
-    {% endif %}
-    {% if instrument.model.variables.all %}
-      <measuredVariables>
-        {% for variable in instrument.model.variables.all %}
-          <measuredVariable>{{ variable.name }}</measuredVariable>
-        {% endfor %}
-      </measuredVariables>
-    {% endif %}
-    {% if instrument.commission_date or instrument.decommission_date %}
-      <dates>
-        {% if instrument.commission_date %}
-          <date dateType="Commissioned">{{ instrument.commission_date|date:"Y-m-d" }}</date>
-        {% endif %}
-        {% if instrument.decommission_date %}
-          <date dateType="DeCommissioned">{{ instrument.decommission_date|date:"Y-m-d" }}</date>
-        {% endif %}
-      </dates>
-    {% endif %}
+  {% endif %}
+  {% if instrument.get_types %}
+    <instrumentTypes>
+      {% for type in instrument.get_types %}
+        <instrumentType>
+          <instrumentTypeName>{{ type.name }}</instrumentTypeName>
+          {% if type.concept_url %}
+            <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">{{ type.concept_url }}</instrumentTypeIdentifier>
+          {% endif %}
+        </instrumentType>
+      {% endfor %}
+    </instrumentTypes>
+  {% endif %}
+  {% if instrument.get_variables %}
+    <measuredVariables>
+      {% for variable in instrument.get_variables %}
+        <measuredVariable>{{ variable.name }}</measuredVariable>
+      {% endfor %}
+    </measuredVariables>
+  {% endif %}
+  {% if instrument.commission_date or instrument.decommission_date %}
+    <dates>
+      {% if instrument.commission_date %}
+        <date dateType="Commissioned">{{ instrument.commission_date|date:"Y-m-d" }}</date>
+      {% endif %}
+      {% if instrument.decommission_date %}
+        <date dateType="DeCommissioned">{{ instrument.decommission_date|date:"Y-m-d" }}</date>
+      {% endif %}
+    </dates>
   {% endif %}
   {% if instrument.description %}
     <description>{{ instrument.description }}</description>
