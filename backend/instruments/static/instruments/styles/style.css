@@ -71,10 +71,18 @@ li:only-child {
 .image-container {
   float: right;
   margin: 1rem 0 1rem 1rem;
+  max-width: 150px;
 }
 
 .image-container img {
   display: block;
+}
+
+.image-attribution {
+  text-align: center;
+  font-size: 75%;
+  color: gray;
+  margin-top: .25rem;
 }
 
 table {

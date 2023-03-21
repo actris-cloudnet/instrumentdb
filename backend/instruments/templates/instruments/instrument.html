@@ -27,11 +27,18 @@
     </div>
     <h1 style="margin-top:.25rem">{{ instrument.name }}</h1>
     {% if instrument.model %}
-      {% with image=instrument.image|default:instrument.model.image %}
-        {% if image %}
-          <a href="/media/{{ image }}" target="_blank" class="image-container">{% thumbnail image "150" as image %}<img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">{% endthumbnail %}</a>
-        {% endif %}
-      {% endwith %}
+      {% if instrument.get_image %}
+        <aside class="image-container">
+          <a href="/media/{{ instrument.get_image }}" target="_blank">
+            {% thumbnail instrument.get_image "150" as image %}
+              <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+            {% endthumbnail %}
+          </a>
+          {% if instrument.get_image_attribution %}
+            <div class="image-attribution">Photo: {{ instrument.get_image_attribution }}</div>
+          {% endif %}
+        </aside>
+      {% endif %}
     {% endif %}
     {% if instrument.pid %}
       <div class="field">

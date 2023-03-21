@@ -74,6 +74,7 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         "manufacturers",
         "description",
         "image",
+        "image_attribution",
         "serial_number",
         "components",
     ]

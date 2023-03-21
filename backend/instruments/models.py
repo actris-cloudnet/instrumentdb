@@ -82,6 +82,7 @@ class Model(models.Model):
         blank=True,
     )
     image = ImageField(null=True, blank=True, verbose_name="Default image")
+    image_attribution = models.CharField(max_length=255, null=True, blank=True)
     concept_url = models.URLField(null=True, blank=True, verbose_name="Concept URL")
 
     def pidinst(self):
@@ -144,6 +145,7 @@ class Instrument(models.Model):
         blank=True,
         help_text="Photograph of the instrument on site. Leave empty to use default image of the model.",
     )
+    image_attribution = models.CharField(max_length=255, null=True, blank=True)
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
     persons = models.ManyToManyField(Person, through="Pi")
@@ -325,6 +327,20 @@ class Instrument(models.Model):
                 }
             )
         return output
+
+    def get_image(self) -> str | None:
+        if self.image:
+            return self.image
+        if self.model and self.model.image:
+            return self.model.image
+        return None
+
+    def get_image_attribution(self) -> str | None:
+        if self.image:
+            return self.image_attribution
+        if self.model and self.model.image:
+            return self.model.image_attribution
+        return None
 
     def __str__(self) -> str:
         return self.name
