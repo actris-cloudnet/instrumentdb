@@ -76,9 +76,10 @@ li:only-child {
 
 .image-container img {
   display: block;
+  border-radius: 4px;
 }
 
-.image-attribution {
+.image-container figcaption {
   text-align: center;
   font-size: 75%;
   color: gray;

@@ -28,16 +28,18 @@
     <h1 style="margin-top:.25rem">{{ instrument.name }}</h1>
     {% if instrument.model %}
       {% if instrument.get_image %}
-        <aside class="image-container">
+        <figure class="image-container">
           <a href="/media/{{ instrument.get_image }}" target="_blank">
             {% thumbnail instrument.get_image "150" as image %}
               <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
             {% endthumbnail %}
           </a>
           {% if instrument.get_image_attribution %}
-            <div class="image-attribution">Photo: {{ instrument.get_image_attribution }}</div>
+            <figcaption>
+              Photo: {{ instrument.get_image_attribution }}
+            </figcaption>
           {% endif %}
-        </aside>
+        </figure>
       {% endif %}
     {% endif %}
     {% if instrument.pid %}
