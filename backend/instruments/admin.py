@@ -1,5 +1,7 @@
 from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
+from django.forms import ModelForm
 from django.urls import reverse
 from sorl.thumbnail.admin import AdminImageMixin
 
@@ -60,6 +62,18 @@ class PiAdminInline(admin.TabularInline):
     extra = 0
 
 
+class InstrumentAdminForm(ModelForm):
+    def clean(self):
+        a = self.cleaned_data["model"] is not None
+        b = len(self.cleaned_data["types"]) > 0
+        c = len(self.cleaned_data["manufacturers"]) > 0
+        valid = (a and not b and not c) or (not a and b and c)
+        if not valid:
+            raise ValidationError(
+                "Please specify either model or both types and manufacturers."
+            )
+
+
 @admin.register(models.Instrument)
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     list_display = ["name", "pid"]
@@ -80,6 +94,7 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     ]
     readonly_fields = ["pid"]
     actions = ["create_pids"]
+    form = InstrumentAdminForm
 
     @staticmethod
     def view_on_site(obj):
