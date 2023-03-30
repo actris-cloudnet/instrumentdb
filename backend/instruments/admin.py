@@ -91,6 +91,7 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         "image_attribution",
         "serial_number",
         "components",
+        "new_version",
     ]
     readonly_fields = ["pid"]
     actions = ["create_pids"]

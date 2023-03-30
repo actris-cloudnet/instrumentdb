@@ -396,3 +396,135 @@ snapshots[
       </alternateIdentifier>
   </alternateIdentifiers>
 </instrument>"""
+
+snapshots["VersionsTest::test_new_json 1"] = {
+    "Identifier": {
+        "identifierType": "Handle",
+        "identifierValue": "https://hdl.handle.net/21.12132/3.1fdbc5068c7e",
+    },
+    "InstrumentType": [
+        {
+            "instrumentType": {
+                "instrumentTypeIdentifier": {
+                    "instrumentTypeIdentifierType": "URL",
+                    "instrumentTypeIdentifierValue": "http://vocab.test/temperaturesensor",
+                },
+                "instrumentTypeName": "Temperature sensor",
+            }
+        }
+    ],
+    "LandingPage": "http://localhost:8000/instrument/1fdbc506-8c7e-4171-93d9-70a4393f082e",
+    "Manufacturers": [{"manufacturer": {"manufacturerName": "ACME"}}],
+    "Model": {"modelName": "ACME T1"},
+    "Name": "New temperature sensor version",
+    "Owners": [{"owner": {"ownerName": "My institute"}}],
+    "RelatedIdentifiers": [
+        {
+            "relatedIdentifier": {
+                "relatedIdentifierType": "Handle",
+                "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.39dbf9986eef",
+                "relationType": "IsNewVersionOf",
+            }
+        }
+    ],
+    "SchemaVersion": "1.0",
+}
+
+snapshots[
+    "VersionsTest::test_new_xml 1"
+] = """<instrument>
+  <identifier identifierType="Handle">https://hdl.handle.net/21.12132/3.1fdbc5068c7e</identifier>
+  <schemaVersion>1.0</schemaVersion>
+  <landingPage>http://localhost:8000/instrument/1fdbc506-8c7e-4171-93d9-70a4393f082e</landingPage>
+  <name>New temperature sensor version</name>
+  <owners>
+    <owner>
+      <ownerName>My institute</ownerName>
+    </owner>
+  </owners>
+  <manufacturers>
+    <manufacturer>
+      <manufacturerName>ACME</manufacturerName>
+    </manufacturer>
+  </manufacturers>
+  <model>
+    <modelName>ACME T1</modelName>
+  </model>
+  <instrumentTypes>
+    <instrumentType>
+      <instrumentTypeName>Temperature sensor</instrumentTypeName>
+      <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">http://vocab.test/temperaturesensor</instrumentTypeIdentifier>
+    </instrumentType>
+  </instrumentTypes>
+  <relatedIdentifiers>
+    <relatedIdentifier relatedIdentifierType="Handle" relationType="IsNewVersionOf">
+          https://hdl.handle.net/21.12132/3.39dbf9986eef
+        </relatedIdentifier>
+  </relatedIdentifiers>
+</instrument>"""
+
+snapshots["VersionsTest::test_old_json 1"] = {
+    "Identifier": {
+        "identifierType": "Handle",
+        "identifierValue": "https://hdl.handle.net/21.12132/3.39dbf9986eef",
+    },
+    "InstrumentType": [
+        {
+            "instrumentType": {
+                "instrumentTypeIdentifier": {
+                    "instrumentTypeIdentifierType": "URL",
+                    "instrumentTypeIdentifierValue": "http://vocab.test/temperaturesensor",
+                },
+                "instrumentTypeName": "Temperature sensor",
+            }
+        }
+    ],
+    "LandingPage": "http://localhost:8000/instrument/39dbf998-6eef-47d8-991e-78f53e892d34",
+    "Manufacturers": [{"manufacturer": {"manufacturerName": "ACME"}}],
+    "Model": {"modelName": "ACME T1"},
+    "Name": "Old temperature sensor version",
+    "Owners": [{"owner": {"ownerName": "My institute"}}],
+    "RelatedIdentifiers": [
+        {
+            "relatedIdentifier": {
+                "relatedIdentifierType": "Handle",
+                "relatedIdentifierValue": "https://hdl.handle.net/21.12132/3.1fdbc5068c7e",
+                "relationType": "IsPreviousVersionOf",
+            }
+        }
+    ],
+    "SchemaVersion": "1.0",
+}
+
+snapshots[
+    "VersionsTest::test_old_xml 1"
+] = """<instrument>
+  <identifier identifierType="Handle">https://hdl.handle.net/21.12132/3.39dbf9986eef</identifier>
+  <schemaVersion>1.0</schemaVersion>
+  <landingPage>http://localhost:8000/instrument/39dbf998-6eef-47d8-991e-78f53e892d34</landingPage>
+  <name>Old temperature sensor version</name>
+  <owners>
+    <owner>
+      <ownerName>My institute</ownerName>
+    </owner>
+  </owners>
+  <manufacturers>
+    <manufacturer>
+      <manufacturerName>ACME</manufacturerName>
+    </manufacturer>
+  </manufacturers>
+  <model>
+    <modelName>ACME T1</modelName>
+  </model>
+  <instrumentTypes>
+    <instrumentType>
+      <instrumentTypeName>Temperature sensor</instrumentTypeName>
+      <instrumentTypeIdentifier instrumentTypeIdentifierType="URL">http://vocab.test/temperaturesensor</instrumentTypeIdentifier>
+    </instrumentType>
+  </instrumentTypes>
+  <relatedIdentifiers>
+    <relatedIdentifier relatedIdentifierType="Handle" relationType="IsPreviousVersionOf">
+          https://hdl.handle.net/21.12132/3.1fdbc5068c7e
+        </relatedIdentifier>
+  </relatedIdentifiers>
+</instrument>"""

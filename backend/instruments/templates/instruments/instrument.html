@@ -257,6 +257,23 @@
         </table>
       </div>
     {% endif %}
+    {% if instrument.previous_version or instrument.new_version %}
+      <div class="field">
+        <div class="field-label">Versions</div>
+        <div class="field-content">
+          {% if instrument.previous_version %}
+            <a href="{{ instrument.previous_version.landing_page }}" style="margin-right: .5rem; text-decoration: none;">
+              « Previous
+            </a>
+          {% endif %}
+          {% if instrument.new_version %}
+            <a href="{{ instrument.new_version.landing_page }}" style="text-decoration: none;">
+              New »
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
     {% if instrument.related_identifiers.all %}
       <div class="field">
         <div class="field-label">Related identifier{{ instrument.related_identifiers.all|pluralize }}</div>

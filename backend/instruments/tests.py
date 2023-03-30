@@ -424,3 +424,96 @@ class ComponentsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "application/json")
         self.assertMatchSnapshot(response.json())
+
+
+class VersionsTest(TestCase):
+    new_instrument: Instrument
+    old_instrument: Instrument
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        owner = Organization.objects.create(name="My institute")
+
+        manufacturer = Organization.objects.create(name="ACME")
+
+        model = Model.objects.create(name="ACME T1")
+        model.manufacturers.add(manufacturer)
+        model.types.add(
+            Type.objects.create(
+                name="Temperature sensor",
+                concept_url="http://vocab.test/temperaturesensor",
+            )
+        )
+
+        cls.new_instrument = Instrument.objects.create(
+            uuid="1fdbc506-8c7e-4171-93d9-70a4393f082e",
+            pid="https://hdl.handle.net/21.12132/3.1fdbc5068c7e",
+            name="New temperature sensor version",
+            model=model,
+        )
+        cls.new_instrument.owners.add(owner)
+
+        cls.old_instrument = Instrument.objects.create(
+            uuid="39dbf998-6eef-47d8-991e-78f53e892d34",
+            pid="https://hdl.handle.net/21.12132/3.39dbf9986eef",
+            name="Old temperature sensor version",
+            model=model,
+            new_version=cls.new_instrument,
+        )
+        cls.old_instrument.owners.add(owner)
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_index_html(self):
+        response = self.client.get("/")
+        self.assertContains(
+            response,
+            f'<a href="{self.new_instrument.landing_page}">{self.new_instrument.name}</a>',
+            html=True,
+        )
+        self.assertNotContains(
+            response,
+            f'<a href="{self.old_instrument.landing_page}">{self.old_instrument.name}</a>',
+            html=True,
+        )
+
+    def test_new_html(self):
+        response = self.client.get(f"/instrument/{self.new_instrument.uuid}.html")
+        self.assertContains(
+            response,
+            f'<a href="{self.old_instrument.landing_page}" style="margin-right: .5rem; text-decoration: none;">« Previous</a>',
+            html=True,
+        )
+
+    def test_old_html(self):
+        response = self.client.get(f"/instrument/{self.old_instrument.uuid}.html")
+        self.assertContains(
+            response,
+            f'<a href="{self.new_instrument.landing_page}" style="text-decoration: none;">New »</a>',
+            html=True,
+        )
+
+    def test_new_xml(self):
+        response = self.client.get(f"/instrument/{self.new_instrument.uuid}.xml")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["Content-Type"], "application/xml")
+        self.assertMatchSnapshot(_pretty_xml(response.content))
+
+    def test_old_xml(self):
+        response = self.client.get(f"/instrument/{self.old_instrument.uuid}.xml")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["Content-Type"], "application/xml")
+        self.assertMatchSnapshot(_pretty_xml(response.content))
+
+    def test_new_json(self):
+        response = self.client.get(f"/instrument/{self.new_instrument.uuid}.json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertMatchSnapshot(response.json())
+
+    def test_old_json(self):
+        response = self.client.get(f"/instrument/{self.old_instrument.uuid}.json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["Content-Type"], "application/json")
+        self.assertMatchSnapshot(response.json())

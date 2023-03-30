@@ -152,6 +152,9 @@ class Instrument(models.Model):
     components = models.ManyToManyField(
         "self", blank=True, symmetrical=False, related_name="component_of"
     )
+    new_version = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.PROTECT
+    )
 
     def pidinst(self):
         result: dict = {
@@ -283,6 +286,13 @@ class Instrument(models.Model):
     def parents(self):
         return Instrument.objects.filter(components=self)
 
+    @property
+    def previous_version(self):
+        try:
+            return Instrument.objects.get(new_version=self)
+        except Instrument.DoesNotExist:
+            return None
+
     def get_manufacturers(self):
         if self.model:
             return self.model.manufacturers.all()
@@ -308,24 +318,26 @@ class Instrument(models.Model):
                     "relation_type": identifier.relation_type,
                 }
             )
+
+        def add_relation(relation_type, instrument):
+            output.append(
+                {
+                    "identifier": instrument.pid
+                    if instrument.pid
+                    else instrument.landing_page,
+                    "identifier_type": "Handle" if instrument.pid else "URL",
+                    "relation_type": relation_type,
+                }
+            )
+
         for component in self.components.all():
-            output.append(
-                {
-                    "identifier": component.pid
-                    if component.pid
-                    else component.landing_page,
-                    "identifier_type": "Handle" if component.pid else "URL",
-                    "relation_type": "HasComponent",
-                }
-            )
+            add_relation("HasComponent", component)
         for parent in self.parents:
-            output.append(
-                {
-                    "identifier": parent.pid if parent.pid else parent.landing_page,
-                    "identifier_type": "Handle" if parent.pid else "URL",
-                    "relation_type": "IsComponentOf",
-                }
-            )
+            add_relation("IsComponentOf", parent)
+        if self.new_version:
+            add_relation("IsPreviousVersionOf", self.new_version)
+        if self.previous_version:
+            add_relation("IsNewVersionOf", self.previous_version)
         return output
 
     def get_image(self) -> str | None:

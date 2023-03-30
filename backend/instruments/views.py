@@ -71,7 +71,7 @@ def instrument(
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    instruments = Instrument.objects.filter(component_of=None)
+    instruments = Instrument.objects.filter(component_of=None, new_version__isnull=True)
     if not request.user.is_authenticated:
         instruments = instruments.filter(pid__isnull=False)
 
