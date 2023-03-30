@@ -21,7 +21,11 @@
         <div class="instruments">
           {% for instrument in location.instruments %}
             <div class="instrument">
-              <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a><br>
+              <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
+              {% if not instrument.pid %}
+                (draft)
+              {% endif %}
+              <br>
               {% if instrument.get_types %}
                 {% for type in instrument.get_types %}
                   {{ type }}
