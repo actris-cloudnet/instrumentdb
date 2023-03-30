@@ -109,6 +109,7 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         try:
             for obj in queryset:
                 obj.create_or_update_pid()
+                self._update_related_pids(obj)
                 created_pids += 1
         except Exception as err:
             self.message_user(request, f"Failed to create PID: {err}.", messages.ERROR)
@@ -121,6 +122,17 @@ class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if obj.pid:
             obj.create_or_update_pid()
+        self._update_related_pids(obj)
+
+    def _update_related_pids(self, instrument):
+        for component in instrument.components.filter(pid__isnull=False):
+            component.create_or_update_pid()
+        for parent in instrument.parents.filter(pid__isnull=False):
+            parent.create_or_update_pid()
+        if instrument.new_version and instrument.new_version.pid:
+            instrument.new_version.create_or_update_pid()
+        if instrument.previous_version and instrument.previous_version.pid:
+            instrument.previous_version.create_or_update_pid()
 
 
 @admin.register(models.Location)
