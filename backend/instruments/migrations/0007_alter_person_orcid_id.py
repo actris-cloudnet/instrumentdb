@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0006_alter_instrument_contact_person"),
     ]

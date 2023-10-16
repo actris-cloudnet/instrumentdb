@@ -17,7 +17,6 @@ def migrate_dates(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0021_model_concept_url_type_concept_url_and_more"),
     ]

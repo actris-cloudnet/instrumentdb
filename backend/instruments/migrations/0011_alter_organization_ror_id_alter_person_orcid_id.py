@@ -6,7 +6,6 @@ import instruments.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0010_alter_instrument_image"),
     ]

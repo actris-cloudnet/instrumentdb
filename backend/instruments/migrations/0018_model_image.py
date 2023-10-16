@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0017_instrument_serial_number_delete_alternateidentifier"),
     ]

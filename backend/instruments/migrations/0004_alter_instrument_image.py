@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0003_alter_instrument_types_alter_instrument_variables"),
     ]

@@ -15,7 +15,6 @@ def migrate_contacts(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0023_remove_campaign_exclude_overlapping_campaigns"),
     ]

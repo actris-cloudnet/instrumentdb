@@ -11,7 +11,6 @@ def split_names(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0026_person_first_name_person_last_name"),
     ]

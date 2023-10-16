@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0033_instrument_manufacturers_instrument_types_and_more"),
     ]

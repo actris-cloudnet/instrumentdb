@@ -33,7 +33,6 @@ def _pretty_xml(src: bytes) -> str:
 
 
 class SimpleTest(TestCase):
-
     uuid = "d8b717b8-16e7-476a-9f5e-95b2a93ddff6"
     endpoint = f"/instrument/{uuid}"
     instrument: Instrument

@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0034_instrument_image_attribution_model_image_attribution"),
     ]

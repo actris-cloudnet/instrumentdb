@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0024_pi_remove_instrument_contact_person_and_more"),
     ]

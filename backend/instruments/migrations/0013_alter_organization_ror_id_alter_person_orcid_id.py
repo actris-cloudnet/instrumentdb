@@ -6,7 +6,6 @@ import instruments.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("instruments", "0012_alter_organization_ror_id_alter_person_orcid_id"),
     ]
