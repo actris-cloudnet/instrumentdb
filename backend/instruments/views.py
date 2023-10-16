@@ -1,6 +1,7 @@
 import datetime
 from datetime import date
 
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -120,3 +121,11 @@ def pi(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
         for pi in pis
     ]
     return JsonResponse(data, safe=False)
+
+
+@login_required
+def create_pid(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
+    instru = get_object_or_404(Instrument, uuid=instrument_uuid)
+    instru.create_or_update_pid()
+    instru.update_related_pids()
+    return redirect("instrument", instrument_uuid=instru.uuid, output_format="html")

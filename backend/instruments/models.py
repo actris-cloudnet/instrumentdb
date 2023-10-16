@@ -257,6 +257,16 @@ class Instrument(models.Model):
         self.pid = pid
         self.save()
 
+    def update_related_pids(self):
+        for component in self.components.filter(pid__isnull=False):
+            component.create_or_update_pid()
+        for parent in self.parents.filter(pid__isnull=False):
+            parent.create_or_update_pid()
+        if self.new_version and self.new_version.pid:
+            self.new_version.create_or_update_pid()
+        if self.previous_version and self.previous_version.pid:
+            self.previous_version.create_or_update_pid()
+
     @property
     def landing_page(self) -> str:
         return settings.PUBLIC_URL + reverse(

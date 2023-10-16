@@ -42,12 +42,16 @@
         </figure>
       {% endif %}
     {% endif %}
-    {% if instrument.pid %}
-      <div class="field">
-        <div class="field-label">PID</div>
+    <div class="field">
+      <div class="field-label">PID</div>
+      {% if instrument.pid %}
         <a class="field-content" href="{{ instrument.pid }}">{{ instrument.pid }}</a>
-      </div>
-    {% endif %}
+      {% elif user.is_authenticated %}
+        <a class="field-content" href="{% url 'create_pid' instrument.uuid %}">CREATE PID</a>
+      {% else %}
+        <span class="field-content" style="color:gray">n/a</span>
+      {% endif %}
+    </div>
     <div class="field">
       <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
       <div class="field-content">
