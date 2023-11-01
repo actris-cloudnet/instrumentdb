@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate changelog
+        run: |
+          version=${GITHUB_REF#refs/tags/v}
+          sed "0,/^## ${version//./\\.}/d;/^## /,\$d" CHANGELOG.md > ${{ github.workspace }}-CHANGELOG.txt
+          echo "name=InstrumentDB $version" >> $GITHUB_OUTPUT
+        id: changelog
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.changelog.outputs.name }}
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
