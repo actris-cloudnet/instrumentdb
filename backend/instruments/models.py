@@ -120,6 +120,9 @@ class Location(models.Model):
 
 
 class Instrument(models.Model):
+    class Meta:
+        permissions = [("can_create_pid", "Can create PID")]
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     pid = models.URLField(unique=True, null=True, verbose_name="PID")
     name = models.CharField(
