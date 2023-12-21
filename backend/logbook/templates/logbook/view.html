@@ -1,0 +1,42 @@
+{% extends 'instruments/base.html' %}
+
+{% block title %}
+  {{ instrument.name }} logbook
+{% endblock %}
+
+{% block body %}
+  <main>
+    <div class="header">
+      <ul class="breadcrumbs" style="margin-right:auto">
+        <li><a href="{% url 'index' %}">Instruments</a></li>
+        <li><a href="{% url 'instrument' instrument_uuid=instrument.uuid %}">{{ instrument.name }}</a></li>
+      </ul>
+      {% if can_edit %}
+        <a href="{% url 'logbook:add' instrument_uuid=instrument.uuid %}">Add entry</a>
+      {% endif %}
+    </div>
+    <h1 style="margin-top:.25rem">Logbook</h1>
+    {% for event in events %}
+      <div class="entry">
+        <strong>{{ event.timestamp }}</strong>
+        {% if event.kind == "log_entry" %}
+          – {{ event.data.author }}
+          {% if can_edit %}
+            <div style="float:right">
+              <a href="{% url 'logbook:edit' instrument_uuid=instrument.uuid entry_id=event.data.id %}">edit</a>
+              <a href="{% url 'logbook:delete' instrument_uuid=instrument.uuid entry_id=event.data.id %}">delete</a>
+            </div>
+          {% endif %}
+        {% endif %}
+        <br>
+        {% if event.kind == "log_entry" %}
+          {{ event.data.content|linebreaks }}
+        {% elif event.kind == "campaign_start" %}
+          <p>Instrument moved to {{ event.data.location.name }}.</p>
+        {% endif %}
+      </div>
+    {% empty %}
+      <span style="color:gray">No log entries yet</span>
+    {% endfor %}
+  </main>
+{% endblock%}

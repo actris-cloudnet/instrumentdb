@@ -6,6 +6,8 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from logbook.views import can_view_logbook
+
 from .decorators import cors
 from .models import Instrument, Location
 
@@ -15,7 +17,11 @@ def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
 
 
 def _instrument_html(request: HttpRequest, instru: Instrument) -> HttpResponse:
-    return render(request, "instruments/instrument.html", {"instrument": instru})
+    return render(
+        request,
+        "instruments/instrument.html",
+        {"instrument": instru, "can_view_logbook": can_view_logbook(request, instru)},
+    )
 
 
 def _instrument_xml(request: HttpRequest, instru: Instrument) -> HttpResponse:

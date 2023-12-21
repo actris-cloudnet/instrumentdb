@@ -156,3 +156,29 @@ td, th {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
+.breadcrumbs {
+  list-style: none;
+  display: flex;
+}
+
+.breadcrumbs li {
+  margin: 0;
+}
+
+.breadcrumbs li:not(:first-child)::before {
+  content: "»";
+  color: gray;
+  margin: 0 .25rem;
+}
+
+.entry {
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}

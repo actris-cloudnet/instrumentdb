@@ -16,7 +16,12 @@
 {% block body %}
   <main>
     <div class="header">
-      <a href="{% url 'index' %}">« Instruments</a>
+      <ul class="breadcrumbs" style="margin-right:auto">
+        <li><a href="{% url 'index' %}">Instruments</a></li>
+      </ul>
+      {% if can_view_logbook %}
+        <a href="{% url 'logbook:view' instrument.uuid %}">Logbook</a>
+      {% endif %}
       {% if user.is_authenticated %}
         <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
       {% else %}

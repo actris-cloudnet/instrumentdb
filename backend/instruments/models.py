@@ -5,6 +5,7 @@ from typing import Optional
 
 import requests
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields import DateRangeField
 from django.db import models
 from django.db.models import QuerySet
@@ -99,6 +100,7 @@ class Model(models.Model):
 
 
 class Person(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.PROTECT)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email_address = models.EmailField()
