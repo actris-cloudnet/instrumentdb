@@ -4,42 +4,42 @@
   Instruments
 {% endblock %}
 
+{% block header %}
+  Instruments
+{% endblock %}
+
+{% block actions %}
+  {% if user.is_staff %}
+    <a href="{% url 'admin:index' %}">Administration</a>
+    <a href="{% url 'admin:instruments_instrument_add' %}">New instrument</a>
+  {% endif %}
+{% endblock %}
+
 {% block body %}
-  <main>
-    <div class="header" style="margin-bottom:1rem">
-      <h1 style="margin-right:auto">Instruments</h1>
-      {% if user.is_authenticated %}
-        <a href="{% url 'admin:index' %}">Administration</a>
-        <a href="{% url 'admin:instruments_instrument_add' %}">New instrument</a>
-      {% else %}
-        <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
-      {% endif %}
-    </div>
-    {% for location in locations %}
-      {% if location.instruments %}
-        <h2>{{ location.name }}</h2>
-        <div class="instruments">
-          {% for instrument in location.instruments %}
-            <div class="instrument">
-              <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
-              {% if not instrument.pid %}
-                (draft)
-              {% endif %}
-              <br>
-              {% if instrument.get_types %}
-                {% for type in instrument.get_types %}
-                  {{ type }}
-                {% endfor %}
-              {% else %}
-                <span style="color:gray">Unknown</span>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endfor %}
-    <div style="margin-top: 2rem; font-style: italic;">
-      If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY4nvAah-K5xPfF-VMhDbmmY9lq7BbtTDKTT9BZMqT7tC7zA/viewform">fill this form</a>.
-    </div>
-  </main>
+  <div style="margin: 1rem 0; font-style: italic;">
+    If your instrument is not included in the list, please <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY4nvAah-K5xPfF-VMhDbmmY9lq7BbtTDKTT9BZMqT7tC7zA/viewform">fill this form</a>.
+  </div>
+  {% for location in locations %}
+    {% if location.instruments %}
+      <h2>{{ location.name }}</h2>
+      <div class="instruments">
+        {% for instrument in location.instruments %}
+          <div class="instrument">
+            <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
+            {% if not instrument.pid %}
+              (draft)
+            {% endif %}
+            <br>
+            {% if instrument.get_types %}
+              {% for type in instrument.get_types %}
+                {{ type }}
+              {% endfor %}
+            {% else %}
+              <span style="color:gray">Unknown</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endfor %}
 {% endblock %}

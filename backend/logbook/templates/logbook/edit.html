@@ -4,20 +4,22 @@
   {{ instrument.name }} logbook
 {% endblock %}
 
+{% block header %}
+  Edit entry
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li><a href="{% url 'index' %}">Instruments</a></li>
+    <li><a href="{% url 'instrument' instrument_uuid=instrument.uuid %}">{{ instrument.name }}</a></li>
+    <li><a href="{% url 'logbook:view' instrument_uuid=instrument.uuid %}">Logbook</a></li>
+  </ul>
+{% endblock %}
+
 {% block body %}
-  <main>
-    <div class="header">
-      <ul class="breadcrumbs" style="margin-right:auto">
-        <li><a href="{% url 'index' %}">Instruments</a></li>
-        <li><a href="{% url 'instrument' instrument_uuid=instrument.uuid %}">{{ instrument.name }}</a></li>
-        <li><a href="{% url 'logbook:view' instrument_uuid=instrument.uuid %}">Log entries</a></li>
-      </ul>
-    </div>
-    <h1 style="margin-top:.25rem">Edit entry</h1>
-    <form action="" method="post">
-      {% csrf_token %}
-      {{ form.as_div }}
-      <button type="submit">Save</button>
-    </form>
-  </main>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button type="submit">Save</button>
+  </form>
 {% endblock%}

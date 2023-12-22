@@ -12,7 +12,27 @@
     {% block head %}{% endblock %}
   </head>
   <body>
-    {% block body %}{% endblock %}
+    <main>
+      <div class="header">
+        {% block breadcrumbs %}{% endblock %}
+        <h1>{% block header %}{% endblock %}</h1>
+        <div class="actions">
+          {% block actions %}{% endblock %}
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" id="logout">
+              {% csrf_token %}
+              <input type="hidden" value="/">
+              <button type="submit">Log out</button>
+            </form>
+          {% elif request.resolver_match.url_name != "login" %}
+            <a href="{% url 'login' %}?next={{ request.path|urlencode }}">Log in</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="body">
+        {% block body %}{% endblock %}
+      </div>
+    </main>
     <footer>
       <a href="https://github.com/actris-cloudnet/instrumentdb/tree/v{{ INSTRUMENTS_VERSION }}">
         InstrumentDB {{ INSTRUMENTS_VERSION }}

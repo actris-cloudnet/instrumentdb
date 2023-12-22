@@ -6,6 +6,14 @@ body {
   background-color: #edecf9;
 }
 
+:link {
+  color: #00e;
+}
+
+:visited {
+  color: #551a8b;
+}
+
 main {
   background-color: white;
   border-radius: 8px;
@@ -47,17 +55,17 @@ footer a:hover {
 }
 
 .header {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr minmax(1px, auto);
 }
 
-.header a + a {
+.actions {
+  grid-row: 1;
+  grid-column: 2 / 3;
+}
+
+.actions > * + * {
   margin-left: .5rem;
-}
-
-.header a:first-child {
-  margin-right: auto;
-  text-decoration: none;
 }
 
 h1 {
@@ -172,6 +180,14 @@ td, th {
   margin: 0 .25rem;
 }
 
+.breadcrumbs a {
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
 .entry {
   margin-top: 1rem;
   border-top: 1px solid #ddd;
@@ -181,4 +197,26 @@ td, th {
 textarea {
   width: 100%;
   resize: vertical;
+}
+
+#logout {
+  display: inline;
+}
+
+#logout button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  color: #00e;
+}
+
+.actions a {
+  text-decoration: none;
+}
+
+.actions a:hover,
+#logout button:hover {
+  text-decoration: underline;
 }

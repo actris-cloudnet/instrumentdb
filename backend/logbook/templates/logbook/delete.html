@@ -4,25 +4,27 @@
   {{ instrument.name }} logbook
 {% endblock %}
 
+{% block header %}
+  Delete entry?
+{% endblock %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li><a href="{% url 'index' %}">Instruments</a></li>
+    <li><a href="{% url 'instrument' instrument_uuid=instrument.uuid %}">{{ instrument.name }}</a></li>
+    <li><a href="{% url 'logbook:view' instrument_uuid=instrument.uuid %}">Logbook</a></li>
+  </ul>
+{% endblock %}
+
 {% block body %}
-  <main>
-    <div class="header">
-      <ul class="breadcrumbs" style="margin-right:auto">
-        <li><a href="{% url 'index' %}">Instruments</a></li>
-        <li><a href="{% url 'instrument' instrument_uuid=instrument.uuid %}">{{ instrument.name }}</a></li>
-        <li><a href="{% url 'logbook:view' instrument_uuid=instrument.uuid %}">Log entries</a></li>
-      </ul>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div style="margin:1rem 0">
+      <strong>{{ log_entry.created_at }}</strong>
+      – {{ log_entry.author }}
+      <br>
+      {{ log_entry.content | linebreaks }}
     </div>
-    <h1 style="margin-top:.25rem">Delete entry?</h1>
-    <form action="" method="post">
-      {% csrf_token %}
-      <div style="margin:1rem 0">
-        <strong>{{ log_entry.created_at }}</strong>
-        – {{ log_entry.author }}
-        <br>
-        {{ log_entry.content | linebreaks }}
-      </div>
-      <button type="submit">Delete</button>
-    </form>
-  </main>
+    <button type="submit">Delete</button>
+  </form>
 {% endblock%}

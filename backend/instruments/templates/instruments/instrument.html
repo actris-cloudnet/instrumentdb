@@ -13,299 +13,304 @@
   {% endif %}
 {% endblock %}
 
+{% block breadcrumbs %}
+  <ul class="breadcrumbs">
+    <li><a href="{% url 'index' %}">Instruments</a></li>
+  </ul>
+{% endblock %}
+
+{% block header %}
+  {{ instrument.name }}
+{% endblock %}
+
+{% block actions %}
+  {% if can_view_logbook %}
+    <a href="{% url 'logbook:view' instrument.uuid %}">Logbook</a>
+  {% endif %}
+  {% if user.is_staff %}
+    <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
+  {% elif not user.is_authenticated %}
+    <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
+  {% endif %}
+  <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
+  <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
+{% endblock %}
+
 {% block body %}
-  <main>
-    <div class="header">
-      <ul class="breadcrumbs" style="margin-right:auto">
-        <li><a href="{% url 'index' %}">Instruments</a></li>
-      </ul>
-      {% if can_view_logbook %}
-        <a href="{% url 'logbook:view' instrument.uuid %}">Logbook</a>
-      {% endif %}
-      {% if user.is_authenticated %}
-        <a href="{% url 'admin:instruments_instrument_change' instrument.id %}">Edit</a>
-      {% else %}
-        <a href="{% url 'admin:login' %}?next={{ request.path|urlencode }}">Log in</a>
-      {% endif %}
-      <a href="{% url 'instrument' instrument.uuid 'json' %}">JSON</a>
-      <a href="{% url 'instrument' instrument.uuid 'xml' %}">XML</a>
-    </div>
-    <h1 style="margin-top:.25rem">{{ instrument.name }}</h1>
-    {% if instrument.model %}
-      {% if instrument.get_image %}
-        <figure class="image-container">
-          <a href="/media/{{ instrument.get_image }}" target="_blank">
-            {% thumbnail instrument.get_image "150" as image %}
-              <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
-            {% endthumbnail %}
-          </a>
-          {% if instrument.get_image_attribution %}
-            <figcaption>
-              Photo: {{ instrument.get_image_attribution }}
-            </figcaption>
-          {% endif %}
-        </figure>
-      {% endif %}
+  {% if instrument.model %}
+    {% if instrument.get_image %}
+      <figure class="image-container">
+        <a href="/media/{{ instrument.get_image }}" target="_blank">
+          {% thumbnail instrument.get_image "150" as image %}
+            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+          {% endthumbnail %}
+        </a>
+        {% if instrument.get_image_attribution %}
+          <figcaption>
+            Photo: {{ instrument.get_image_attribution }}
+          </figcaption>
+        {% endif %}
+      </figure>
     {% endif %}
-    <div class="field">
-      <div class="field-label">PID</div>
-      {% if instrument.pid %}
-        <a class="field-content" href="{{ instrument.pid }}">{{ instrument.pid }}</a>
-      {% elif perms.instruments.can_create_pid %}
-        <a class="field-content" href="{% url 'create_pid' instrument.uuid %}">CREATE PID</a>
-      {% else %}
-        <span class="field-content" style="color:gray">n/a</span>
-      {% endif %}
+  {% endif %}
+  <div class="field">
+    <div class="field-label">PID</div>
+    {% if instrument.pid %}
+      <a class="field-content" href="{{ instrument.pid }}">{{ instrument.pid }}</a>
+    {% elif perms.instruments.can_create_pid %}
+      <a class="field-content" href="{% url 'create_pid' instrument.uuid %}">CREATE PID</a>
+    {% else %}
+      <span class="field-content" style="color:gray">n/a</span>
+    {% endif %}
+  </div>
+  <div class="field">
+    <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
+    <div class="field-content">
+      <ul>
+        {% for owner in instrument.owners.all %}
+        <li>
+          {{ owner.name }}
+          {% if owner.acronym %}
+            ({{ owner.acronym }})
+          {% endif %}
+          {% if owner.ror_id %}
+            <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="{% static 'instruments/images/ror-icon-rgb-16.png' %}" width="23" height="16"></a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
     </div>
+  </div>
+  {% if instrument.get_manufacturers %}
     <div class="field">
-      <div class="field-label">Owner{{ instrument.owners.all|pluralize }}</div>
+      <div class="field-label">Manufacturer{{ instrument.get_manufacturers|pluralize }}</div>
       <div class="field-content">
         <ul>
-          {% for owner in instrument.owners.all %}
+        {% for manufacturer in instrument.get_manufacturers %}
           <li>
-            {{ owner.name }}
-            {% if owner.acronym %}
-              ({{ owner.acronym }})
+            {{ manufacturer.name }}
+            {% if manufacturer.acronym %}
+              ({{ manufacturer.acronym }})
             {% endif %}
-            {% if owner.ror_id %}
-              <a href="https://ror.org/{{ owner.ror_id }}" target="_blank"><img alt="ROR logo" src="{% static 'instruments/images/ror-icon-rgb-16.png' %}" width="23" height="16"></a>
+            {% if manufacturer.ror_id %}
+              <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16"></a>
             {% endif %}
           </li>
-          {% endfor %}
+        {% endfor %}
         </ul>
       </div>
     </div>
-    {% if instrument.get_manufacturers %}
-      <div class="field">
-        <div class="field-label">Manufacturer{{ instrument.get_manufacturers|pluralize }}</div>
-        <div class="field-content">
-          <ul>
-          {% for manufacturer in instrument.get_manufacturers %}
-            <li>
-              {{ manufacturer.name }}
-              {% if manufacturer.acronym %}
-                ({{ manufacturer.acronym }})
-              {% endif %}
-              {% if manufacturer.ror_id %}
-                <a href="https://ror.org/{{ manufacturer.ror_id }}" target="_blank"><img alt="ROR logo" src="https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb-16.png" width="23" height="16"></a>
-              {% endif %}
-            </li>
-          {% endfor %}
-          </ul>
-        </div>
+  {% endif %}
+  {% if instrument.model %}
+    <div class="field">
+      <div class="field-label">Model</div>
+      <div class="field-content">
+        {% if instrument.model.concept_url %}
+          <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
+        {% else %}
+          {{ instrument.model.name }}
+        {% endif %}
       </div>
-    {% endif %}
-    {% if instrument.model %}
-      <div class="field">
-        <div class="field-label">Model</div>
-        <div class="field-content">
-          {% if instrument.model.concept_url %}
-            <a href="{{ instrument.model.concept_url }}">{{ instrument.model.name }}</a>
-          {% else %}
-            {{ instrument.model.name }}
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
-    {% if instrument.get_types %}
-      <div class="field">
-        <div class="field-label">Instrument type{{ instrument.get_types|pluralize }}</div>
-        <div class="field-content">
-          <ul>
-          {% for type in instrument.get_types %}
-            <li>
-              {% if type.concept_url %}
-                <a href="{{ type.concept_url }}">{{ type.name }}</a>
-              {% else %}
-                {{ type.name }}
-              {% endif %}
-            </li>
-          {% endfor %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-    {% if instrument.get_variables %}
-      <div class="field">
-        <div class="field-label">Measured variable{{ instrument.get_variables|pluralize }}</div>
-        <div class="field-content">
-          <ul>
-          {% for variable in instrument.get_variables %}
-            <li>
-              {% if variable.concept_url %}
-                <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
-              {% else %}
-                {{ variable.name }}
-              {% endif %}
-            </li>
-          {% endfor %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-    {% if instrument.description %}
-      <div class="field">
-        <div class="field-label">Description</div>
-        <div class="field-content">{{ instrument.description }}</div>
-      </div>
-    {% endif %}
-    {% if instrument.campaigns.all %}
-      <div class="field">
-        <div class="field-label">Location{{ instrument.campaigns.all|pluralize }}</div>
-        <table class="field-content">
-          <tbody>
-          {% for campaign in instrument.campaigns.all %}
-            <tr>
-              <td class="cell-date">
-                {% if campaign.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
-                    {{ campaign.date_range.lower|date:'Y-m-d' }}
-                  </time>
-                {% else %}
-                  n/a
-                {% endif %}
-              </td>
-              <td class="cell-dash">&#8211;</td>
-              <td class="cell-date">
-                {% if campaign.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
-                    {{ campaign.date_range.upper|date:'Y-m-d' }}
-                  </time>
-                {% else %}
-                  now
-                {% endif %}
-              </td>
-              <td class="cell-fill">
-                {{ campaign.location.name|default:'Unknown' }}
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    {% if instrument.pis.all %}
-      <div class="field">
-        <div class="field-label">Principal Investigator{{ instrument.pis.all|pluralize }}</div>
-        <table class="field-content">
-          <tbody>
-          {% for pi in instrument.pis.all %}
-            <tr>
-              <td class="cell-date">
-                {% if pi.date_range.lower %}
-                  <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
-                    {{ pi.date_range.lower|date:'Y-m-d' }}
-                  </time>
-                {% else %}
-                  n/a
-                {% endif %}
-              </td>
-              <td class="cell-dash">&#8211;</td>
-              <td class="cell-date">
-                {% if pi.date_range.upper %}
-                  <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
-                    {{ pi.date_range.upper|date:'Y-m-d' }}
-                  </time>
-                {% else %}
-                  now
-                {% endif %}
-              </td>
-              <td class="cell-fill">
-                {{ pi.person.full_name|default:'Unknown' }}
-              </td>
-              {% if pi.person.orcid_id %}
-                <td class="cell-action">
-                  <a href="https://orcid.org/{{ pi.person.orcid_id }}" target="_blank"><img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16"></a>
-                </td>
-              {% endif %}
-              {% if user.is_authenticated %}
-                <td class="cell-action">
-                  <a href="mailto:{{ pi.person.email_address }}"><img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
-                </td>
-              {% endif %}
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    {% if instrument.serial_number %}
-      <div class="field">
-        <div class="field-label">Serial number</div>
-        <div class="field-content">{{ instrument.serial_number }}</div>
-      </div>
-    {% endif %}
-    {% if instrument.components.all %}
-      <div class="field">
-        <div class="field-label">Components</div>
-        <table class="field-content">
-          <ul>
-            {% for component in instrument.components.all %}
-              <li>
-                <a href="{{ component.landing_page }}">{{ component.name }}</a>
-                {% for type in component.model.types.all %}
-                  {{ type.name }}
-                {% endfor %}
-              </li>
-            {% endfor %}
-            </ul>
-        </table>
-      </div>
-    {% endif %}
-    {% if instrument.parents %}
-      <div class="field">
-        <div class="field-label">Component of</div>
-        <table class="field-content">
-          <ul>
-            {% for parent in instrument.parents %}
-              <li>
-                <a href="{{ parent.landing_page }}">{{ parent.name }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </table>
-      </div>
-    {% endif %}
-    {% if instrument.previous_version or instrument.new_version %}
-      <div class="field">
-        <div class="field-label">Versions</div>
-        <div class="field-content">
-          {% if instrument.previous_version %}
-            <a href="{{ instrument.previous_version.landing_page }}" style="margin-right: .5rem; text-decoration: none;">
-              « Previous
-            </a>
-          {% endif %}
-          {% if instrument.new_version %}
-            <a href="{{ instrument.new_version.landing_page }}" style="text-decoration: none;">
-              New »
-            </a>
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
-    {% if instrument.related_identifiers.all %}
-      <div class="field">
-        <div class="field-label">Related identifier{{ instrument.related_identifiers.all|pluralize }}</div>
-        <table class="field-content">
-          <tbody>
-            {% for item in instrument.related_identifiers.all %}
-              <tr>
-                <th>{{ item.get_relation_type_display }}:</th>
-                <td>
-                  {% if item.identifier_type == 'URL' %}
-                    <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
-                  {% else %}
-                    {{ item.identifier }} ({{ item.get_identifier_type_display }})
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-    <div style="margin-top: 2rem; font-style: italic;">
-      If you notice any incorrect or outdated information, please send email to <a href="mailto:actris-cloudnet@fmi.fi">actris-cloudnet@fmi.fi</a>.
     </div>
-  </main>
+  {% endif %}
+  {% if instrument.get_types %}
+    <div class="field">
+      <div class="field-label">Instrument type{{ instrument.get_types|pluralize }}</div>
+      <div class="field-content">
+        <ul>
+        {% for type in instrument.get_types %}
+          <li>
+            {% if type.concept_url %}
+              <a href="{{ type.concept_url }}">{{ type.name }}</a>
+            {% else %}
+              {{ type.name }}
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+  {% if instrument.get_variables %}
+    <div class="field">
+      <div class="field-label">Measured variable{{ instrument.get_variables|pluralize }}</div>
+      <div class="field-content">
+        <ul>
+        {% for variable in instrument.get_variables %}
+          <li>
+            {% if variable.concept_url %}
+              <a href="{{ variable.concept_url }}">{{ variable.name }}</a>
+            {% else %}
+              {{ variable.name }}
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+  {% if instrument.description %}
+    <div class="field">
+      <div class="field-label">Description</div>
+      <div class="field-content">{{ instrument.description }}</div>
+    </div>
+  {% endif %}
+  {% if instrument.campaigns.all %}
+    <div class="field">
+      <div class="field-label">Location{{ instrument.campaigns.all|pluralize }}</div>
+      <table class="field-content">
+        <tbody>
+        {% for campaign in instrument.campaigns.all %}
+          <tr>
+            <td class="cell-date">
+              {% if campaign.date_range.lower %}
+                <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
+                  {{ campaign.date_range.lower|date:'Y-m-d' }}
+                </time>
+              {% else %}
+                n/a
+              {% endif %}
+            </td>
+            <td class="cell-dash">&#8211;</td>
+            <td class="cell-date">
+              {% if campaign.date_range.upper %}
+                <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
+                  {{ campaign.date_range.upper|date:'Y-m-d' }}
+                </time>
+              {% else %}
+                now
+              {% endif %}
+            </td>
+            <td class="cell-fill">
+              {{ campaign.location.name|default:'Unknown' }}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+  {% if instrument.pis.all %}
+    <div class="field">
+      <div class="field-label">Principal Investigator{{ instrument.pis.all|pluralize }}</div>
+      <table class="field-content">
+        <tbody>
+        {% for pi in instrument.pis.all %}
+          <tr>
+            <td class="cell-date">
+              {% if pi.date_range.lower %}
+                <time datetime="{{ campaign.date_range.lower|date:'Y-m-d' }}">
+                  {{ pi.date_range.lower|date:'Y-m-d' }}
+                </time>
+              {% else %}
+                n/a
+              {% endif %}
+            </td>
+            <td class="cell-dash">&#8211;</td>
+            <td class="cell-date">
+              {% if pi.date_range.upper %}
+                <time datetime="{{ campaign.date_range.upper|date:'Y-m-d' }}">
+                  {{ pi.date_range.upper|date:'Y-m-d' }}
+                </time>
+              {% else %}
+                now
+              {% endif %}
+            </td>
+            <td class="cell-fill">
+              {{ pi.person.full_name|default:'Unknown' }}
+            </td>
+            {% if pi.person.orcid_id %}
+              <td class="cell-action">
+                <a href="https://orcid.org/{{ pi.person.orcid_id }}" target="_blank"><img alt="ORCID logo" src="{% static 'instruments/images/orcid_16x16.png' %}" width="16" height="16"></a>
+              </td>
+            {% endif %}
+            {% if user.is_authenticated %}
+              <td class="cell-action">
+                <a href="mailto:{{ pi.person.email_address }}"><img src="{% static 'instruments/images/envelope-solid.svg' %}" alt="Email" width="16" height="16"></a>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+  {% if instrument.serial_number %}
+    <div class="field">
+      <div class="field-label">Serial number</div>
+      <div class="field-content">{{ instrument.serial_number }}</div>
+    </div>
+  {% endif %}
+  {% if instrument.components.all %}
+    <div class="field">
+      <div class="field-label">Components</div>
+      <table class="field-content">
+        <ul>
+          {% for component in instrument.components.all %}
+            <li>
+              <a href="{{ component.landing_page }}">{{ component.name }}</a>
+              {% for type in component.model.types.all %}
+                {{ type.name }}
+              {% endfor %}
+            </li>
+          {% endfor %}
+          </ul>
+      </table>
+    </div>
+  {% endif %}
+  {% if instrument.parents %}
+    <div class="field">
+      <div class="field-label">Component of</div>
+      <table class="field-content">
+        <ul>
+          {% for parent in instrument.parents %}
+            <li>
+              <a href="{{ parent.landing_page }}">{{ parent.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </table>
+    </div>
+  {% endif %}
+  {% if instrument.previous_version or instrument.new_version %}
+    <div class="field">
+      <div class="field-label">Versions</div>
+      <div class="field-content">
+        {% if instrument.previous_version %}
+          <a href="{{ instrument.previous_version.landing_page }}" style="margin-right: .5rem; text-decoration: none;">
+            « Previous
+          </a>
+        {% endif %}
+        {% if instrument.new_version %}
+          <a href="{{ instrument.new_version.landing_page }}" style="text-decoration: none;">
+            New »
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  {% if instrument.related_identifiers.all %}
+    <div class="field">
+      <div class="field-label">Related identifier{{ instrument.related_identifiers.all|pluralize }}</div>
+      <table class="field-content">
+        <tbody>
+          {% for item in instrument.related_identifiers.all %}
+            <tr>
+              <th>{{ item.get_relation_type_display }}:</th>
+              <td>
+                {% if item.identifier_type == 'URL' %}
+                  <a href="{{ item.identifier }}" target="_blank">{{ item.identifier }}</a>
+                {% else %}
+                  {{ item.identifier }} ({{ item.get_identifier_type_display }})
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+  <div style="margin-top: 2rem; font-style: italic;">
+    If you notice any incorrect or outdated information, please send email to <a href="mailto:actris-cloudnet@fmi.fi">actris-cloudnet@fmi.fi</a>.
+  </div>
 {% endblock %}
