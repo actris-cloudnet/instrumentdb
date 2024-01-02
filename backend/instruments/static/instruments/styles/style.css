@@ -59,6 +59,10 @@ footer a:hover {
   grid-template-columns: 1fr minmax(1px, auto);
 }
 
+.header h1 {
+  grid-column: 1 / 3;
+}
+
 .actions {
   grid-row: 1;
   grid-column: 2 / 3;
