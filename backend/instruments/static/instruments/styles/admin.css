@@ -1,0 +1,4 @@
+/* Allow overflow for autocomplete dropdown. */
+.form-row {
+  overflow: visible;
+}

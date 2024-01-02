@@ -30,7 +30,12 @@ class OrganizationAdmin(admin.ModelAdmin):
             "instruments/scripts/autoComplete.min.js",
             "instruments/scripts/organization.js",
         ]
-        css = {"all": ["instruments/styles/autoComplete.css"]}
+        css = {
+            "all": [
+                "instruments/styles/admin.css",
+                "instruments/styles/autoComplete.css",
+            ]
+        }
 
 
 @admin.register(models.Person)

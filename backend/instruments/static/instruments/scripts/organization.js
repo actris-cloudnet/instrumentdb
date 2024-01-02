@@ -39,7 +39,6 @@ window.addEventListener('load', () => {
     events: {
       input: {
         selection(event) {
-          console.log(event, event.detail.selection)
           const selection = event.detail.selection.value;
           rorIdInput.value = selection.id;
           nameInput.value = selection.name;
