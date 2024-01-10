@@ -43,14 +43,14 @@ footer {
   margin-top: .5rem;
 }
 
-footer a {
+footer :link {
   text-decoration: none;
   color: inherit;
   opacity: .5;
   font-size: 75%;
 }
 
-footer a:hover {
+footer :link:hover {
   text-decoration: underline;
 }
 
