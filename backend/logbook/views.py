@@ -24,7 +24,7 @@ def can_view_logbook(request: HttpRequest, instrument: Instrument) -> bool:
 
 class Event(NamedTuple):
     kind: Literal["log_entry", "campaign_start"]
-    timestamp: datetime.date
+    date: datetime.date
     data: Any
 
 
@@ -34,19 +34,17 @@ def view(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
         raise Http404
     can_edit = can_edit_logbook(request, instru)
     events = []
-    for entry in instru.logentry_set.order_by("-created_at"):
-        events.append(
-            Event(kind="log_entry", timestamp=entry.created_at.date(), data=entry)
-        )
+    for entry in instru.logentry_set.order_by("-date"):
+        events.append(Event(kind="log_entry", date=entry.date, data=entry))
     for campaign in instru.campaign_set.order_by("-date_range"):
         events.append(
             Event(
                 kind="campaign_start",
-                timestamp=campaign.date_range.lower,
+                date=campaign.date_range.lower,
                 data=campaign,
             )
         )
-    events.sort(key=attrgetter("timestamp"), reverse=True)
+    events.sort(key=attrgetter("date"), reverse=True)
     return render(
         request,
         "logbook/view.html",

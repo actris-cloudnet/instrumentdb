@@ -24,7 +24,7 @@
 {% block body %}
   {% for event in events %}
     <div class="entry">
-      <time datetime="{{ event.timestamp|date:'c' }}" style="font-weight:bold">{{ event.timestamp }}</time>
+      <time datetime="{{ event.date|date:'c' }}" style="font-weight:bold">{{ event.date }}</time>
       {% if event.kind == "log_entry" %}
         – {{ event.data.author }}
         {% if can_edit %}

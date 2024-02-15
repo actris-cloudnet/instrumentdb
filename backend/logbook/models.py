@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf import settings
 from django.db import models
 
@@ -11,5 +13,6 @@ class LogEntry(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
     )
     content = models.TextField()
+    date = models.DateField(default=datetime.date.today)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
