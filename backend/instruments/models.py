@@ -153,7 +153,7 @@ class Instrument(models.Model):
     image_attribution = models.CharField(max_length=255, null=True, blank=True)
     serial_number = models.CharField(max_length=255, null=True, blank=True)
     locations = models.ManyToManyField(Location, through="Campaign")
-    persons = models.ManyToManyField(Person, through="Pi")
+    persons = models.ManyToManyField(Person, through="Contact")
     components = models.ManyToManyField(
         "self", blank=True, symmetrical=False, related_name="component_of"
     )
@@ -284,8 +284,8 @@ class Instrument(models.Model):
         return self.campaign_set.order_by("-date_range")
 
     @property
-    def pis(self) -> "QuerySet[Pi]":
-        return self.pi_set.order_by("-date_range")
+    def pis(self) -> "QuerySet[Contact]":
+        return self.contact_set.filter(role=Contact.PI).order_by("-date_range")
 
     @property
     def commission_date(self) -> Optional[datetime.date]:
@@ -390,10 +390,18 @@ class Campaign(models.Model):
         return f"{name} {date_range}"
 
 
-class Pi(models.Model):
+class Contact(models.Model):
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
     instrument = models.ForeignKey(Instrument, on_delete=models.PROTECT)
     date_range = DateRangeField(blank=True)
+
+    PI = "pi"
+    EXTRA = "extra"
+    ROLE_CHOICES = [
+        (PI, "Principal investigator"),
+        (EXTRA, "Extra person"),
+    ]
+    role = models.TextField(choices=ROLE_CHOICES)
 
 
 class RelatedIdentifier(models.Model):

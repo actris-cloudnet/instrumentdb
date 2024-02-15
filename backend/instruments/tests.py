@@ -10,12 +10,12 @@ from snapshottest.django import TestCase
 from . import fields
 from .models import (
     Campaign,
+    Contact,
     Instrument,
     Location,
     Model,
     Organization,
     Person,
-    Pi,
     Type,
     Variable,
 )
@@ -76,15 +76,24 @@ class SimpleTest(TestCase):
         )
         person1 = Person.objects.create(first_name="John", last_name="Doe")
         person2 = Person.objects.create(first_name="Jane", last_name="Doe")
-        Pi.objects.create(
+        person3 = Person.objects.create(first_name="Persona", last_name="Non Grata")
+        Contact.objects.create(
             instrument=cls.instrument,
             person=person1,
             date_range=(datetime.date(2002, 3, 18), datetime.date(2005, 6, 24)),
+            role=Contact.PI,
         )
-        Pi.objects.create(
+        Contact.objects.create(
             instrument=cls.instrument,
             person=person2,
             date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
+            role=Contact.PI,
+        )
+        Contact.objects.create(
+            instrument=cls.instrument,
+            person=person3,
+            date_range=(datetime.date(2000, 1, 1), None),
+            role=Contact.EXTRA,
         )
 
     def setUp(self):

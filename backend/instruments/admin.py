@@ -61,8 +61,8 @@ class CampaignAdminInline(admin.TabularInline):
     extra = 0
 
 
-class PiAdminInline(admin.TabularInline):
-    model = models.Pi
+class ContactAdminInline(admin.TabularInline):
+    model = models.Contact
     ordering = ["-date_range"]
     extra = 0
 
@@ -83,7 +83,7 @@ class InstrumentAdminForm(ModelForm):
 class InstrumentAdmin(AdminImageMixin, admin.ModelAdmin):
     list_display = ["name", "pid"]
     ordering = ["name"]
-    inlines = [RelatedIdentifierAdminInline, CampaignAdminInline, PiAdminInline]
+    inlines = [RelatedIdentifierAdminInline, CampaignAdminInline, ContactAdminInline]
     fields = [
         "pid",
         "name",
