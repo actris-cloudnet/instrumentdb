@@ -1,4 +1,5 @@
 import datetime
+import re
 from datetime import date
 
 from django.contrib.auth.decorators import permission_required
@@ -9,7 +10,7 @@ from django.urls import reverse
 from logbook.views import can_view_logbook
 
 from .decorators import cors
-from .models import Instrument, Location
+from .models import Instrument, Location, Person
 
 
 def _instrument_json(request: HttpRequest, instru: Instrument) -> HttpResponse:
@@ -20,7 +21,11 @@ def _instrument_html(request: HttpRequest, instru: Instrument) -> HttpResponse:
     return render(
         request,
         "instruments/instrument.html",
-        {"instrument": instru, "can_view_logbook": can_view_logbook(request, instru)},
+        {
+            "instrument": instru,
+            "can_view_logbook": can_view_logbook(request, instru),
+            "citation": _cite_instrument(instru),
+        },
     )
 
 
@@ -135,3 +140,25 @@ def create_pid(request: HttpRequest, instrument_uuid: str) -> HttpResponse:
     instru.create_or_update_pid()
     instru.update_related_pids()
     return redirect("instrument", instrument_uuid=instru.uuid, output_format="html")
+
+
+def _format_list(values: list) -> str:
+    if len(values) < 2:
+        return "".join(values)
+    return ", ".join(values[:-1]) + ", & " + values[-1]
+
+
+def _cite_person(person: Person) -> str:
+    return (
+        person.last_name
+        + ", "
+        + re.sub(r"([^\W\d_])[^\W\d_]+", r"\1.", person.first_name)
+    )
+
+
+def _cite_instrument(instru: Instrument) -> str:
+    today = datetime.datetime.now(datetime.timezone.utc).date()
+    contacts = instru.pis.filter(date_range__contains=today)
+    authors = _format_list([_cite_person(contact.person) for contact in contacts])
+    publisher = "ACTRIS Cloud remote sensing data centre unit (CLU)"
+    return f"{authors} ({today.year}). {instru.name}. {publisher}. {instru.pid or instru.landing_page}"

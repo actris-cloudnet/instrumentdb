@@ -75,7 +75,7 @@ class SimpleTest(TestCase):
             date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
         )
         person1 = Person.objects.create(first_name="John", last_name="Doe")
-        person2 = Person.objects.create(first_name="Jane", last_name="Doe")
+        person2 = Person.objects.create(first_name="Jane", last_name="Toe")
         person3 = Person.objects.create(first_name="Persona", last_name="Non Grata")
         Contact.objects.create(
             instrument=cls.instrument,
@@ -86,7 +86,7 @@ class SimpleTest(TestCase):
         Contact.objects.create(
             instrument=cls.instrument,
             person=person2,
-            date_range=(datetime.date(2008, 2, 10), datetime.date(2011, 1, 5)),
+            date_range=(datetime.date(2008, 2, 10), None),
             role=Contact.PI,
         )
         Contact.objects.create(
@@ -123,6 +123,7 @@ class SimpleTest(TestCase):
     def _test_html_response(self, response):
         response_decoded = response.content.decode("utf-8")
         self.assertEqual(response.status_code, 200)
+        this_year = datetime.datetime.now(datetime.timezone.utc).date().year
         test_strings = (
             "Test instrument",
             "PID",
@@ -149,12 +150,13 @@ class SimpleTest(TestCase):
             '<time datetime="2005-06-24">2005-06-24</time>',
             "John Doe",
             '<time datetime="2008-02-10">2008-02-10</time>',
-            '<time datetime="2011-01-05">2011-01-05</time>',
-            "Jane Doe",
+            "Jane Toe",
             "Serial number",
             "836514404680691",
             "JSON",
             "XML",
+            "Citation",
+            f"Toe, J. ({this_year}). Test instrument. ACTRIS Cloud remote sensing data centre unit (CLU). https://hdl.handle.net/21.12132/3.d8b717b816e7476a",
         )
         for test_string in test_strings:
             self.assertInHTML(test_string, response_decoded)
@@ -173,10 +175,10 @@ class SimpleTest(TestCase):
         expected_json = [
             {
                 "first_name": "Jane",
-                "last_name": "Doe",
+                "last_name": "Toe",
                 "orcid_id": None,
                 "start_date": "2008-02-10",
-                "end_date": "2011-01-05",
+                "end_date": None,
             },
             {
                 "first_name": "John",
@@ -192,10 +194,10 @@ class SimpleTest(TestCase):
         expected_json = [
             {
                 "first_name": "Jane",
-                "last_name": "Doe",
+                "last_name": "Toe",
                 "orcid_id": None,
                 "start_date": "2008-02-10",
-                "end_date": "2011-01-05",
+                "end_date": None,
             }
         ]
         self.assertJSONEqual(response.content, expected_json)
