@@ -6,12 +6,13 @@ body {
   background-color: #edecf9;
 }
 
-:link {
-  color: #00e;
+a {
+  color: #3c61b9;
+  text-decoration: none;
 }
 
-:visited {
-  color: #551a8b;
+a:hover {
+  text-decoration: underline;
 }
 
 main {
@@ -43,15 +44,10 @@ footer {
   margin-top: .5rem;
 }
 
-footer :link {
-  text-decoration: none;
+footer a {
   color: inherit;
   opacity: .5;
   font-size: 75%;
-}
-
-footer :link:hover {
-  text-decoration: underline;
 }
 
 .header {
@@ -83,6 +79,9 @@ h1 {
 .field-label {
   font-weight: 600;
   margin-bottom: .25rem;
+  text-transform: uppercase;
+  font-size: 75%;
+  color: #333;
 }
 
 ul {
@@ -213,7 +212,7 @@ textarea {
   cursor: pointer;
   padding: 0;
   font: inherit;
-  color: #00e;
+  color: #3c61b9;
 }
 
 .actions a {
