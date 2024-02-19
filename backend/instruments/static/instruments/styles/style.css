@@ -168,6 +168,25 @@ td, th {
   gap: 1rem;
 }
 
+.instrument {
+  position: relative;
+  padding-left: 42px;
+}
+
+.instrument-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 3px;
+  width: 35px;
+  height: 35px;
+  background-color: #eee;
+  line-height: 32px;
+  text-align: center;
+  color: #bbb;
+  font-weight: bold;
+}
+
 .breadcrumbs {
   list-style: none;
   display: flex;

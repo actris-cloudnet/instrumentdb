@@ -362,7 +362,7 @@ class ComponentsTest(TestCase):
         response_decoded = response.content.decode("utf-8")
         self.assertEqual(response.status_code, 200)
         test_strings = (
-            '<a href="http://localhost:8000/instrument/90845957-31eb-4900-89a5-78696ec0453d">My weather station</a><br>Weather station type',
+            '<div class="instrument-image">?</div><a href="http://localhost:8000/instrument/90845957-31eb-4900-89a5-78696ec0453d">My weather station</a><br>Weather station type',
         )
         for test_string in test_strings:
             self.assertInHTML(test_string, response_decoded)

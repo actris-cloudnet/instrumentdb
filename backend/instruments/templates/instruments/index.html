@@ -1,5 +1,7 @@
 {% extends 'instruments/base.html' %}
 
+{% load thumbnail %}
+
 {% block title %}
   Instruments
 {% endblock %}
@@ -25,6 +27,11 @@
       <div class="instruments">
         {% for instrument in location.instruments %}
           <div class="instrument">
+            {% thumbnail instrument.get_image "35x35" crop="center center" as image %}
+              <img class="instrument-image" src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+            {% empty %}
+              <div class="instrument-image">?</div>
+            {% endthumbnail %}
             <a href="{{ instrument.landing_page }}">{{ instrument.name }}</a>
             {% if not instrument.pid %}
               (draft)
