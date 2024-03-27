@@ -35,21 +35,19 @@
 {% endblock %}
 
 {% block body %}
-  {% if instrument.model %}
-    {% if instrument.get_image %}
-      <figure class="image-container">
-        <a href="/media/{{ instrument.get_image }}" target="_blank">
-          {% thumbnail instrument.get_image "150" as image %}
-            <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
-          {% endthumbnail %}
-        </a>
-        {% if instrument.get_image_attribution %}
-          <figcaption>
-            Photo: {{ instrument.get_image_attribution }}
-          </figcaption>
-        {% endif %}
-      </figure>
-    {% endif %}
+  {% if instrument.get_image %}
+    <figure class="image-container">
+      <a href="/media/{{ instrument.get_image }}" target="_blank">
+        {% thumbnail instrument.get_image "150" as image %}
+          <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="">
+        {% endthumbnail %}
+      </a>
+      {% if instrument.get_image_attribution %}
+        <figcaption>
+          Photo: {{ instrument.get_image_attribution }}
+        </figcaption>
+      {% endif %}
+    </figure>
   {% endif %}
   <div class="field">
     <div class="field-label">PID</div>
