@@ -11,10 +11,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: docker-compose build
+        run: docker compose build
 
       - name: Test
-        run: docker-compose run django ./manage.py test
+        run: docker compose run django ./manage.py test
 
       - name: Check style
         run: ./scripts/check-style
