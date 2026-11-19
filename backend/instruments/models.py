@@ -152,8 +152,8 @@ class Instrument(models.Model):
     )
     image_attribution = models.CharField(max_length=255, null=True, blank=True)
     serial_number = models.CharField(max_length=255, null=True, blank=True)
-    locations = models.ManyToManyField(Location, through="Campaign")
-    persons = models.ManyToManyField(Person, through="Contact")
+    locations = models.ManyToManyField(Location, through="Campaign")  # type: ignore[var-annotated]
+    persons = models.ManyToManyField(Person, through="Contact")  # type: ignore[var-annotated]
     components = models.ManyToManyField(
         "self", blank=True, symmetrical=False, related_name="component_of"
     )

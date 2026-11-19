@@ -103,7 +103,7 @@ class OrcidIdField(CharField):
             return value
         return parse_orcid_id(value)
 
-    def formfield(self, **kwargs):
+    def formfield(self, **kwargs):  # type: ignore[override]
         kwargs["max_length"] = None
         return super().formfield(**kwargs)
 
@@ -119,6 +119,6 @@ class RorIdField(CharField):
             return value
         return parse_ror_id(value)
 
-    def formfield(self, **kwargs):
+    def formfield(self, **kwargs):  # type: ignore[override]
         kwargs["max_length"] = None
         return super().formfield(**kwargs)
