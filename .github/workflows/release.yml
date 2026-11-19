@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Generate changelog
         run: |
           version=${GITHUB_REF#refs/tags/v}
@@ -17,7 +17,7 @@ jobs:
           echo "name=InstrumentDB $version" >> $GITHUB_OUTPUT
         id: changelog
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: ${{ steps.changelog.outputs.name }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
