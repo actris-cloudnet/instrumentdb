@@ -18,7 +18,8 @@ services:
       - PUBLIC_URL=http://localhost:8000
       - MODE=development
     depends_on:
-      - database
+      database:
+        condition: service_healthy
   database:
     image: postgres
     restart: always
@@ -27,3 +28,9 @@ services:
       POSTGRES_PASSWORD: supersecret
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
